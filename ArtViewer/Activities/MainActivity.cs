@@ -1,4 +1,5 @@
 using Android.Content;
+using ArtViewer.Network.Deviantart;
 
 namespace ArtViewer.Activities
 {
@@ -7,6 +8,11 @@ namespace ArtViewer.Activities
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
+            //Start establishing a connection to the API as soon as possible to avoid slowdowns
+            //FIXME: modify this code to catch a connection error and make a popup on the front end
+            Task newTask = Task.Run(() => NetworkUtils.GetAccessToken());
+
+
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 

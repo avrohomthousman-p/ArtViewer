@@ -1,4 +1,5 @@
 ﻿using Android.Util;
+using ImageSearch;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -6,6 +7,84 @@ namespace ArtViewer.Network.Deviantart
 {
     public static class NetworkUtils
     {
+        private static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+        private static string accessToken = null;
+
+
+
+        /// <summary>
+        /// Gets the access token for the DeviantArt API.
+        /// </summary>
+        public static string GetAccessToken()
+        {
+            if (accessToken != null)
+            {
+                return accessToken;
+            }
+
+
+            semaphore.Wait();
+
+            if (accessToken != null)
+            {
+                return accessToken;
+            }
+
+
+            try
+            {
+                GenerateAccessToken().Wait();
+            }
+            catch (Exception ex)
+            {
+                semaphore.Release();
+                throw new Exception("Failed to retrieve access token", ex);
+            }
+
+
+
+            semaphore.Release();
+            return accessToken;
+        }
+
+
+
+        /// <summary>
+        /// Connects to the DeviantArt API and retrieves and saves an access token.
+        /// </summary>
+        private static async Task GenerateAccessToken()
+        {
+            if (accessToken != null)
+            {
+                return;
+            }
+
+            const string url = "https://www.deviantart.com/oauth2/token";
+            Dictionary<string, string> postData = new Dictionary<string, string>
+                {
+                    { "grant_type", "client_credentials" },
+                    { "client_id", Secrets.client_id },
+                    { "client_secret", Secrets.client_secret }
+                };
+
+
+
+            JsonDocument response = await RunPostRequest(url, postData);
+
+            if (response.RootElement.TryGetProperty("access_token", out JsonElement accessTokenElement))
+            {
+                accessToken = accessTokenElement.ToString();
+            }
+            else
+            {
+                Log.Error("Connection Error", "Failed to retrieve access token.");
+                throw new Exception("Failed to retrieve access token.");
+            }
+        }
+
+
+
+
         public static async Task<JsonDocument> RunGetRequest(string url)
         {
             using (HttpClient client = new HttpClient())
