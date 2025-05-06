@@ -1,7 +1,7 @@
 ﻿using Android.Views;
 using AndroidX.RecyclerView.Widget;
 
-namespace ArtViewer
+namespace ArtViewer.Activities
 {
     public class ImageViewHolder : RecyclerView.ViewHolder
     {

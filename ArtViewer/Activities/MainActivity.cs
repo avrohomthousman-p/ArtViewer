@@ -1,6 +1,6 @@
 using Android.Content;
 
-namespace ArtViewer
+namespace ArtViewer.Activities
 {
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : Activity
@@ -15,7 +15,7 @@ namespace ArtViewer
             //TODO: setup button click listeners for all buttons
 
             FindViewById<Button>(Resource.Id.browse_my_folders_btn).Click +=
-                (Object sender, EventArgs e) =>
+                (sender, e) =>
                 {
                     Intent intent = new Intent(this, typeof(DisplayActivity));
                     StartActivity(intent);

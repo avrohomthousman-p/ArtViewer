@@ -4,7 +4,7 @@ using AndroidX.RecyclerView.Widget;
 using Bumptech.Glide;
 
 
-namespace ArtViewer
+namespace ArtViewer.Activities
 {
     internal class ImageAdapter : RecyclerView.Adapter
 
@@ -22,7 +22,7 @@ namespace ArtViewer
 
 
 
-        public override int ItemCount => this.imageUrls.Count;
+        public override int ItemCount => imageUrls.Count;
 
 
 
@@ -31,8 +31,8 @@ namespace ArtViewer
             ImageViewHolder viewHolder = holder as ImageViewHolder;
 
 
-            Glide.With(this.context)
-             .Load(this.imageUrls[position])
+            Glide.With(context)
+             .Load(imageUrls[position])
              .Into(viewHolder.ImageView);
         }
 

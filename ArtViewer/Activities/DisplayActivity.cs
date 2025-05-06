@@ -1,6 +1,6 @@
 ﻿using AndroidX.RecyclerView.Widget;
 
-namespace ArtViewer;
+namespace ArtViewer.Activities;
 
 [Activity(Label = "@string/app_name")]
 public class DisplayActivity : Activity
@@ -8,8 +8,8 @@ public class DisplayActivity : Activity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(Resource.Layout.activity_display);
-        this.Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+        SetContentView(_Microsoft.Android.Resource.Designer.ResourceConstant.Layout.activity_display);
+        Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
         SetupRecyclerView();
     }
