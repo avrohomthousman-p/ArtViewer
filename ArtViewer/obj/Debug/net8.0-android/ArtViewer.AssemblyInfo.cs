@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ArtViewer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+e7ffd11663486e3accfb943dcc7f8ce7f5f67d6a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ArtViewer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ArtViewer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

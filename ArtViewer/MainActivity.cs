@@ -1,3 +1,5 @@
+using Android.Content;
+
 namespace ArtViewer
 {
     [Activity(Label = "@string/app_name", MainLauncher = true)]
@@ -6,9 +8,18 @@ namespace ArtViewer
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
+
+
+
+            //TODO: setup button click listeners for all buttons
+
+            FindViewById<Button>(Resource.Id.browse_my_folders_btn).Click +=
+                (Object sender, EventArgs e) =>
+                {
+                    Intent intent = new Intent(this, typeof(DisplayActivity));
+                    StartActivity(intent);
+                };
         }
     }
 }
