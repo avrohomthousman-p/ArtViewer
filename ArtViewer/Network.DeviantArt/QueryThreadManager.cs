@@ -1,4 +1,6 @@
 ﻿using Android.Drm;
+using ArtViewer.Activities;
+using ArtViewer.Database;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -23,9 +25,19 @@ namespace ArtViewer.Network.Deviantart
         
         public QueryThreadManager()
         {
+            InitAsync();
+        }
 
-            List<string> queries = PlanQueries();
-            StartAllQueries(queries);
+
+
+        /// <summary>
+        /// Runs all the asyncronous initialization needed for this class
+        /// </summary>
+        private async void InitAsync()
+        {
+            Folder folder = await StandardDBQueries.GetFolder();
+            List<string> queries = PlanQueries(folder);
+            await StartAllQueries(queries);
         }
 
 
@@ -34,17 +46,14 @@ namespace ArtViewer.Network.Deviantart
         /// Generates a list of queries that will fetch the all images from the API, from beginning
         /// to end (or the MAX_IMAGES limit is reached).
         /// </summary>
-        private List<string> PlanQueries()
+        private List<string> PlanQueries(Folder folder)
         {
-            //TODO: this is using sample data. Needs to be replaced with real data
-
             List<string> queries = new List<string>();
             int offset = 0;
             while (offset < MAX_IMAGES)
             {
                 int queryLimit = MAX_QUERY_LIMIT;
-                string url = NetworkUtils.BuildGenericFolderUrl("gallery", "89DB8DF6-9027-4CD2-965F-27CE55CCEFA9",
-                                                                "dissunder", MAX_QUERY_LIMIT, offset);
+                string url = NetworkUtils.BuildGenericFolderUrl(folder.CollectionType, folder.FolderId, folder.Username, MAX_QUERY_LIMIT, offset);
 
                 queries.Add(url);
                 offset += MAX_QUERY_LIMIT;
@@ -66,6 +75,7 @@ namespace ArtViewer.Network.Deviantart
                 }
                 catch (Exception e)
                 {
+                    //We don't want the whole app to crash if some of the queries fail
                     Console.WriteLine("Failed to retrieve images: " + e.Message);
                 }
             });

@@ -16,6 +16,7 @@ namespace ArtViewer.Database
 
         [SQLite.MaxLength(255)]
         [NotNull]
+        [Unique]
         public string FolderId { get; set; }
 
 

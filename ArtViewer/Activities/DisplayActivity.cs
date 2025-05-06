@@ -12,6 +12,7 @@ public class DisplayActivity : Activity
         SetContentView(_Microsoft.Android.Resource.Designer.ResourceConstant.Layout.activity_display);
         Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
+
         SetupRecyclerView();
     }
 

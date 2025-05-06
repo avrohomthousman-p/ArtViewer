@@ -1,4 +1,5 @@
 using Android.Content;
+using ArtViewer.Database;
 using ArtViewer.Network.Deviantart;
 
 namespace ArtViewer.Activities
@@ -8,9 +9,9 @@ namespace ArtViewer.Activities
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
-            //Start establishing a connection to the API as soon as possible to avoid slowdowns
-            //FIXME: modify this code to catch a connection error and make a popup on the front end
-            Task newTask = Task.Run(() => NetworkUtils.GetAccessToken());
+            //Start establishing a connection to the API and database as soon as possible to avoid slowdowns
+            Task.Run(() => NetworkUtils.GetAccessToken());
+            Task.Run(() => DatabaseConnection.GetConnection());
 
 
             base.OnCreate(savedInstanceState);
