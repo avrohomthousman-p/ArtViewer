@@ -1,22 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-android</TargetFramework>
-    <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
-    <OutputType>Exe</OutputType>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationId>com.companyname.ArtViewer</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Resources\layout\activity_display.xml" />
-    <None Remove="Resources\layout\image_item.xml" />
-    <None Remove="Resources\values\dimens.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Xamarin.Android.Glide" Version="4.16.0.12" />
-    <PackageReference Include="Xamarin.AndroidX.ConstraintLayout" Version="2.2.1.1" />
-    <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.1" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0-android</TargetFramework>
+		<SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
+		<OutputType>Exe</OutputType>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ApplicationId>com.companyname.ArtViewer</ApplicationId>
+		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Resources\layout\activity_display.xml" />
+		<None Remove="Resources\layout\image_item.xml" />
+		<None Remove="Resources\values\dimens.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Android.Glide" Version="4.16.0.12" />
+		<PackageReference Include="Xamarin.AndroidX.ConstraintLayout" Version="2.2.1.1" />
+		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.1" />
+	</ItemGroup>
+
+	<Target Name="GenerateSecretsPreBuild" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet script ..\GenerateSecrets.csx" />
+		<ItemGroup>
+			<Compile Include="Secrets.cs" />
+		</ItemGroup>
+	</Target>
 </Project>
