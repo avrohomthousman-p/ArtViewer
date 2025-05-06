@@ -59,6 +59,10 @@
             "Xamarin.AndroidX.ConstraintLayout": {
               "target": "Package",
               "version": "[2.2.1.1, )"
+            },
+            "Xamarin.AndroidX.RecyclerView": {
+              "target": "Package",
+              "version": "[1.4.0.1, )"
             }
           },
           "imports": [

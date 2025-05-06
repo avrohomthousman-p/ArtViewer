@@ -404,6 +404,26 @@
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.targets": {}
         }
       },
+      "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Core.Core.Ktx": "1.16.0.1",
+          "Xamarin.Kotlin.StdLib": "2.0.21.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets": {}
+        }
+      },
       "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
         "type": "package",
         "dependencies": {
@@ -768,6 +788,30 @@
         },
         "build": {
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.ProfileInstaller.ProfileInstaller.targets": {}
+        }
+      },
+      "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Annotation": "1.9.1.3",
+          "Xamarin.AndroidX.Collection": "1.5.0.1",
+          "Xamarin.AndroidX.Core": "1.16.0.1",
+          "Xamarin.AndroidX.CustomView": "1.1.0.31",
+          "Xamarin.AndroidX.CustomView.PoolingContainer": "1.0.0.18",
+          "Xamarin.AndroidX.ProfileInstaller.ProfileInstaller": "1.4.1.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets": {}
         }
       },
       "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -1477,6 +1521,26 @@
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.targets": {}
         }
       },
+      "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Core.Core.Ktx": "1.16.0.1",
+          "Xamarin.Kotlin.StdLib": "2.0.21.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets": {}
+        }
+      },
       "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
         "type": "package",
         "dependencies": {
@@ -1841,6 +1905,30 @@
         },
         "build": {
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.ProfileInstaller.ProfileInstaller.targets": {}
+        }
+      },
+      "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Annotation": "1.9.1.3",
+          "Xamarin.AndroidX.Collection": "1.5.0.1",
+          "Xamarin.AndroidX.Core": "1.16.0.1",
+          "Xamarin.AndroidX.CustomView": "1.1.0.31",
+          "Xamarin.AndroidX.CustomView.PoolingContainer": "1.0.0.18",
+          "Xamarin.AndroidX.ProfileInstaller.ProfileInstaller": "1.4.1.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets": {}
         }
       },
       "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -2550,6 +2638,26 @@
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.targets": {}
         }
       },
+      "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Core.Core.Ktx": "1.16.0.1",
+          "Xamarin.Kotlin.StdLib": "2.0.21.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets": {}
+        }
+      },
       "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
         "type": "package",
         "dependencies": {
@@ -2914,6 +3022,30 @@
         },
         "build": {
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.ProfileInstaller.ProfileInstaller.targets": {}
+        }
+      },
+      "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Annotation": "1.9.1.3",
+          "Xamarin.AndroidX.Collection": "1.5.0.1",
+          "Xamarin.AndroidX.Core": "1.16.0.1",
+          "Xamarin.AndroidX.CustomView": "1.1.0.31",
+          "Xamarin.AndroidX.CustomView.PoolingContainer": "1.0.0.18",
+          "Xamarin.AndroidX.ProfileInstaller.ProfileInstaller": "1.4.1.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets": {}
         }
       },
       "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -3623,6 +3755,26 @@
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.targets": {}
         }
       },
+      "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Core.Core.Ktx": "1.16.0.1",
+          "Xamarin.Kotlin.StdLib": "2.0.21.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets": {}
+        }
+      },
       "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
         "type": "package",
         "dependencies": {
@@ -3987,6 +4139,30 @@
         },
         "build": {
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.ProfileInstaller.ProfileInstaller.targets": {}
+        }
+      },
+      "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Annotation": "1.9.1.3",
+          "Xamarin.AndroidX.Collection": "1.5.0.1",
+          "Xamarin.AndroidX.Core": "1.16.0.1",
+          "Xamarin.AndroidX.CustomView": "1.1.0.31",
+          "Xamarin.AndroidX.CustomView.PoolingContainer": "1.0.0.18",
+          "Xamarin.AndroidX.ProfileInstaller.ProfileInstaller": "1.4.1.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets": {}
         }
       },
       "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -4696,6 +4872,26 @@
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.targets": {}
         }
       },
+      "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Core.Core.Ktx": "1.16.0.1",
+          "Xamarin.Kotlin.StdLib": "2.0.21.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets": {}
+        }
+      },
       "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
         "type": "package",
         "dependencies": {
@@ -5060,6 +5256,30 @@
         },
         "build": {
           "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.ProfileInstaller.ProfileInstaller.targets": {}
+        }
+      },
+      "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.Annotation": "1.9.1.3",
+          "Xamarin.AndroidX.Collection": "1.5.0.1",
+          "Xamarin.AndroidX.Core": "1.16.0.1",
+          "Xamarin.AndroidX.CustomView": "1.1.0.31",
+          "Xamarin.AndroidX.CustomView.PoolingContainer": "1.0.0.18",
+          "Xamarin.AndroidX.ProfileInstaller.ProfileInstaller": "1.4.1.3"
+        },
+        "compile": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets": {}
         }
       },
       "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -5801,6 +6021,27 @@
         "xamarin.androidx.customview.nuspec"
       ]
     },
+    "Xamarin.AndroidX.CustomView.PoolingContainer/1.0.0.18": {
+      "sha512": "SE1I67whJiomlB1p2Z+BC6eRiNfZdSHZIGReOtYjsOKWn9JYtbsaBvILTf5hxhW6muU1LzjwEtH6aSYbWmOERA==",
+      "type": "package",
+      "path": "xamarin.androidx.customview.poolingcontainer/1.0.0.18",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "aar/androidx.customview.customview-poolingcontainer.aar",
+        "build/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets",
+        "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.targets",
+        "icon.png",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.dll",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.pdb",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.CustomView.PoolingContainer.xml",
+        "readme.md",
+        "xamarin.androidx.customview.poolingcontainer.1.0.0.18.nupkg.sha512",
+        "xamarin.androidx.customview.poolingcontainer.nuspec"
+      ]
+    },
     "Xamarin.AndroidX.DrawerLayout/1.2.0.16": {
       "sha512": "oua2XYA3X7cP9mCRosMjf03X9Fk3H685KcJSjyzeR/DlOzhyFUhtx0cpGJP0erz1mfoBllI2hwKLxSCMn/aegA==",
       "type": "package",
@@ -6140,6 +6381,28 @@
         "readme.md",
         "xamarin.androidx.profileinstaller.profileinstaller.1.4.1.3.nupkg.sha512",
         "xamarin.androidx.profileinstaller.profileinstaller.nuspec"
+      ]
+    },
+    "Xamarin.AndroidX.RecyclerView/1.4.0.1": {
+      "sha512": "e63D5DwNKvLW7MYKVpvwd2mQ313JGbWfTGsXdVH31GoakSh/3xPAeR1xOCzNsmDSl+6/wMDhHtP+E8seCeao2g==",
+      "type": "package",
+      "path": "xamarin.androidx.recyclerview/1.4.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "aar/androidx.recyclerview.recyclerview.aar",
+        "build/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets",
+        "buildTransitive/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.targets",
+        "icon.png",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.dll",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.pdb",
+        "lib/net8.0-android34.0/Xamarin.AndroidX.RecyclerView.xml",
+        "proguard/proguard.txt",
+        "readme.md",
+        "xamarin.androidx.recyclerview.1.4.0.1.nupkg.sha512",
+        "xamarin.androidx.recyclerview.nuspec"
       ]
     },
     "Xamarin.AndroidX.ResourceInspection.Annotation/1.0.1.20": {
@@ -6489,7 +6752,8 @@
   "projectFileDependencyGroups": {
     "net8.0-android34.0": [
       "Microsoft.NET.ILLink.Tasks >= 8.0.5",
-      "Xamarin.AndroidX.ConstraintLayout >= 2.2.1.1"
+      "Xamarin.AndroidX.ConstraintLayout >= 2.2.1.1",
+      "Xamarin.AndroidX.RecyclerView >= 1.4.0.1"
     ]
   },
   "packageFolders": {
@@ -6551,6 +6815,10 @@
           "Xamarin.AndroidX.ConstraintLayout": {
             "target": "Package",
             "version": "[2.2.1.1, )"
+          },
+          "Xamarin.AndroidX.RecyclerView": {
+            "target": "Package",
+            "version": "[1.4.0.1, )"
           }
         },
         "imports": [

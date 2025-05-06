@@ -1,5 +1,7 @@
+drawable\ic_loading;drawable\ic_loading
 layout\activity_display;layout\activity_display
 layout\activity_main;layout\activity_main
+layout\image_item;layout\image_item
 mipmap\appicon;mipmap\appicon
 mipmap\appicon_background;mipmap\appicon_background
 mipmap\appicon_foreground;mipmap\appicon_foreground

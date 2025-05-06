@@ -3,24 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\artviewer.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\artviewer.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\layout\\image_item.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}",
+      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\layout\\image_item.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\layout\\activity_main.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}",
-      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\layout\\activity_main.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}"
+      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\imageviewholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\imageviewholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\imageadapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\imageadapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\displayactivity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\displayactivity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\values\\dimens.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\values\\dimens.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\layout\\activity_display.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}",
       "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\layout\\activity_display.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\layout\\activity_main.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}",
+      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\layout\\activity_main.xml||{A4B51DF8-501B-45AD-A022-1A0D18A2B7B0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\resources\\values\\dimens.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|solutionrelative:artviewer\\resources\\values\\dimens.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{31EA884E-63EC-43A4-A32E-684DC46EF516}|ArtViewer\\ArtViewer.csproj|c:\\users\\avroh\\source\\repos\\artviewer\\artviewer\\mainactivity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,8 +46,54 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "image_item.xml",
+              "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\Resources\\layout\\image_item.xml",
+              "RelativeDocumentMoniker": "ArtViewer\\Resources\\layout\\image_item.xml",
+              "ToolTip": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\Resources\\layout\\image_item.xml",
+              "RelativeToolTip": "ArtViewer\\Resources\\layout\\image_item.xml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-05-06T00:59:13.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ImageAdapter.cs",
+              "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ImageAdapter.cs",
+              "RelativeDocumentMoniker": "ArtViewer\\ImageAdapter.cs",
+              "ToolTip": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ImageAdapter.cs",
+              "RelativeToolTip": "ArtViewer\\ImageAdapter.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwAIAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T00:48:14.445Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ImageViewHolder.cs",
+              "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ImageViewHolder.cs",
+              "RelativeDocumentMoniker": "ArtViewer\\ImageViewHolder.cs",
+              "ToolTip": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ImageViewHolder.cs",
+              "RelativeToolTip": "ArtViewer\\ImageViewHolder.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAABMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T00:47:32.026Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 4,
@@ -54,41 +108,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ArtViewer",
-              "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ArtViewer.csproj",
-              "RelativeDocumentMoniker": "ArtViewer\\ArtViewer.csproj",
-              "ToolTip": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\ArtViewer.csproj*",
-              "RelativeToolTip": "ArtViewer\\ArtViewer.csproj*",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-05-06T00:28:23.456Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "DisplayActivity.cs",
               "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\DisplayActivity.cs",
               "RelativeDocumentMoniker": "ArtViewer\\DisplayActivity.cs",
               "ToolTip": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\DisplayActivity.cs",
               "RelativeToolTip": "ArtViewer\\DisplayActivity.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAgAAAA",
+              "ViewState": "AQIAACAAAAAAAAAAAAAUwDMAAAA6AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-06T00:28:37.781Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "dimens.xml",
               "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\Resources\\values\\dimens.xml",
               "RelativeDocumentMoniker": "ArtViewer\\Resources\\values\\dimens.xml",
@@ -101,7 +134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "strings.xml",
               "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\Resources\\values\\strings.xml",
               "RelativeDocumentMoniker": "ArtViewer\\Resources\\values\\strings.xml",
@@ -114,7 +147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "activity_main.xml",
               "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\Resources\\layout\\activity_main.xml",
               "RelativeDocumentMoniker": "ArtViewer\\Resources\\layout\\activity_main.xml",
@@ -126,7 +159,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "MainActivity.cs",
               "DocumentMoniker": "C:\\Users\\avroh\\source\\repos\\ArtViewer\\ArtViewer\\MainActivity.cs",
               "RelativeDocumentMoniker": "ArtViewer\\MainActivity.cs",
