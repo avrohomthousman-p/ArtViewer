@@ -15,6 +15,7 @@
     <None Remove="Resources\values\dimens.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Xamarin.Android.Glide" Version="4.16.0.12" />
     <PackageReference Include="Xamarin.AndroidX.ConstraintLayout" Version="2.2.1.1" />
     <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.1" />
   </ItemGroup>

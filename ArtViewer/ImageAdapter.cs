@@ -1,7 +1,8 @@
 ﻿using Android.Content;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
-using static AndroidX.RecyclerView.Widget.RecyclerView;
+using Bumptech.Glide;
+
 
 namespace ArtViewer
 {
@@ -28,9 +29,11 @@ namespace ArtViewer
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             ImageViewHolder viewHolder = holder as ImageViewHolder;
-            
 
-            //TODO: set the image
+
+            Glide.With(this.context)
+             .Load(this.imageUrls[position])
+             .Into(viewHolder.ImageView);
         }
 
 
