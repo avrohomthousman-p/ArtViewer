@@ -1,23 +1,36 @@
 ﻿using AndroidX.RecyclerView.Widget;
 using ArtViewer.Network.Deviantart;
-
+using AndroidX.AppCompat.App;
+using Android.Views;
 namespace ArtViewer.Activities;
+
 
 
 [Activity(Label = "@string/app_name")]
 /// <summary>
 /// Activity for displaying the images in a user's folder.
 /// </summary>
-public class DisplayActivity : Activity
+public class DisplayActivity : AppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(_Microsoft.Android.Resource.Designer.ResourceConstant.Layout.activity_display);
-        Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+        SetContentView(Resource.Layout.activity_display);
 
 
         SetupRecyclerView();
+
+
+        Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+
+
+        AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+        SetSupportActionBar(toolbar);
+
+
+        // Enable back button
+        SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+        SupportActionBar.SetDisplayShowHomeEnabled(true);
     }
 
 
@@ -38,5 +51,17 @@ public class DisplayActivity : Activity
         //Make the images snap to the center of the screen on scroll
         var snapHelper = new PagerSnapHelper();
         snapHelper.AttachToRecyclerView(recyclerView);
+    }
+
+
+
+    public override bool OnOptionsItemSelected(IMenuItem item)
+    {
+        if (item.ItemId == Android.Resource.Id.Home)
+        {
+            OnBackPressed();
+            return true;
+        }
+        return base.OnOptionsItemSelected(item);
     }
 }

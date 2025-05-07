@@ -1,4 +1,5 @@
 using Android.Content;
+using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using ArtViewer.Network.Deviantart;
 
@@ -10,7 +11,7 @@ namespace ArtViewer.Activities
     /// Lets the user decide what he/she wants to do. Browse saved folders, edit saved folders,
     /// or find new folders to save.
     /// </summary>
-    public class MainActivity : Activity
+    public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -21,6 +22,10 @@ namespace ArtViewer.Activities
 
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
+
+
+            AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(toolbar);
 
 
 

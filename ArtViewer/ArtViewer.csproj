@@ -16,6 +16,7 @@
 		<None Remove="Resources\layout\activity_display.xml" />
 		<None Remove="Resources\layout\activity_save_new_folders.xml" />
 		<None Remove="Resources\layout\image_item.xml" />
+		<None Remove="Resources\layout\toolbar.xml" />
 		<None Remove="Resources\values\dimens.xml" />
 		<None Remove="Resources\values\styles.xml" />
 	</ItemGroup>
