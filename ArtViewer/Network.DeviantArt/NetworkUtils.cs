@@ -35,7 +35,7 @@ namespace ArtViewer.Network.Deviantart
 
             try
             {
-                GenerateAccessToken().Wait();
+                GenerateAccessToken();
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace ArtViewer.Network.Deviantart
         /// <summary>
         /// Connects to the DeviantArt API and retrieves and saves an access token.
         /// </summary>
-        private static async Task GenerateAccessToken()
+        private static void GenerateAccessToken()
         {
             if (accessToken != null)
             {
@@ -71,7 +71,7 @@ namespace ArtViewer.Network.Deviantart
 
 
 
-            JsonDocument response = await RunPostRequest(url, postData);
+            JsonDocument response = RunPostRequest(url, postData).Result;
 
             if (response.RootElement.TryGetProperty("access_token", out JsonElement accessTokenElement))
             {

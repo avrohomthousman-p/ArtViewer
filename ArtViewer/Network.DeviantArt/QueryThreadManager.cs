@@ -224,7 +224,6 @@ namespace ArtViewer.Network.Deviantart
         /// <summary>
         /// Extracts the image urls from the returned data and saves them to the urls list.
         /// </summary>
-
         /// <param name="root">the root element of the API response</param>
         private void SaveQueryResults(JsonElement root)
         {
