@@ -15,9 +15,8 @@ namespace ArtViewer.Database
         private static SQLiteConnection database = DatabaseConnection.GetConnection();
 
 
-        //TODO: replace these temp functions with real queries
 
-        private static void CreateSampleData()
+        private static void SeedDB()
         {
             database.CreateTable<Folder>();
 
@@ -31,9 +30,10 @@ namespace ArtViewer.Database
         }
 
 
+        //Temporary until I make real data
         public static Folder GetFolder()
         {
-            CreateSampleData();
+            SeedDB();
             return database.Table<Folder>().First();
         }
     }

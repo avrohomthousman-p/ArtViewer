@@ -9,16 +9,22 @@
 		<ApplicationVersion>1</ApplicationVersion>
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="Resources\layout\activity_display.xml" />
+		<None Remove="Resources\layout\activity_save_new_folders.xml" />
 		<None Remove="Resources\layout\image_item.xml" />
 		<None Remove="Resources\values\dimens.xml" />
+		<None Remove="Resources\values\styles.xml" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="Xamarin.Android.Glide" Version="4.16.0.12" />
 		<PackageReference Include="Xamarin.AndroidX.ConstraintLayout" Version="2.2.1.1" />
 		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.1" />
+		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.3" />
 	</ItemGroup>
 
 	<Target Name="GenerateSecretsPreBuild" BeforeTargets="BeforeBuild">
