@@ -12,29 +12,29 @@ namespace ArtViewer.Database
     /// </summary>
     internal static class StandardDBQueries
     {
-        private static SQLiteAsyncConnection database = DatabaseConnection.GetConnection();
+        private static SQLiteConnection database = DatabaseConnection.GetConnection();
 
 
         //TODO: replace these temp functions with real queries
 
-        private static async Task CreateSampleData()
+        private static void CreateSampleData()
         {
-            await database.CreateTableAsync<Folder>();
+            database.CreateTable<Folder>();
 
-            int count = await database.Table<Folder>().CountAsync();
+            int count = database.Table<Folder>().Count();
 
             if (count == 0)
             {
                 Folder sample = new Folder("89DB8DF6-9027-4CD2-965F-27CE55CCEFA9", 98, "gallery", "dissunder", true);
-                database.InsertAsync(sample);
+                database.Insert(sample);
             }
         }
 
 
-        public static async Task<Folder> GetFolder()
+        public static Folder GetFolder()
         {
-            await CreateSampleData();
-            return await database.Table<Folder>().FirstAsync();
+            CreateSampleData();
+            return database.Table<Folder>().First();
         }
     }
 }

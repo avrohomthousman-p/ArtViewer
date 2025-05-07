@@ -26,21 +26,11 @@ namespace ArtViewer.Network.Deviantart
         
         public QueryThreadManager()
         {
-            InitAsync();
-        }
-
-
-
-        /// <summary>
-        /// Runs all the asyncronous initialization needed for this class
-        /// </summary>
-        private async void InitAsync()
-        {
-            Folder folder = await StandardDBQueries.GetFolder();
+            Folder folder = StandardDBQueries.GetFolder();
             this.urls = new UrlStore(folder.ShouldRandomize);
 
             List<QueryTarget> queries = PlanQueries(folder);
-            await StartAllQueries(folder, queries);
+            StartAllQueries(folder, queries);
         }
 
 
