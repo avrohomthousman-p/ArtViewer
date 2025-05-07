@@ -1,6 +1,7 @@
 ﻿using Android.Drm;
 using ArtViewer.Activities;
 using ArtViewer.Database;
+using ArtViewer.Network.DeviantArt;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -17,7 +18,7 @@ namespace ArtViewer.Network.Deviantart
         public const int MAX_QUERY_LIMIT = 24;
 
 
-        private readonly ConcurrentBag<string> urls = new ConcurrentBag<string>();
+        private UrlStore urls;
         private readonly TaskCompletionSource queriesCompleted = new TaskCompletionSource();
 
 
@@ -36,26 +37,123 @@ namespace ArtViewer.Network.Deviantart
         private async void InitAsync()
         {
             Folder folder = await StandardDBQueries.GetFolder();
-            List<string> queries = PlanQueries(folder);
-            await StartAllQueries(queries);
+            this.urls = new UrlStore(folder.ShouldRandomize);
+
+            List<QueryTarget> queries = PlanQueries(folder);
+            await StartAllQueries(folder, queries);
+        }
+
+
+
+        /// <summary>
+        /// Determans what queries need to be made inorder to fetch all the images in the input array.
+        /// </summary>
+        /// <returns>A list with a query data object for each query that needs to be done</returns>
+        private List<QueryTarget> PlanQueries(Folder folder)
+        {
+            //We only need to download random images if there are more than MAX_IMAGES. Otherwise, just take all
+            if (folder.ShouldRandomize && folder.TotalImages > MAX_IMAGES)
+            {
+                int[] galleryIndexes = PickImagesToLoad(folder);
+                return PlanNonConsecutiveQueries(galleryIndexes);
+            }
+            else
+            {
+                return PlanConsecutiveQueries(folder);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Picks the images from the gallery that will be loaded. They must be randomly selected
+        /// so that all parts of the gallery are equally represented.
+        /// </summary>
+        private int[] PickImagesToLoad(Folder folder)
+        {
+            //If we have less images than the max, just load all of them
+            if (folder.TotalImages <= MAX_IMAGES)
+            {
+                return Enumerable.Range(0, folder.TotalImages).ToArray();
+            }
+
+
+            Random random = new Random();
+            HashSet<int> selectedImages = new HashSet<int>();
+            while (selectedImages.Count < MAX_IMAGES)
+            {
+                int randomNumber = random.Next(0, folder.TotalImages);
+                selectedImages.Add(randomNumber);
+            }
+
+
+            return selectedImages.Order().ToArray();
+        }
+
+
+
+        /// <summary>
+        /// Generates the queries needed to fetch specific images from the API. Use this if you 
+        /// don't want all images, you just want to pick specific ones and skip the rest.
+        /// </summary>
+        /// <param name="galleryIndexes">The indexes of the images needed from the API</param>
+        private List<QueryTarget> PlanNonConsecutiveQueries(int[] galleryIndexes)
+        {
+            List<QueryTarget> queries = new List<QueryTarget>();
+
+            int offset;
+            int queryLimit;
+            List<int> imagesToKeep;
+
+
+            //For each image we want to load, ensure it is included in a query
+            for (int i = 0; i < galleryIndexes.Length; i++)
+            {
+                imagesToKeep = new List<int>();
+
+
+                //start the next query from this image
+                offset = galleryIndexes[i];
+                imagesToKeep.Add(0); //keep the first image in the query
+
+
+                //check if there are any more images that are close by enough that we can include them in the same query
+                bool HasNextImage() => i + 1 < galleryIndexes.Length;
+                bool NextImageFitsInQuery() => HasNextImage() && galleryIndexes[i + 1] < offset + MAX_QUERY_LIMIT;
+
+                while (NextImageFitsInQuery())
+                {
+                    i++;
+                    imagesToKeep.Add(galleryIndexes[i] - offset);
+                }
+
+
+                queryLimit = galleryIndexes[i] - offset + 1;
+
+                queries.Add(new QueryTarget(offset, queryLimit, imagesToKeep));
+            }
+
+
+            return queries;
         }
 
 
 
         /// <summary>
         /// Generates a list of queries that will fetch the all images from the API, from beginning
-        /// to end (or the MAX_IMAGES limit is reached).
+        /// to end (or the MAX_IMAGES limit is reached). Use this if you don't want to skip any 
+        /// images.
         /// </summary>
-        private List<string> PlanQueries(Folder folder)
+        private List<QueryTarget> PlanConsecutiveQueries(Folder folder)
         {
-            List<string> queries = new List<string>();
-            int offset = 0;
-            while (offset < MAX_IMAGES)
-            {
-                int queryLimit = MAX_QUERY_LIMIT;
-                string url = NetworkUtils.BuildGenericFolderUrl(folder.CollectionType, folder.FolderId, folder.Username, MAX_QUERY_LIMIT, offset);
+            List<QueryTarget> queries = new List<QueryTarget>();
 
-                queries.Add(url);
+            int numImagesToFetch = Math.Min(MAX_IMAGES, folder.TotalImages);
+            int offset = 0;
+            while (offset < numImagesToFetch)
+            {
+                int queryLimit = (offset + MAX_QUERY_LIMIT > numImagesToFetch ? numImagesToFetch - offset : MAX_QUERY_LIMIT);
+                queries.Add(new QueryTarget(offset, queryLimit, null));
                 offset += MAX_QUERY_LIMIT;
             }
 
@@ -64,14 +162,14 @@ namespace ArtViewer.Network.Deviantart
 
 
 
-        private async Task StartAllQueries(List<string> urls)
+        private async Task StartAllQueries(Folder folderModel, List<QueryTarget> queries)
         {
 
-            await Parallel.ForEachAsync(urls, async (url, ct) =>
+            await Parallel.ForEachAsync(queries, async (queryData, ct) =>
             {
                 try
                 {
-                    await GetImageUrls(url);
+                    await GetImageUrls(folderModel, queryData);
                 }
                 catch (Exception e)
                 {
@@ -91,10 +189,11 @@ namespace ArtViewer.Network.Deviantart
         /// that can be retrieved in a single call, we have to make multiple calls to this function, each
         /// with an offset determaning which images this call should retrieve.
         /// </summary>
-        private async Task GetImageUrls(string url)
+        private async Task GetImageUrls(Folder folderModel, QueryTarget queryData)
         {
-            using JsonDocument folder = await NetworkUtils.RunGetRequest(url);
-            JsonElement root = folder.RootElement;
+            string url = folderModel.BuildUrl(queryData.queryLimit, queryData.offset);
+            using JsonDocument jsonFolder = await NetworkUtils.RunGetRequest(url);
+            JsonElement root = jsonFolder.RootElement;
 
 
             //This will throw an exception if something went wrong with the API call
@@ -175,29 +274,7 @@ namespace ArtViewer.Network.Deviantart
         {
             await queriesCompleted.Task;
 
-            List<string> results = new List<string>(this.urls);
-            ShuffleList<string>(results);
-            return results;
-        }
-
-
-
-        /// <summary>
-        /// Randomize the order of the list so the images are displayed in a different order each time.
-        /// </summary>
-        private void ShuffleList<T>(List<T> list)
-        {
-            Random rng = new Random();
-
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
+            return urls.GetUrls();
         }
     }
 }

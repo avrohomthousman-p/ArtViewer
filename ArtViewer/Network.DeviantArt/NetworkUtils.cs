@@ -144,45 +144,5 @@ namespace ArtViewer.Network.Deviantart
             var json = JsonSerializer.Serialize(errorObject);
             return JsonDocument.Parse(json);
         }
-
-
-
-
-        /// <summary>
-        /// Builds the url for getting the images in a users gallery.
-        /// </summary>
-        /// <param name="username">the username of the gallery owner</param>
-        /// <param name="queryLimit">the number of images to fetch in the query</param>
-        /// <param name="offset">the position in the gallery/collection where the query should start</param>
-        /// <returns>a url that will connect to the DeviantArt API and get images from the users gallery</returns>
-        public static string BuildFullGalleryUrl(string username, int queryLimit, int offset)
-        {
-            string usersFullGalleryUrl = "https://www.deviantart.com/api/v1/oauth2/gallery/all?access_token=" +
-                                "{0}&username={1}&mature_content=true&limit={2}&offset={3}";
-
-
-            return string.Format(usersFullGalleryUrl, GetAccessToken(), username, queryLimit, offset);
-        }
-
-
-
-
-        /// <summary>
-        /// Builds the url for getting the images from a specific folder.
-        /// </summary>
-        /// <param name="storageType">where the folder is located. "collection" or "gallery"</param>
-        /// <param name="folderId">the id the folder was given by DeviantArt</param>
-        /// <param name="username">the username of the folder owner</param>
-        /// <param name="queryLimit">the number of images to fetch in the query</param>
-        /// <param name="offset">the position in the gallery/collection where the query should start</param>
-        /// <returns>a url that will connect to the DeviantArt API and get images from a specific folder</returns>
-        public static string BuildGenericFolderUrl(string storageType, string folderId, string username, int queryLimit, int offset)
-        {
-            string userFolderUrl = "https://www.deviantart.com/api/v1/oauth2/{0}/{1}?access_token=" +
-                                "{2}&username={3}&mature_content=true&limit={4}&offset={5}";
-
-
-            return string.Format(userFolderUrl, storageType, folderId, GetAccessToken(), username, queryLimit, offset);
-        }
     }
 }

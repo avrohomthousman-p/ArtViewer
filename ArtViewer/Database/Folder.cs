@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using ArtViewer.Network.Deviantart;
+using SQLite;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -15,8 +16,6 @@ namespace ArtViewer.Database
 
 
         [SQLite.MaxLength(255)]
-        [NotNull]
-        [Unique]
         public string FolderId { get; set; }
 
 
@@ -38,6 +37,10 @@ namespace ArtViewer.Database
         public bool ShouldRandomize { get; set; } = true;
 
 
+
+        private const string BASE_URL = "https://www.deviantart.com/api/v1/oauth2/{0}/{1}?access_token={2}&username={3}&mature_content=true&limit={4}&offset={5}";
+
+
         public Folder() { }
 
 
@@ -48,6 +51,13 @@ namespace ArtViewer.Database
             CollectionType = collectionType;
             Username = username;
             ShouldRandomize = shouldRandomize;
+        }
+
+
+
+        public string BuildUrl(int queryLimit, int offset)
+        {
+            return string.Format(BASE_URL, this.CollectionType, this.FolderId, NetworkUtils.GetAccessToken(), this.Username, queryLimit, offset);
         }
     }
 }
