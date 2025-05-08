@@ -1,6 +1,5 @@
 ﻿using Android.OS;
 using Android.Util;
-using ImageSearch;
 using Org.Apache.Http.Authentication;
 using System.Collections.Concurrent;
 using System.Text.Json;

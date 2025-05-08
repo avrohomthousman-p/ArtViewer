@@ -21,7 +21,7 @@ if (!File.Exists(inputFile))
 
 
 var envData = File.ReadLines(inputFile).Select(line => SplitKeyAndValue(line));
-StringBuilder output = new StringBuilder("namespace ImageSearch");
+StringBuilder output = new StringBuilder("namespace ArtViewer");
 output.AppendLine("{");
 output.AppendLine("    public static class Secrets");
 output.AppendLine("    {");
