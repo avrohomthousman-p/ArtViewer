@@ -7,7 +7,13 @@
 	<string name="edit_my_folders_btn_text">Edit My Folders</string>
 
 
-	<string name="save_new_folders_intro_text">Please tell us what you are looking for</string>
-	<string name="folder_input_label">Folder Name: </string>
+	<string name="save_new_folders_intro_text">Describe the folder you are looking for</string>
+	<string name="folder_input_label">Enter Folder Name: </string>
+	<string name="disabled_folder_input_label">Using full gallery/collection</string>
 	<string name="use_gallery_checkbox_label">Use Full Gallery/Collection Instead</string>
+	<string name="username_input_label">Enter Username of Owner:</string>
+	<string name="submit_btn_text">Save Folder</string>
+
+	<string name="location_gallery">Gallery</string>
+	<string name="location_collection">Collection</string>
 </resources>
