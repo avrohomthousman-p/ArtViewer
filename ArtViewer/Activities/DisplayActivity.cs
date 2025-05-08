@@ -38,8 +38,8 @@ public class DisplayActivity : AppCompatActivity
     private async Task SetupRecyclerView()
     {
         //Use sample images until the API queries are set up
-        QueryThreadManager threadManager = new QueryThreadManager();
-        List<string> imageUrls = await threadManager.GetResults();
+        ImageQueryService imageFetcher = new ImageQueryService();
+        List<string> imageUrls = await imageFetcher.GetResults();
 
 
         //Recycler view creation

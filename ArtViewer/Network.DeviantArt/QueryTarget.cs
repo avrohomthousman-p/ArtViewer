@@ -26,7 +26,7 @@ namespace ArtViewer.Network.DeviantArt
         public QueryTarget()
         {
             offset = 0;
-            queryLimit = QueryThreadManager.MAX_QUERY_LIMIT;
+            queryLimit = ImageQueryService.MAX_QUERY_LIMIT;
             itemsToKeep = null;
         }
 

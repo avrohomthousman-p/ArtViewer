@@ -20,7 +20,7 @@ namespace ArtViewer.Database
 
 
         [NotNull]
-        public int TotalImages { get; set; } = Network.Deviantart.QueryThreadManager.MAX_IMAGES;
+        public int TotalImages { get; set; } = Network.Deviantart.ImageQueryService.MAX_IMAGES;
 
 
         [SQLite.MaxLength(20)]

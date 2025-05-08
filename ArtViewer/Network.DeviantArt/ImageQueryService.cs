@@ -11,7 +11,7 @@ namespace ArtViewer.Network.Deviantart
     /// <summary>
     /// Class that starts threads to connect to the DeviantArt API and retrieve the image URLs.
     /// </summary>
-    internal class QueryThreadManager
+    internal class ImageQueryService
     {
         //fetch only 250 imagaes, but it not necessarily the first 250 in the gallery
         public const int MAX_IMAGES = 250;
@@ -24,7 +24,7 @@ namespace ArtViewer.Network.Deviantart
 
 
         
-        public QueryThreadManager()
+        public ImageQueryService()
         {
             Folder folder = StandardDBQueries.GetFolder();
             this.urls = new UrlStore(folder.ShouldRandomize);
