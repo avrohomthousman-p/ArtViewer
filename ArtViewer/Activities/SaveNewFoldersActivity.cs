@@ -1,5 +1,6 @@
 using Android.Views;
 using AndroidX.AppCompat.App;
+using ArtViewer.Database;
 using Google.Android.Material.TextField;
 using System.Text;
 namespace ArtViewer.Activities;
@@ -110,7 +111,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
         bool isFolder = !this.checkBox.Checked;
         string folderName = (isFolder ? folderNameInput.Text : null);
         string username = usernameInput.Text;
-        string location = (galleryRadioBtn.Selected ? "gallery" : "collections");
+        ImageSource storedIn = (galleryRadioBtn.Selected ? ImageSource.GALLERY : ImageSource.COLLECTIONS);
 
 
 

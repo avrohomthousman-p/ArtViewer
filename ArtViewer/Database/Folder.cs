@@ -15,6 +15,7 @@ namespace ArtViewer.Database
         public int ID { get; private set; }
 
 
+        //Set to "All" if fetching all images in collection/gallery
         [SQLite.MaxLength(255)]
         public string FolderId { get; set; }
 
@@ -25,7 +26,7 @@ namespace ArtViewer.Database
 
         [SQLite.MaxLength(20)]
         [NotNull]
-        public string CollectionType { get; set; }
+        public StorageLocation StoredIn { get; set; }
 
 
         [SQLite.MaxLength(50)]
@@ -44,11 +45,11 @@ namespace ArtViewer.Database
         public Folder() { }
 
 
-        public Folder(string folderId, int totalImages, string collectionType, string username, bool shouldRandomize)
+        public Folder(string folderId, int totalImages, StorageLocation storedIn, string username, bool shouldRandomize)
         {
             FolderId = folderId;
             TotalImages = totalImages;
-            CollectionType = collectionType;
+            StoredIn = storedIn;
             Username = username;
             ShouldRandomize = shouldRandomize;
         }
@@ -57,7 +58,7 @@ namespace ArtViewer.Database
 
         public string BuildUrl(int queryLimit, int offset)
         {
-            return string.Format(BASE_URL, this.CollectionType, this.FolderId, NetworkUtils.GetAccessToken(), this.Username, queryLimit, offset);
+            return string.Format(BASE_URL, this.StoredIn.AsText(), this.FolderId, NetworkUtils.GetAccessToken(), this.Username, queryLimit, offset);
         }
     }
 }

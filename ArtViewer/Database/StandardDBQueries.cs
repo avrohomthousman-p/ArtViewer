@@ -24,7 +24,7 @@ namespace ArtViewer.Database
 
             if (count == 0)
             {
-                Folder sample = new Folder("89DB8DF6-9027-4CD2-965F-27CE55CCEFA9", 98, "gallery", "dissunder", true);
+                Folder sample = new Folder("89DB8DF6-9027-4CD2-965F-27CE55CCEFA9", 98, StorageLocation.GALLERY, "dissunder", true);
                 database.Insert(sample);
             }
         }
