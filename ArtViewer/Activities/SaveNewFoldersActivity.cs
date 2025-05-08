@@ -10,6 +10,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
     //Quick references to some of the views
     private CheckBox checkBox;
     private TextInputEditText folderNameInput;
+    private Switch randomizationSwitch;
 
 
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -25,6 +26,16 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
         this.checkBox = FindViewById<CheckBox>(Resource.Id.should_use_full_gallery);
         this.checkBox.CheckedChange += OnCheckboxToggled;
+
+
+        randomizationSwitch = FindViewById<Switch>(Resource.Id.randomization_switch);
+        randomizationSwitch.CheckedChange += (sender, e) =>
+        {
+            if (randomizationSwitch.Checked)
+                randomizationSwitch.Text = GetString(Resource.String.switch_text_when_on);
+            else
+                randomizationSwitch.Text = GetString(Resource.String.switch_text_when_off);
+        };
 
 
         Button submitBtn = FindViewById<Button>(Resource.Id.submit_btn);
