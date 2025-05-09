@@ -6,10 +6,10 @@ namespace ArtViewer.Activities;
 
 
 
-[Activity(Label = "@string/app_name")]
 /// <summary>
 /// Activity for displaying the images in a user's folder.
 /// </summary>
+[Activity(Label = "@string/app_name")]
 public class DisplayActivity : AppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)

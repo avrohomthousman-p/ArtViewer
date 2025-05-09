@@ -6,11 +6,11 @@ using ArtViewer.Network.Deviantart;
 namespace ArtViewer.Activities
 {
 
-    [Activity(Label = "@string/app_name", MainLauncher = true)]
     /// <summary>
     /// Lets the user decide what he/she wants to do. Browse saved folders, edit saved folders,
     /// or find new folders to save.
     /// </summary>
+    [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle? savedInstanceState)

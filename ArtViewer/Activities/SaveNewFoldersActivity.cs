@@ -6,6 +6,11 @@ using Google.Android.Material.TextField;
 using System.Text;
 namespace ArtViewer.Activities;
 
+
+
+/// <summary>
+/// Activity for saving new folders that you can then view in the app.
+/// </summary>
 [Activity(Label = "SaveNewFoldersActivity")]
 public class SaveNewFoldersActivity : AppCompatActivity
 {
