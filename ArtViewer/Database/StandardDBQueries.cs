@@ -44,5 +44,12 @@ namespace ArtViewer.Database
         {
             database.Insert(folder);
         }
+
+
+
+        public static IEnumerable<Folder> GetAllFolders()
+        {
+            return database.Table<Folder>();
+        }
     }
 }

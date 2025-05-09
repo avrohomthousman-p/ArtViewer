@@ -29,12 +29,11 @@ namespace ArtViewer.Activities
 
 
 
-            //TODO: setup button click listeners for all buttons
 
             FindViewById<Button>(Resource.Id.browse_my_folders_btn).Click +=
                 (sender, e) =>
                 {
-                    Intent intent = new Intent(this, typeof(DisplayActivity));
+                    Intent intent = new Intent(this, typeof(ManageFoldersActivity));
                     StartActivity(intent);
                 };
 
