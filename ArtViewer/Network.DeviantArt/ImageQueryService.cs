@@ -228,7 +228,6 @@ namespace ArtViewer.Network.Deviantart
         private void SaveQueryResults(JsonElement root)
         {
             var pics = root.GetProperty("results");
-            int imagesRecieved = pics.GetArrayLength();
             int imageCount = pics.GetArrayLength();
 
 

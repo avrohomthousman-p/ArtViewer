@@ -1,6 +1,7 @@
 using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
+using ArtViewer.Network.DeviantArt;
 using Google.Android.Material.TextField;
 using System.Text;
 namespace ArtViewer.Activities;
@@ -12,6 +13,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
     private CheckBox checkBox;
     private TextInputEditText folderNameInput;
     private Switch randomizationSwitch;
+    private Button submitBtn;
 
 
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -20,8 +22,40 @@ public class SaveNewFoldersActivity : AppCompatActivity
         SetContentView(Resource.Layout.activity_save_new_folders);
 
         SetupToolbar();
+        SetupAllEventHandlers();
+    }
 
 
+
+    public override bool OnOptionsItemSelected(IMenuItem item)
+    {
+        if (item.ItemId == Android.Resource.Id.Home)
+        {
+            OnBackPressed();
+            return true;
+        }
+        return base.OnOptionsItemSelected(item);
+    }
+
+
+
+
+    private void SetupToolbar()
+    {
+        AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+        SetSupportActionBar(toolbar);
+
+
+        // Enable back button
+        SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+        SupportActionBar.SetDisplayShowHomeEnabled(true);
+    }
+
+
+
+
+    private void SetupAllEventHandlers()
+    {
         folderNameInput = FindViewById<TextInputEditText>(Resource.Id.folder_name_input);
 
 
@@ -39,37 +73,15 @@ public class SaveNewFoldersActivity : AppCompatActivity
         };
 
 
-        Button submitBtn = FindViewById<Button>(Resource.Id.submit_btn);
-        submitBtn.Click += SaveFolder;
+        submitBtn = FindViewById<Button>(Resource.Id.submit_btn);
+        submitBtn.Click += HandleSubmit;
     }
 
 
 
-    public override bool OnOptionsItemSelected(IMenuItem item)
-    {
-        if (item.ItemId == Android.Resource.Id.Home)
-        {
-            OnBackPressed();
-            return true;
-        }
-        return base.OnOptionsItemSelected(item);
-    }
-
-
-
-    private void SetupToolbar()
-    {
-        AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
-        SetSupportActionBar(toolbar);
-
-
-        // Enable back button
-        SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-        SupportActionBar.SetDisplayShowHomeEnabled(true);
-    }
-
-
-
+    /// <summary>
+    /// Event Handler for when user toggles the checkbox for "use all images in gallery/collection"
+    /// </summary>
     private void OnCheckboxToggled(Object? sender, EventArgs e)
     {
         TextInputLayout inputContainer = FindViewById<TextInputLayout>(Resource.Id.folder_name_input_container);
@@ -89,8 +101,10 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
 
 
-    private void SaveFolder(object? sender, EventArgs e)
+    private async void HandleSubmit(object? sender, EventArgs e)
     {
+        this.DeactivateSubmitBtn();
+
         TextInputEditText usernameInput = FindViewById<TextInputEditText>(Resource.Id.username_input);
         RadioButton galleryRadioBtn = FindViewById<RadioButton>(Resource.Id.gallery_radio_btn);
         RadioButton collectionRadioBtn = FindViewById<RadioButton>(Resource.Id.collection_radio_btn);
@@ -103,20 +117,24 @@ public class SaveNewFoldersActivity : AppCompatActivity
             dialog.SetMessage(errorMsg);
             dialog.SetPositiveButton("Ok", (sender, e) => { });
             dialog.Show();
+            ActivateSubmitBtn();
             return;
         }
+
+
+        Toast.MakeText(this, "Your request is being processed", ToastLength.Short).Show();
 
 
         //Gather all the data
         bool isFolder = !this.checkBox.Checked;
         string folderName = (isFolder ? folderNameInput.Text : null);
         string username = usernameInput.Text;
-        ImageSource storedIn = (galleryRadioBtn.Selected ? ImageSource.GALLERY : ImageSource.COLLECTIONS);
+        StorageLocation location = (galleryRadioBtn.Selected ? StorageLocation.GALLERY : StorageLocation.COLLECTIONS);
+        bool shouldRandomize = randomizationSwitch.Checked;
 
 
-
-        //TODO: run API request
-        //TODO: run DB request
+        await SaveFolder(location, username, folderName, shouldRandomize, isFolder);
+        ActivateSubmitBtn();
     }
 
 
@@ -149,5 +167,44 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
         errorMsg = (thereIsAnError ? builder.ToString() : "");
         return thereIsAnError;
+    }
+
+
+
+    private void DeactivateSubmitBtn()
+    {
+        submitBtn.Enabled = false;
+        submitBtn.Text = GetString(Resource.String.submit_btn_text_inactive);
+    }
+
+
+
+    private void ActivateSubmitBtn()
+    {
+        submitBtn.Enabled = true;
+        submitBtn.Text = GetString(Resource.String.submit_btn_text_active);
+    }
+
+
+
+    private async Task SaveFolder(StorageLocation location, string username, string folderName, bool shouldRandomize, bool isFolder)
+    {
+        try
+        {
+            FolderQueryService service = new FolderQueryService();
+            await service.SaveFolder(location, username, folderName, shouldRandomize, !isFolder);
+        }
+        catch (FolderNotFoundException e)
+        {
+            RunOnUiThread(() =>
+            {
+                Toast.MakeText(this, e.Message, ToastLength.Long).Show();
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine(e.StackTrace);
+        }
     }
 }

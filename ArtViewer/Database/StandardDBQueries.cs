@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Android.Renderscripts;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,13 @@ namespace ArtViewer.Database
         {
             SeedDB();
             return database.Table<Folder>().First();
+        }
+
+
+
+        public static void CreateFolder(Folder folder)
+        {
+            database.Insert(folder);
         }
     }
 }

@@ -12,7 +12,8 @@
 	<string name="disabled_folder_input_label">Using full gallery/collection</string>
 	<string name="use_gallery_checkbox_label">Use Full Gallery/Collection Instead</string>
 	<string name="username_input_label">Enter Username of Owner:</string>
-	<string name="submit_btn_text">Save Folder</string>
+	<string name="submit_btn_text_active">Save Folder</string>
+	<string name="submit_btn_text_inactive">Processing...</string>
 
 	<string name="location_gallery">Gallery</string>
 	<string name="location_collection">Collection</string>
