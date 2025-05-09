@@ -122,9 +122,6 @@ public class SaveNewFoldersActivity : AppCompatActivity
         }
 
 
-        Toast.MakeText(this, "Your request is being processed", ToastLength.Short).Show();
-
-
         //Gather all the data
         bool isFolder = !this.checkBox.Checked;
         string folderName = (isFolder ? folderNameInput.Text : null);
@@ -194,17 +191,12 @@ public class SaveNewFoldersActivity : AppCompatActivity
             FolderQueryService service = new FolderQueryService();
             await service.SaveFolder(location, username, folderName, shouldRandomize, !isFolder);
         }
-        catch (FolderNotFoundException e)
+        catch (Exception e)
         {
             RunOnUiThread(() =>
             {
                 Toast.MakeText(this, e.Message, ToastLength.Long).Show();
             });
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ArtViewer.Network.DeviantArt
             }
             else
             {
-                folder = FindFolderInResults(foldersArray, folderName);
+                folder = FindFolderInResults(foldersArray, folderName, username);
             }
 
 
@@ -69,11 +69,11 @@ namespace ArtViewer.Network.DeviantArt
         private void CheckResponseForErrors(JsonElement root)
         {
             bool hasStatus = root.TryGetProperty("status", out JsonElement status);
-            if (hasStatus && status.ToString() == "error")
+            if (hasStatus && status.GetString() == "error")
             {
-                var errorMsg = root.GetProperty("message");
-                Console.WriteLine("Connection Failure: " + errorMsg.ToString());
-                throw new HttpRequestException("Connection Failure: " + errorMsg.ToString());
+                string errorMsg = root.GetProperty("error_description").GetString();
+                Console.WriteLine("Connection Failure: " + errorMsg);
+                throw new HttpRequestException("Connection Failure: " + errorMsg);
             }
         }
 
@@ -82,13 +82,16 @@ namespace ArtViewer.Network.DeviantArt
         /// <summary>
         /// Finds the folder in the results array with the correct name
         /// </summary>
-        private Folder FindFolderInResults(JsonElement foldersArray, string folderName)
+        private Folder FindFolderInResults(JsonElement foldersArray, string folderName, string username)
         {
             JsonElement currentItem;
             int folderCount = foldersArray.GetArrayLength();
-            
 
-            for(int i = 0; i < folderCount; i++)
+
+            CheckIfUserExists(foldersArray, username);
+
+
+            for (int i = 0; i < folderCount; i++)
             {
                 currentItem = foldersArray[i];
                 if (FoldersMatch(currentItem, folderName))
@@ -102,6 +105,36 @@ namespace ArtViewer.Network.DeviantArt
 
 
             throw new FolderNotFoundException($"Could not find folder named {folderName}");
+        }
+
+
+
+
+        /// <summary>
+        /// If you query the API for a username that does not exist, it returns a single default
+        /// folder that is empty and named featured. So if that is the response we got, we need
+        /// to throw a UserNotFoundException.
+        /// </summary>
+        /// <exception cref="UserNotFoundException"></exception>
+        private void CheckIfUserExists(JsonElement foldersArray, string username)
+        {
+            if(foldersArray.GetArrayLength() != 1)
+            {
+                return;
+            }
+
+            if (foldersArray[0].GetProperty("name").GetString() != "Featured")
+            {
+                return;
+            }
+
+            if(foldersArray[0].GetProperty("size").GetInt32() != 0)
+            {
+                return;
+            }
+
+
+            throw new UserNotFoundException($"Could not find any user named {username}");
         }
 
 
@@ -122,8 +155,16 @@ namespace ArtViewer.Network.DeviantArt
         /// </summary>
         private Folder CreateFolderForAllImages(JsonElement results)
         {
-            //TODO: run through all results and add the total images
-            return null;
+            int imageCount = 0;
+            for(int i = 0; i < results.GetArrayLength(); i++)
+            {
+                imageCount += results.GetProperty("size").GetInt32();
+            }
+
+            Folder folder = new Folder();
+            folder.FolderId = "All";
+            folder.TotalImages = imageCount;
+            return folder;
         }
     }
 
@@ -139,5 +180,19 @@ namespace ArtViewer.Network.DeviantArt
         public FolderNotFoundException(string message) : base(message) { }
 
         public FolderNotFoundException(string message, Exception inner) : base(message, inner) { }
+    }
+
+
+
+    /// <summary>
+    /// Thrown when the DeviantArt user does not exist
+    /// </summary>
+    internal class UserNotFoundException : Exception
+    {
+        public UserNotFoundException() { }
+
+        public UserNotFoundException(string message) : base(message) { }
+
+        public UserNotFoundException(string message, Exception inner) : base(message, inner) { }
     }
 }

@@ -137,7 +137,7 @@ namespace ArtViewer.Network.Deviantart
             var errorObject = new Dictionary<string, object>
             {
                 ["status"] = "error",
-                ["message"] = message
+                ["error_description"] = message
             };
 
             var json = JsonSerializer.Serialize(errorObject);
