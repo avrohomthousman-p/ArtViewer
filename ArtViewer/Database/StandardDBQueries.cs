@@ -48,6 +48,13 @@ namespace ArtViewer.Database
 
 
 
+        public static void DeleteFolder(Folder folder)
+        {
+            database.Delete(folder);
+        }
+
+
+
         public static IEnumerable<Folder> GetAllFolders()
         {
             return database.Table<Folder>();

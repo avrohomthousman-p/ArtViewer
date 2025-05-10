@@ -12,7 +12,7 @@ namespace ArtViewer.Database
     public class Folder
     {
         [PrimaryKey, AutoIncrement]
-        public int ID { get; private set; }
+        public int ID { get; set; }
 
 
         //Set to "All" if fetching all images in collection/gallery

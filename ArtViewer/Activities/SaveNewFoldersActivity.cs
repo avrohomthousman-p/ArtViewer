@@ -193,17 +193,39 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
     private async Task SaveFolder(StorageLocation location, string username, string actualFolderName, string customFolderLabel, bool shouldRandomize, bool isFolder)
     {
+        string message;
         try
         {
             FolderQueryService service = new FolderQueryService();
             await service.SaveFolder(location, username, actualFolderName, customFolderLabel, shouldRandomize, !isFolder);
+            message = "Folder saved successfully";
+        }
+        catch(SQLite.SQLiteException e)
+        {
+            Console.WriteLine(e.GetType() + " " + e.Message);
+            message = "Something went wrong. Unable to save folder";
         }
         catch (Exception e)
         {
-            RunOnUiThread(() =>
-            {
-                Toast.MakeText(this, e.Message, ToastLength.Long).Show();
-            });
+            Console.WriteLine(e.GetType() + " " + e.Message);
+            message = "Something went wrong. Unable to save folder";
         }
+
+
+        DisplayToastOnUiThread(message, ToastLength.Long);
+    }
+
+
+
+
+    /// <summary>
+    /// Convienent way to make a Toast popup excecute on the UI thread.
+    /// </summary>
+    private void DisplayToastOnUiThread(string message, ToastLength duration = ToastLength.Long)
+    {
+        RunOnUiThread(() =>
+        {
+            Toast.MakeText(this, message, duration).Show();
+        });
     }
 }
