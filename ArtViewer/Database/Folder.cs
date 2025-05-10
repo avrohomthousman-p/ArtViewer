@@ -20,6 +20,12 @@ namespace ArtViewer.Database
         public string FolderId { get; set; }
 
 
+        //Allow the user to name the folder withing this app
+        [SQLite.MaxLength(60)]
+        [NotNull]
+        public string CustomName { get; set; }
+
+
         [NotNull]
         public int TotalImages { get; set; } = Network.Deviantart.ImageQueryService.MAX_IMAGES;
 
@@ -45,9 +51,10 @@ namespace ArtViewer.Database
         public Folder() { }
 
 
-        public Folder(string folderId, int totalImages, StorageLocation storedIn, string username, bool shouldRandomize)
+        public Folder(string folderId, string customName, int totalImages, StorageLocation storedIn, string username, bool shouldRandomize)
         {
             FolderId = folderId;
+            CustomName = customName;
             TotalImages = totalImages;
             StoredIn = storedIn;
             Username = username;

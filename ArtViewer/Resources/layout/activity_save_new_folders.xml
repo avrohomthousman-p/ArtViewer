@@ -106,6 +106,27 @@
 
 
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/custom_folder_name_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/custom_folder_name_label"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/username_input_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/custom_folder_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
     <Switch
         android:id="@+id/randomization_switch"
         android:layout_width="wrap_content"
@@ -113,7 +134,7 @@
         android:text="@string/switch_text_when_on"
         android:checked="true"
         android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/username_input_container"
+        app:layout_constraintTop_toBottomOf="@+id/custom_folder_name_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

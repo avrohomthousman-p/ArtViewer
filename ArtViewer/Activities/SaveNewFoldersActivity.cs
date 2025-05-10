@@ -111,6 +111,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
         this.DeactivateSubmitBtn();
 
         TextInputEditText usernameInput = FindViewById<TextInputEditText>(Resource.Id.username_input);
+        TextInputEditText customFolderLabelInput = FindViewById<TextInputEditText>(Resource.Id.custom_folder_name_input);
         RadioButton galleryRadioBtn = FindViewById<RadioButton>(Resource.Id.gallery_radio_btn);
         RadioButton collectionRadioBtn = FindViewById<RadioButton>(Resource.Id.collection_radio_btn);
 
@@ -129,13 +130,14 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
         //Gather all the data
         bool isFolder = !this.checkBox.Checked;
-        string folderName = (isFolder ? folderNameInput.Text : null);
-        string username = usernameInput.Text;
+        string actualFolderName = (isFolder ? folderNameInput.Text.Trim() : null);
+        string username = usernameInput.Text.Trim();
+        string customFolderLabel = customFolderLabelInput.Text.Trim();
         StorageLocation location = (galleryRadioBtn.Selected ? StorageLocation.GALLERY : StorageLocation.COLLECTIONS);
         bool shouldRandomize = randomizationSwitch.Checked;
 
 
-        await SaveFolder(location, username, folderName, shouldRandomize, isFolder);
+        await SaveFolder(location, username, actualFolderName, customFolderLabel, shouldRandomize, isFolder);
         ActivateSubmitBtn();
     }
 
@@ -189,12 +191,12 @@ public class SaveNewFoldersActivity : AppCompatActivity
 
 
 
-    private async Task SaveFolder(StorageLocation location, string username, string folderName, bool shouldRandomize, bool isFolder)
+    private async Task SaveFolder(StorageLocation location, string username, string actualFolderName, string customFolderLabel, bool shouldRandomize, bool isFolder)
     {
         try
         {
             FolderQueryService service = new FolderQueryService();
-            await service.SaveFolder(location, username, folderName, shouldRandomize, !isFolder);
+            await service.SaveFolder(location, username, actualFolderName, customFolderLabel, shouldRandomize, !isFolder);
         }
         catch (Exception e)
         {

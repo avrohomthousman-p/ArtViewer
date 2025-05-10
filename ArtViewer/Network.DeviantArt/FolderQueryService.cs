@@ -19,7 +19,7 @@ namespace ArtViewer.Network.DeviantArt
         /// Fetches the desired folder from the DeviantArt API and saves it to the database for future use.
         /// </summary>
         /// <exception cref="FolderNotFoundException">If the folder could not be found</exception>
-        public async Task SaveFolder(StorageLocation location, string username, string folderName, bool shouldRandomize, bool allPics=false)
+        public async Task SaveFolder(StorageLocation location, string username, string actualFolderName, string customFolderLabel, bool shouldRandomize, bool allPics=false)
         {
             string url = BuildUrl(location, username);
             using JsonDocument response = await NetworkUtils.RunGetRequest(url);
@@ -37,14 +37,16 @@ namespace ArtViewer.Network.DeviantArt
             }
             else
             {
-                folder = FindFolderInResults(foldersArray, folderName, username);
+                folder = FindFolderInResults(foldersArray, actualFolderName, username);
             }
 
 
             folder.StoredIn = location;
             folder.Username = username;
             folder.ShouldRandomize = shouldRandomize;
-            
+            folder.CustomName = GetCustomLabel(location, username, actualFolderName, customFolderLabel, allPics);
+
+
             StandardDBQueries.CreateFolder(folder);
         }
 
@@ -144,7 +146,7 @@ namespace ArtViewer.Network.DeviantArt
         /// </summary>
         private static bool FoldersMatch(JsonElement folderFound, string desiredFolderName)
         {
-            return folderFound.GetProperty("name").ToString().ToLower() == desiredFolderName.Trim().ToLower();
+            return folderFound.GetProperty("name").ToString().ToLower() == desiredFolderName.ToLower();
         }
 
 
@@ -162,9 +164,35 @@ namespace ArtViewer.Network.DeviantArt
             }
 
             Folder folder = new Folder();
+            //TODO: save custom name
             folder.FolderId = "All";
             folder.TotalImages = imageCount;
             return folder;
+        }
+
+
+
+        /// <summary>
+        /// Gets the appropriate label to use for the saved folder. If the user entered one, use that
+        /// one. Otherwise use the actual folder name for folders, and the username for full gallery
+        /// or collection.
+        /// </summary>
+        private string GetCustomLabel(StorageLocation location, string username, string actualFolderName, string customLabel, bool allPics)
+        {
+            if(customLabel != null && customLabel != "")
+            {
+                return customLabel;
+            }
+
+
+            if (allPics)
+            {
+                return username + "'s " + location.AsText();
+            }
+            else
+            {
+                return actualFolderName;
+            }
         }
     }
 
