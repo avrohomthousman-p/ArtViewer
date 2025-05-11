@@ -53,7 +53,7 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
             //Set the event handler on click of the whole card
-            folderDisplayView.Click += (sender, e) => { /* TODO: start display activity */ };
+            folderDisplayView.Click += (sender, e) => { StartDisplayActivity(folder); };
 
 
             ImageButton deleteBtn = folderDisplayView.FindViewById<ImageButton>(Resource.Id.delete_btn);
@@ -66,6 +66,16 @@ public class ManageFoldersActivity : AppCompatActivity
 
             parentLayout.AddView(folderDisplayView);
         }
+    }
+
+
+
+
+    private void StartDisplayActivity(Folder folder)
+    {
+        Intent intent = new Intent(this, typeof(DisplayActivity));
+        intent.PutExtra(DisplayActivity.FOLDER_ID_KEY, folder.ID);
+        StartActivity(intent);
     }
 
 

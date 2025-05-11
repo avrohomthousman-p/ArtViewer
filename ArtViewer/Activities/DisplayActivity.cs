@@ -2,6 +2,7 @@
 using ArtViewer.Network.Deviantart;
 using AndroidX.AppCompat.App;
 using Android.Views;
+using ArtViewer.Database;
 namespace ArtViewer.Activities;
 
 
@@ -12,6 +13,9 @@ namespace ArtViewer.Activities;
 [Activity(Label = "@string/app_name")]
 public class DisplayActivity : AppCompatActivity
 {
+    public const string FOLDER_ID_KEY = "folderId";
+
+
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
@@ -37,9 +41,28 @@ public class DisplayActivity : AppCompatActivity
 
     private async Task SetupRecyclerView()
     {
-        //Use sample images until the API queries are set up
-        ImageQueryService imageFetcher = new ImageQueryService();
-        List<string> imageUrls = await imageFetcher.GetResults();
+        List<string> imageUrls;
+
+
+        try
+        {
+            int folderId = Intent.GetIntExtra(FOLDER_ID_KEY, -1);
+            if(folderId == -1)
+            {
+                throw new KeyNotFoundException("Could not find folder");
+            }
+            Folder folder = StandardDBQueries.GetFolderByID(folderId);
+
+            ImageQueryService imageFetcher = new ImageQueryService();
+            imageUrls = await imageFetcher.LoadAllImages(folder);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.GetType() + " " + e.Message);
+            Toast.MakeText(this, "Unable to load images", ToastLength.Short);
+            return;
+        }
+
 
 
         //Recycler view creation

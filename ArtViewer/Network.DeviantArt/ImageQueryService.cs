@@ -19,18 +19,17 @@ namespace ArtViewer.Network.Deviantart
 
 
         private UrlStore urls;
-        private readonly TaskCompletionSource queriesCompleted = new TaskCompletionSource();
 
 
 
-        
-        public ImageQueryService()
+        public async Task<List<string>> LoadAllImages(Folder folder)
         {
-            Folder folder = StandardDBQueries.GetFolder();
             this.urls = new UrlStore(folder.ShouldRandomize);
 
             List<QueryTarget> queries = PlanQueries(folder);
-            StartAllQueries(folder, queries);
+            await StartAllQueries(folder, queries);
+
+            return urls.GetUrls();
         }
 
 
@@ -167,9 +166,6 @@ namespace ArtViewer.Network.Deviantart
                     Console.WriteLine("Failed to retrieve images: " + e.Message);
                 }
             });
-
-
-            this.queriesCompleted.SetResult();
         }
 
 
@@ -249,20 +245,6 @@ namespace ArtViewer.Network.Deviantart
                     }
                 }
             }
-        }
-
-
-
-        /// <summary>
-        /// Compiles the results from the threads into a single list of random order.
-        /// 
-        /// Note: this function will block until all the data is loaded.
-        /// </summary>
-        public async Task<List<string>> GetResults()
-        {
-            await queriesCompleted.Task;
-
-            return urls.GetUrls();
         }
     }
 }
