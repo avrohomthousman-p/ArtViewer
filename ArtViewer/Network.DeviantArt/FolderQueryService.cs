@@ -155,17 +155,16 @@ namespace ArtViewer.Network.DeviantArt
         /// <summary>
         /// Creates a folder for all the images in this users collection/gallery
         /// </summary>
-        private Folder CreateFolderForAllImages(JsonElement results)
+        private Folder CreateFolderForAllImages(JsonElement foldersArray)
         {
             int imageCount = 0;
-            for(int i = 0; i < results.GetArrayLength(); i++)
+            for(int i = 0; i < foldersArray.GetArrayLength(); i++)
             {
-                imageCount += results.GetProperty("size").GetInt32();
+                imageCount += foldersArray[i].GetProperty("size").GetInt32();
             }
 
             Folder folder = new Folder();
-            //TODO: save custom name
-            folder.FolderId = "All";
+            folder.FolderId = "all";
             folder.TotalImages = imageCount;
             return folder;
         }

@@ -163,7 +163,7 @@ namespace ArtViewer.Network.Deviantart
                 catch (Exception e)
                 {
                     //We don't want the whole app to crash if some of the queries fail
-                    Console.WriteLine("Failed to retrieve images: " + e.Message);
+                    Console.WriteLine(e.GetType() + " " + e.Message);
                 }
             });
         }
@@ -206,9 +206,9 @@ namespace ArtViewer.Network.Deviantart
 
             //Sometimes the API will use the key status instead of error
             bool hasStatus = root.TryGetProperty("status", out JsonElement status);
-            if (hasStatus && status.ToString() == "error")
+            if (hasStatus && status.GetString() == "error")
             {
-                var errorMsg = root.GetProperty("message");
+                var errorMsg = root.GetProperty("error_description");
                 Console.WriteLine("Connection Failure: " + errorMsg.ToString());
                 throw new HttpRequestException("Connection Failure: " + errorMsg.ToString());
             }

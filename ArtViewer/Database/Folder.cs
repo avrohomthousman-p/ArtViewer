@@ -15,7 +15,7 @@ namespace ArtViewer.Database
         public int ID { get; set; }
 
 
-        //Set to "All" if fetching all images in collection/gallery
+        //Set to "all" if fetching all images in collection/gallery
         [SQLite.MaxLength(255)]
         public string FolderId { get; set; }
 
