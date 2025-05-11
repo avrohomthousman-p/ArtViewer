@@ -24,6 +24,11 @@ public class ManageFoldersActivity : AppCompatActivity
         SetSupportActionBar(toolbar);
 
         PopulateScrollView();
+
+
+        // Enable back button
+        SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+        SupportActionBar.SetDisplayShowHomeEnabled(true);
     }
 
 
@@ -47,7 +52,8 @@ public class ManageFoldersActivity : AppCompatActivity
             folderName.Text = folder.CustomName;
 
 
-            //TODO: set the event handler on click of the whole card
+            //Set the event handler on click of the whole card
+            folderDisplayView.Click += (sender, e) => { /* TODO: start display activity */ };
 
 
             ImageButton deleteBtn = folderDisplayView.FindViewById<ImageButton>(Resource.Id.delete_btn);
@@ -211,5 +217,17 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
         popup.Dismiss();
+    }
+
+
+
+    public override bool OnOptionsItemSelected(IMenuItem item)
+    {
+        if (item.ItemId == Android.Resource.Id.Home)
+        {
+            OnBackPressed();
+            return true;
+        }
+        return base.OnOptionsItemSelected(item);
     }
 }
