@@ -133,7 +133,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
         string actualFolderName = (isFolder ? folderNameInput.Text.Trim() : null);
         string username = usernameInput.Text.Trim();
         string customFolderLabel = customFolderLabelInput.Text.Trim();
-        StorageLocation location = (galleryRadioBtn.Selected ? StorageLocation.GALLERY : StorageLocation.COLLECTIONS);
+        StorageLocation location = (galleryRadioBtn.Checked ? StorageLocation.GALLERY : StorageLocation.COLLECTIONS);
         bool shouldRandomize = randomizationSwitch.Checked;
 
 
