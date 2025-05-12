@@ -48,8 +48,8 @@ public class ManageFoldersActivity : AppCompatActivity
             View folderDisplayView = inflater.Inflate(Resource.Layout.single_folder_display, parentLayout, false);
 
 
-            TextView folderName = folderDisplayView.FindViewById<TextView>(Resource.Id.folder_name);
-            folderName.Text = folder.CustomName;
+            TextView folderNameView = folderDisplayView.FindViewById<TextView>(Resource.Id.folder_name);
+            folderNameView.Text = folder.CustomName;
 
 
             //Set the event handler on click of the whole card
@@ -61,7 +61,7 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
             ImageButton editBtn = folderDisplayView.FindViewById<ImageButton>(Resource.Id.edit_btn);
-            editBtn.Click += (sender, e) => ShowFolderRenameDialog(folder, folderName);
+            editBtn.Click += (sender, e) => ShowFolderRenameDialog(folderNameView, folder);
 
 
             parentLayout.AddView(folderDisplayView);
@@ -98,7 +98,6 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
 
-
     private void DeleteFolder(Folder folder, View targetView, LinearLayout parentLayout)
     {
         //If this function slows things down, move it to a background thread
@@ -127,106 +126,16 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
 
-    /// <summary>
-    /// Displays a popup with an EditText allowing the user to enter a new name to use as the folder label.
-    /// </summary>
-    /// <param name="originalFolderNameDisplay">The TextView from the activity displaying the (old) folder name</param>
-    private void ShowFolderRenameDialog(Folder folder, TextView originalFolderNameDisplay)
-    {
-        LinearLayout inputField = BuildTextEntryForEditPopup(folder);
-        AndroidX.AppCompat.App.AlertDialog.Builder builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
-        builder.SetTitle("Edit Folder Label");
-        builder.SetView(inputField);
-        builder.SetNegativeButton("Cancel", (sender, e) => { });
-
-        //Use null to avoid the default event handler (which closes on click)
-        builder.SetPositiveButton("Save", (IDialogInterfaceOnClickListener)null);
-
-
-        AndroidX.AppCompat.App.AlertDialog popup = builder.Create();
-        popup.Show();
-
-
-        //Provide a custom click handler that only closes if the data is valid
-        var saveBtn = popup.GetButton((int)DialogButtonType.Positive);
-        saveBtn.Click += (sender, e) => { ApplyNewFolderName(folder, originalFolderNameDisplay, popup, inputField); };
-    }
-
-
 
     /// <summary>
-    /// Builds the TextView for the popup that changes the folder name
+    /// Displays a dialog box for editing the folder name
     /// </summary>
-    private LinearLayout BuildTextEntryForEditPopup(Folder folder)
+    /// <param name="originalFolderNameTextView">The TextView in the activity for this folder</param>
+    /// <param name="folder">The instance of the folder being edited</param>
+    private void ShowFolderRenameDialog(TextView originalFolderNameTextView, Folder folder)
     {
-        EditText input = new EditText(this)
-        {
-            Text = folder.CustomName
-        };
-
-        input.SetBackgroundResource(Resource.Drawable.rounded_edit_text);
-        input.SetPadding(15, 20, 0, 20);
-        input.SetSingleLine(true);
-
-
-        //Setup Margins
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent
-        );
-
-        layoutParams.SetMargins(20, 0, 20, 0);
-        input.LayoutParameters = layoutParams;
-
-
-        //For the margins to work, the input needs to be inside a layout
-        LinearLayout container = new LinearLayout(this)
-        {
-            Orientation = Orientation.Horizontal
-        };
-
-        container.AddView(input);
-
-        return container;
-    }
-
-
-
-    /// <summary>
-    /// If the user provided name is valid, updates the folder in the database and closes the popup.
-    /// </summary>
-    /// <param name="folder">The folder whose label is being edited</param>
-    /// <param name="originalFolderNameDisplay">The TextView from the activity displaying the (old) folder name</param>
-    /// <param name="popup">A reference to the popup itself</param>
-    /// <param name="inputContainer">A reference to the layout that the popup's TextView input field is in</param>
-    private void ApplyNewFolderName(Folder folder, TextView originalFolderNameDisplay, AndroidX.AppCompat.App.AlertDialog popup, LinearLayout inputContainer)
-    {
-        View rootView = FindViewById(Android.Resource.Id.Content);
-        TextView inputFeild = (TextView)inputContainer.GetChildAt(0);
-        string newName = inputFeild.Text;
-
-        if (newName == null || newName.Length <= 3)
-        {
-            Snackbar.Make(rootView, "Must provide a folder name at least 4 letters long", Snackbar.LengthShort).Show();
-            return;
-        }
-
-
-        try
-        {
-            folder.CustomName = newName;
-            StandardDBQueries.UpdateFolder(folder);
-            originalFolderNameDisplay.Text = newName;
-        }
-        catch(Exception e)
-        {
-            Console.WriteLine(e.GetType() + " " + e.Message);
-            Snackbar.Make(rootView, "Something went wrong. Could not save your change", Snackbar.LengthShort).Show();
-            popup.Dismiss();
-        }
-
-
-        popup.Dismiss();
+        EditFolderDialogBox dialogBox = new EditFolderDialogBox(this, originalFolderNameTextView, folder);
+        dialogBox.ShowDialogBox();
     }
 
 
