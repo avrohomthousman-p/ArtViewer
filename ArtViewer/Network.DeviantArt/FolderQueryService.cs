@@ -19,7 +19,7 @@ namespace ArtViewer.Network.DeviantArt
         /// Fetches the desired folder from the DeviantArt API and saves it to the database for future use.
         /// </summary>
         /// <exception cref="FolderNotFoundException">If the folder could not be found</exception>
-        public async Task SaveFolder(StorageLocation location, string username, string actualFolderName, string customFolderLabel, bool shouldRandomize, bool allPics=false)
+        public async Task SaveFolder(StorageLocation location, string username, string actualFolderName, bool shouldRandomize, bool allPics=false)
         {
             string url = BuildUrl(location, username);
             using JsonDocument response = await NetworkUtils.RunGetRequest(url);
@@ -44,7 +44,7 @@ namespace ArtViewer.Network.DeviantArt
             folder.StoredIn = location;
             folder.Username = username;
             folder.ShouldRandomize = shouldRandomize;
-            folder.CustomName = GetCustomLabel(location, username, actualFolderName, customFolderLabel, allPics);
+            folder.CustomName = GetDefaultFolderLabel(location, username, actualFolderName, allPics);
 
 
             StandardDBQueries.CreateFolder(folder);
@@ -172,18 +172,11 @@ namespace ArtViewer.Network.DeviantArt
 
 
         /// <summary>
-        /// Gets the appropriate label to use for the saved folder. If the user entered one, use that
-        /// one. Otherwise use the actual folder name for folders, and the username for full gallery
-        /// or collection.
+        /// Gets a default label to use for the saved folder. Uses the actual folder name for folders, 
+        /// and the username for full gallery or collection.
         /// </summary>
-        private string GetCustomLabel(StorageLocation location, string username, string actualFolderName, string customLabel, bool allPics)
+        private string GetDefaultFolderLabel(StorageLocation location, string username, string actualFolderName, bool allPics)
         {
-            if(customLabel != null && customLabel != "")
-            {
-                return customLabel;
-            }
-
-
             if (allPics)
             {
                 return username + "'s " + location.AsText();
