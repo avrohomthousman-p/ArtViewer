@@ -62,6 +62,7 @@ public class SearchNewFoldersActivity : AppCompatActivity
     private void SetupAllEventHandlers()
     {
         this.checkBox = FindViewById<CheckBox>(Resource.Id.should_use_full_gallery);
+        //TODO: add click listener. The randomization switch should only be visible when this is checked
 
 
         randomizationSwitch = FindViewById<Switch>(Resource.Id.randomization_switch);
@@ -112,6 +113,8 @@ public class SearchNewFoldersActivity : AppCompatActivity
         {
             //Start an activity where the user can pick the folder(s) they want
             Intent intent = new Intent(this, typeof(PickDesiredFoldersActivity));
+            intent.PutExtra(PickDesiredFoldersActivity.USERNAME_KEY, username);
+            intent.PutExtra(PickDesiredFoldersActivity.LOCATION_KEY, (int)location);
             StartActivity(intent);
         }
         else
