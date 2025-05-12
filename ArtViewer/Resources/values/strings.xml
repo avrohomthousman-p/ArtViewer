@@ -18,4 +18,6 @@
 	<string name="location_collection">Collection</string>
 	<string name="switch_text_when_on">Show images in RANDOM order</string>
 	<string name="switch_text_when_off">Show images in CORRECT order</string>
+
+	<string name="save_btn_text">Save</string>
 </resources>
