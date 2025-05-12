@@ -1,3 +1,4 @@
+using Android.Content;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
@@ -16,7 +17,6 @@ public class SearchNewFoldersActivity : AppCompatActivity
 {
     //Quick references to some of the views
     private CheckBox checkBox;
-    private TextInputEditText folderNameInput;
     private Switch randomizationSwitch;
     private Button submitBtn;
 
@@ -61,11 +61,7 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
     private void SetupAllEventHandlers()
     {
-        folderNameInput = FindViewById<TextInputEditText>(Resource.Id.folder_name_input);
-
-
         this.checkBox = FindViewById<CheckBox>(Resource.Id.should_use_full_gallery);
-        this.checkBox.CheckedChange += OnCheckboxToggled;
 
 
         randomizationSwitch = FindViewById<Switch>(Resource.Id.randomization_switch);
@@ -84,34 +80,11 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
 
 
-    /// <summary>
-    /// Event Handler for when user toggles the checkbox for "use all images in gallery/collection"
-    /// </summary>
-    private void OnCheckboxToggled(Object? sender, EventArgs e)
-    {
-        TextInputLayout inputContainer = FindViewById<TextInputLayout>(Resource.Id.folder_name_input_container);
-
-        if (this.checkBox.Checked)
-        {
-            folderNameInput.Enabled = false;
-            folderNameInput.Text = "";
-            inputContainer.Hint = GetString(Resource.String.disabled_folder_input_label);
-        }
-        else
-        {
-            folderNameInput.Enabled = true;
-            inputContainer.Hint = GetString(Resource.String.folder_input_label);
-        }
-    }
-
-
-
     private async void HandleSubmit(object? sender, EventArgs e)
     {
         this.DeactivateSubmitBtn();
 
         TextInputEditText usernameInput = FindViewById<TextInputEditText>(Resource.Id.username_input);
-        TextInputEditText customFolderLabelInput = FindViewById<TextInputEditText>(Resource.Id.custom_folder_name_input);
         RadioButton galleryRadioBtn = FindViewById<RadioButton>(Resource.Id.gallery_radio_btn);
         RadioButton collectionRadioBtn = FindViewById<RadioButton>(Resource.Id.collection_radio_btn);
 
@@ -130,14 +103,22 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
         //Gather all the data
         bool isFolder = !this.checkBox.Checked;
-        string actualFolderName = (isFolder ? folderNameInput.Text.Trim() : null);
         string username = usernameInput.Text.Trim();
-        string customFolderLabel = customFolderLabelInput.Text.Trim();
         StorageLocation location = (galleryRadioBtn.Checked ? StorageLocation.GALLERY : StorageLocation.COLLECTIONS);
         bool shouldRandomize = randomizationSwitch.Checked;
 
 
-        await SaveFolder(location, username, actualFolderName, customFolderLabel, shouldRandomize, isFolder);
+        if (isFolder)
+        {
+            //Start an activity where the user can pick the folder(s) they want
+            Intent intent = new Intent(this, typeof(PickDesiredFoldersActivity));
+            StartActivity(intent);
+        }
+        else
+        {
+            await SaveFullGalleryOrCollection(location, username, shouldRandomize);
+        }
+        
         ActivateSubmitBtn();
     }
 
@@ -147,12 +128,6 @@ public class SearchNewFoldersActivity : AppCompatActivity
     {
         StringBuilder builder = new StringBuilder("Please make sure you filled everything out.\n");
         bool thereIsAnError = false;
-
-        if((folderNameInput.Text == null || folderNameInput.Text == "") && !this.checkBox.Checked)
-        {
-            builder.Append("-Provide a folder name or check the box for \"use full gallery/collection\"\n");
-            thereIsAnError = true;
-        }
 
 
         if(usernameInput.Text == null || usernameInput.Text == "")
@@ -191,13 +166,16 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
 
 
-    private async Task SaveFolder(StorageLocation location, string username, string actualFolderName, string customFolderLabel, bool shouldRandomize, bool isFolder)
+    /// <summary>
+    /// Saves a full gallery or collection to the database
+    /// </summary>
+    private async Task SaveFullGalleryOrCollection(StorageLocation location, string username, bool shouldRandomize)
     {
         string message;
         try
         {
             FolderQueryService service = new FolderQueryService();
-            await service.SaveFolder(location, username, actualFolderName, customFolderLabel, shouldRandomize, !isFolder);
+            await service.SaveFolder(location, username, null, shouldRandomize, true);
             message = "Folder saved successfully";
         }
         catch(SQLite.SQLiteException e)

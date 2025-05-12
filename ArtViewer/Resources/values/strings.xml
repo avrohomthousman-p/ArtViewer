@@ -8,10 +8,8 @@
 
 	<string name="save_new_folders_intro_text">Describe the folder you are looking for</string>
 	<string name="folder_input_label">Enter Folder Name: </string>
-	<string name="disabled_folder_input_label">Using full gallery/collection</string>
-	<string name="use_gallery_checkbox_label">Use Full Gallery/Collection Instead</string>
+	<string name="use_gallery_checkbox_label">Save the Full Gallery/Collection</string>
 	<string name="username_input_label">Enter Username of Owner:</string>
-	<string name="custom_folder_name_label">Optional - label this folder (won’t affect DeviantArt)</string>
 	<string name="submit_btn_text_active">Save Folder</string>
 	<string name="submit_btn_text_inactive">Processing...</string>
 
