@@ -41,7 +41,7 @@ namespace ArtViewer.Activities
             FindViewById<Button>(Resource.Id.add_new_folders_btn).Click +=
                 (sender, e) =>
                 {
-                    Intent intent = new Intent(this, typeof(SaveNewFoldersActivity));
+                    Intent intent = new Intent(this, typeof(SearchNewFoldersActivity));
                     StartActivity(intent);
                 };
         }

@@ -9,10 +9,10 @@ namespace ArtViewer.Activities;
 
 
 /// <summary>
-/// Activity for saving new folders that you can then view in the app.
+/// Activity for searching for new folders that you can then view in the app.
 /// </summary>
-[Activity(Label = "SaveNewFoldersActivity")]
-public class SaveNewFoldersActivity : AppCompatActivity
+[Activity(Label = "SearchNewFoldersActivity")]
+public class SearchNewFoldersActivity : AppCompatActivity
 {
     //Quick references to some of the views
     private CheckBox checkBox;
@@ -24,7 +24,7 @@ public class SaveNewFoldersActivity : AppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(Resource.Layout.activity_save_new_folders);
+        SetContentView(Resource.Layout.activity_search_new_folders);
 
         SetupToolbar();
         SetupAllEventHandlers();
