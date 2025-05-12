@@ -37,16 +37,38 @@ namespace ArtViewer.Network.DeviantArt
 
         /// <summary>
         /// Queries the API for all folders owned by the specified user and returns them as an array
-        /// of UNSAVED folder instances.
+        /// of UNSAVED folder instances. 
+        /// 
+        /// Note: the actual name of the folder is put inside the CustomName field.
         /// </summary>
         /// <param name="location">The location of the folders, gallery or collection</param>
         /// <param name="username">The username of the DeviantArt user who owns the folder</param>
         /// <returns>An array of unsaved folder instances containing each folder the user has</returns>
-        public async Task GetAllFoldersOwnedByUser(StorageLocation location, string username)
+        public async Task<Folder[]> GetAllFoldersOwnedByUser(StorageLocation location, string username)
         {
             JsonElement foldersArray = await FetchAllUsersFolders(username, location);
+            int folderCount = foldersArray.GetArrayLength();
 
-            //TODO: convert the JSON data to an array of folders and return it
+
+            List<Folder> folders = new List<Folder>();
+            Folder currentFolder;
+            JsonElement currentJsonItem;
+            for(int i = 0; i < folderCount; i++)
+            {
+                currentJsonItem = foldersArray[i];
+
+                currentFolder = new Folder();
+                currentFolder.FolderId = currentJsonItem.GetProperty("folderid").GetString();
+                currentFolder.TotalImages = currentJsonItem.GetProperty("size").GetInt32();
+                currentFolder.Username = username;
+                currentFolder.StoredIn = location;
+                currentFolder.CustomName = currentJsonItem.GetProperty("name").GetString();
+
+                folders.Add(currentFolder);
+            }
+
+
+            return folders.ToArray();
         }
 
 
