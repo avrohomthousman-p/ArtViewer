@@ -17,7 +17,7 @@ public class ManageFoldersActivity : AppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(Resource.Layout.activity_manage_folders);
+        SetContentView(Resource.Layout.display_item_in_scrollview);
 
 
         AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
