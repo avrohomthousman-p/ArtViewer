@@ -175,7 +175,7 @@ public class SearchNewFoldersActivity : AppCompatActivity
         try
         {
             FolderQueryService service = new FolderQueryService();
-            await service.SaveFolder(location, username, null, shouldRandomize, true);
+            await service.SaveFullGalleryOrCollection(location, username, shouldRandomize);
             message = "Folder saved successfully";
         }
         catch(SQLite.SQLiteException e)
