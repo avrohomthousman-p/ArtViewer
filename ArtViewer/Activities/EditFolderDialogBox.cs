@@ -25,6 +25,25 @@ namespace ArtViewer.Activities
 
 
 
+        protected override View BuildMainContents()
+        {
+            View view = base.BuildMainContents();
+
+
+
+            this.randomizationSwitch.Checked = this.folder.ShouldRandomize;
+            if (randomizationSwitch.Checked)
+                randomizationSwitch.Text = this.activity.GetString(Resource.String.switch_text_when_on);
+            else
+                randomizationSwitch.Text = this.activity.GetString(Resource.String.switch_text_when_off);
+
+
+
+            return view;
+        }
+
+
+
         protected override void SetupEventHandlers(AndroidX.AppCompat.App.AlertDialog dialogBox)
         {
             base.SetupEventHandlers(dialogBox);

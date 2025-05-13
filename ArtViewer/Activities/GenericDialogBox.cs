@@ -46,6 +46,9 @@ namespace ArtViewer.Activities
             this.saveBtn = parentView.FindViewById<Button>(Resource.Id.save_btn);
             this.randomizationSwitch = parentView.FindViewById<Switch>(Resource.Id.randomization_switch);
 
+
+            this.folderLabelInputField.Text = folder.CustomName;
+
             return parentView;
         }
 

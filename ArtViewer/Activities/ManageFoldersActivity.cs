@@ -134,7 +134,7 @@ public class ManageFoldersActivity : AppCompatActivity
     /// <param name="folder">The instance of the folder being edited</param>
     private void ShowFolderRenameDialog(TextView originalFolderNameTextView, Folder folder)
     {
-        EditFolderDialogBox dialogBox = new EditFolderDialogBox(this, originalFolderNameTextView, folder);
+        EditFolderDialogBox dialogBox = new EditFolderDialogBox(this, folder, originalFolderNameTextView);
         dialogBox.ShowDialogBox();
     }
 
