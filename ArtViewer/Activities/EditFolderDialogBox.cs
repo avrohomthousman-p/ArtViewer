@@ -66,7 +66,7 @@ namespace ArtViewer.Activities
 
 
 
-            if (originalName == newName)
+            if (!this.ChangesMade())
             {
                 dialogBox.Dismiss();
                 return;
@@ -79,7 +79,7 @@ namespace ArtViewer.Activities
 
 
 
-            bool success = ApplyNewFolderName(newName);
+            bool success = SaveChangesToFolder(newName);
             if (success)
             {
                 this.originalFolderNameTextView.Text = newName;
@@ -94,16 +94,27 @@ namespace ArtViewer.Activities
 
 
 
+        public override bool ChangesMade()
+        {
+            string originalName = this.originalFolderNameTextView.Text;
+            string newName = this.folderLabelInputField.Text;
+
+            return base.ChangesMade() || originalName != newName;
+        }
+
+
+
         /// <summary>
-        /// Updates the folder label in the database.
+        /// Updates the folder label and randomization setting in the database.
         /// </summary>
         /// <returns>True if the folder was updated successfully and false otherwise</returns>
-        protected bool ApplyNewFolderName(string newName)
+        protected bool SaveChangesToFolder(string newName)
         {
             try
             {
                 this.folder.CustomName = newName;
-                StandardDBQueries.UpdateFolder(folder);
+                this.folder.ShouldRandomize = this.randomizationSwitch.Checked;
+                StandardDBQueries.UpdateFolder(this.folder);
             }
             catch (Exception e)
             {
