@@ -186,7 +186,7 @@ namespace ArtViewer.Network.Deviantart
             CheckQueryResponseForErrors(root);
 
 
-            SaveQueryResults(root);
+            SaveQueryResults(root, queryData.offset);
         }
 
 
@@ -220,8 +220,9 @@ namespace ArtViewer.Network.Deviantart
         /// <summary>
         /// Extracts the image urls from the returned data and saves them to the urls list.
         /// </summary>
-        /// <param name="root">the root element of the API response</param>
-        private void SaveQueryResults(JsonElement root)
+        /// <param name="root">The root element of the API response</param>
+        /// <param name="offset">The offset this query used</param>
+        private void SaveQueryResults(JsonElement root, int offset)
         {
             var pics = root.GetProperty("results");
             int imageCount = pics.GetArrayLength();
@@ -241,7 +242,7 @@ namespace ArtViewer.Network.Deviantart
                 {
                     if (content.TryGetProperty("src", out JsonElement src))
                     {
-                        urls.Add(src.ToString());
+                        urls.Add(src.ToString(), imageIndex + offset);
                     }
                 }
             }
