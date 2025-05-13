@@ -27,7 +27,7 @@ namespace ArtViewer.Network.DeviantArt
             folder.StoredIn = location;
             folder.Username = username;
             folder.ShouldRandomize = shouldRandomize;
-            folder.CustomName = GetDefaultFolderLabel(location, username, null, true);
+            folder.CustomName = username + "'s " + location.AsText();
 
 
             StandardDBQueries.CreateFolder(folder);
@@ -135,25 +135,6 @@ namespace ArtViewer.Network.DeviantArt
             folder.FolderId = "all";
             folder.TotalImages = imageCount;
             return folder;
-        }
-
-
-
-
-        /// <summary>
-        /// Gets a default label to use for the saved folder. Uses the actual folder name for folders, 
-        /// and the username for full gallery or collection.
-        /// </summary>
-        private string GetDefaultFolderLabel(StorageLocation location, string username, string actualFolderName, bool allPics)
-        {
-            if (allPics)
-            {
-                return username + "'s " + location.AsText();
-            }
-            else
-            {
-                return actualFolderName;
-            }
         }
     }
 }
