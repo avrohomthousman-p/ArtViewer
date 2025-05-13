@@ -6,10 +6,11 @@ never see any of the rest of the collection unless you spend a long time scrolli
 Often the browser will start to slow down as more and more images are loaded into the DOM. As a result of this, you tend to become far
 more familiar with the images at the beginning of the collection, then those at the end. This app fixes that issue by displaying all
 images from a collection, but in a random order. The likelihood of seeing a given picture will now be equal across all pictures in the
-collection.
+collection, and you get to see everything your favorite artist has.
 
-It should be noted that currently this app is hardcoded to only view the collection of one very specific user. Hopefully this will be
-changed at some point in the future.
+The app lets you save individual folders you want to view, as well as letting you save someone's entire gallery or collection. Once you 
+have saved a folder, you can access it anytime.
+
 
 
 # Installation
@@ -36,3 +37,15 @@ Do not have trailing or leading whitespace on any line or at the beginning or en
 3) You will need to install the scripting software that is required by the above mentioned script. To do this, navigate to the
 project root directory and run this command in a terminal
 `dotnet tool restore`
+
+
+#Screenshots
+<img src="https://github.com/user-attachments/assets/a5f8bafe-b61c-41aa-89de-6be653371bff" width="300" />
+<img src="https://github.com/user-attachments/assets/692124d7-be9f-4f33-8ec4-cc0f3433904b" width="300" />
+<img src="https://github.com/user-attachments/assets/bf69053f-061f-4cc6-8030-ae9b85db452d" width="300" />
+<img src="https://github.com/user-attachments/assets/7e9b8cd0-3e84-41b5-9fd1-e53a17cad938" width="300" />
+<img src="https://github.com/user-attachments/assets/35a3b107-94a5-4850-bae3-7274ccea74ee" width="300" />
+<img src="https://github.com/user-attachments/assets/fcf76efe-8c6b-4358-9126-181c795927b2" width="300" />
+<img src="https://github.com/user-attachments/assets/248508b1-7570-473b-a747-dd77cbdc5535" width="300" />
+
+
