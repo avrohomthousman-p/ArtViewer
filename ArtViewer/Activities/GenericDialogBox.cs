@@ -7,6 +7,9 @@ namespace ArtViewer.Activities
 {
     /// <summary>
     /// Object that builds a AlertDialog for use in saving or editing folders.
+    /// 
+    /// Warning, do not use one instance of this class to make multiple dialog boxes.
+    /// This might trigger unexpected behaviour.
     /// </summary>
     public class GenericDialogBox
     {
@@ -17,6 +20,7 @@ namespace ArtViewer.Activities
         protected Button cancelBtn;
         protected Button saveBtn;
         protected Switch randomizationSwitch;
+        protected bool changesMade = false;
 
 
         public virtual string Title { get; set; }
@@ -82,6 +86,7 @@ namespace ArtViewer.Activities
         {
             this.randomizationSwitch.CheckedChange += (sender, e) =>
             {
+                this.changesMade = true;
                 if (randomizationSwitch.Checked)
                     randomizationSwitch.Text = this.activity.GetString(Resource.String.switch_text_when_on);
                 else
@@ -91,6 +96,16 @@ namespace ArtViewer.Activities
 
 
             this.cancelBtn.Click += (sender, e) => { dialogBox.Dismiss(); };
+        }
+
+
+
+        /// <summary>
+        /// Checks if there were any changes made in any of the input feilds on the popup.
+        /// </summary>
+        public virtual bool ChangesMade()
+        {
+            return this.changesMade;
         }
     }
 }
