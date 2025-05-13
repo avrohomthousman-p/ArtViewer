@@ -45,7 +45,7 @@ public class ManageFoldersActivity : AppCompatActivity
 
         foreach (Folder folder in folders)
         {
-            View folderDisplayView = inflater.Inflate(Resource.Layout.single_folder_display, parentLayout, false);
+            View folderDisplayView = inflater.Inflate(Resource.Layout.display_db_folder, parentLayout, false);
 
 
             TextView folderNameView = folderDisplayView.FindViewById<TextView>(Resource.Id.folder_name);
