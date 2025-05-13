@@ -149,7 +149,10 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
 
-        //TODO: add click handler
+        view.Click += (sender, e) => {
+            CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder);
+            boxBuilder.ShowDialogBox();
+        };
 
         return view;
     }
