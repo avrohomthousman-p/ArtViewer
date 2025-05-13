@@ -62,11 +62,11 @@ public class SearchNewFoldersActivity : AppCompatActivity
     private void SetupAllEventHandlers()
     {
         this.checkBox = FindViewById<CheckBox>(Resource.Id.should_use_full_gallery);
-        //TODO: add click listener. The randomization switch should only be visible when this is checked
+        this.checkBox.CheckedChange += OnCheckboxToggled;
 
 
-        randomizationSwitch = FindViewById<Switch>(Resource.Id.randomization_switch);
-        randomizationSwitch.CheckedChange += (sender, e) =>
+        this.randomizationSwitch = FindViewById<Switch>(Resource.Id.randomization_switch);
+        this.randomizationSwitch.CheckedChange += (sender, e) =>
         {
             if (randomizationSwitch.Checked)
                 randomizationSwitch.Text = GetString(Resource.String.switch_text_when_on);
@@ -75,8 +75,47 @@ public class SearchNewFoldersActivity : AppCompatActivity
         };
 
 
-        submitBtn = FindViewById<Button>(Resource.Id.submit_btn);
-        submitBtn.Click += HandleSubmit;
+        this.submitBtn = FindViewById<Button>(Resource.Id.submit_btn);
+        this.submitBtn.Click += HandleSubmit;
+    }
+
+
+
+    private void SetSubmitButtonText()
+    {
+        if (this.checkBox.Checked)
+        {
+            this.submitBtn.Text = GetString(Resource.String.submit_btn_text_full_gallery);
+        }
+        else
+        {
+            this.submitBtn.Text = GetString(Resource.String.submit_btn_text_individual_folders);
+        }
+    }
+
+
+
+    private void SetRandomizationSwitchVisibility()
+    {
+        if (this.checkBox.Checked)
+        {
+            this.randomizationSwitch.Visibility = ViewStates.Visible;
+        }
+        else
+        {
+            this.randomizationSwitch.Visibility = ViewStates.Invisible;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Event Handler for when user toggles the checkbox for "use all images in gallery/collection"
+    /// </summary>
+    private void OnCheckboxToggled(Object? sender, EventArgs e)
+    {
+        SetRandomizationSwitchVisibility();
+        SetSubmitButtonText();
     }
 
 
@@ -121,7 +160,7 @@ public class SearchNewFoldersActivity : AppCompatActivity
         {
             await SaveFullGalleryOrCollection(location, username, shouldRandomize);
         }
-        
+
         ActivateSubmitBtn();
     }
 
@@ -133,14 +172,14 @@ public class SearchNewFoldersActivity : AppCompatActivity
         bool thereIsAnError = false;
 
 
-        if(usernameInput.Text == null || usernameInput.Text == "")
+        if (usernameInput.Text == null || usernameInput.Text == "")
         {
             builder.Append("-Provide the username of the gallery/collection owner\n");
             thereIsAnError = true;
         }
 
 
-        if(!galleryRadioBtn.Checked && !collectionRadioBtn.Checked)
+        if (!galleryRadioBtn.Checked && !collectionRadioBtn.Checked)
         {
             builder.Append("-You must select either Gallery or Collection\n");
             thereIsAnError = true;
@@ -163,8 +202,8 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
     private void ActivateSubmitBtn()
     {
-        submitBtn.Enabled = true;
-        submitBtn.Text = GetString(Resource.String.submit_btn_text_active);
+        this.submitBtn.Enabled = true;
+        SetSubmitButtonText();
     }
 
 
@@ -181,7 +220,7 @@ public class SearchNewFoldersActivity : AppCompatActivity
             await service.SaveFullGalleryOrCollection(location, username, shouldRandomize);
             message = "Folder saved successfully";
         }
-        catch(SQLite.SQLiteException e)
+        catch (SQLite.SQLiteException e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
             message = "Something went wrong. Unable to save folder";

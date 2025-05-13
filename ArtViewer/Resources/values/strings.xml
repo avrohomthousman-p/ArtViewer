@@ -10,7 +10,8 @@
 	<string name="folder_input_label">Enter Folder Name: </string>
 	<string name="use_gallery_checkbox_label">Save the Full Gallery/Collection</string>
 	<string name="username_input_label">Enter Username of Owner:</string>
-	<string name="submit_btn_text_active">Save Folder</string>
+	<string name="submit_btn_text_individual_folders">See User Folders</string>
+	<string name="submit_btn_text_full_gallery">Save As Single Folder</string>
 	<string name="submit_btn_text_inactive">Processing...</string>
 
 	
