@@ -116,7 +116,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     {
         TextView view = new TextView(this);
         view.Text = "Tap on the folder you want to save";
-        view.TextSize = Resources.GetDimension(Resource.Dimension.large_text);
+        view.TextSize = Resources.GetDimension(Resource.Dimension.medium_text);
         view.Typeface = Typeface.DefaultBold;
         view.Gravity = GravityFlags.Center;
         view.SetPadding(32, 24, 32, 24);
