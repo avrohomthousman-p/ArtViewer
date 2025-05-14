@@ -39,18 +39,21 @@ namespace ArtViewer.Network.DeviantArt
         /// Queries the API for all folders owned by the specified user and returns them as an array
         /// of UNSAVED folder instances. 
         /// 
+        /// Along with every folder, this function returns a url to the thumbnail for that folder, or null
+        /// if no thumbnail exists.
+        /// 
         /// Note: the actual name of the folder is put inside the CustomName field.
         /// </summary>
         /// <param name="location">The location of the folders, gallery or collection</param>
         /// <param name="username">The username of the DeviantArt user who owns the folder</param>
-        /// <returns>An array of unsaved folder instances containing each folder the user has</returns>
-        public async Task<Folder[]> GetAllFoldersOwnedByUser(StorageLocation location, string username)
+        /// <returns>An array of unsaved folder instances containing each folder the user has, and its thumbnail image</returns>
+        public async Task<Tuple<Folder, string?>[]> GetAllFoldersOwnedByUser(StorageLocation location, string username)
         {
             JsonElement foldersArray = await FetchAllUsersFolders(username, location);
             int folderCount = foldersArray.GetArrayLength();
 
 
-            List<Folder> folders = new List<Folder>();
+            List<Tuple<Folder, string?>> folders = new List<Tuple<Folder, string?>>();
             Folder currentFolder;
             JsonElement currentJsonItem;
             for(int i = 0; i < folderCount; i++)
@@ -64,7 +67,9 @@ namespace ArtViewer.Network.DeviantArt
                 currentFolder.StoredIn = location;
                 currentFolder.CustomName = currentJsonItem.GetProperty("name").GetString();
 
-                folders.Add(currentFolder);
+                string? thumbnail = ExtractFolderThumbnail(currentJsonItem);
+
+                folders.Add(Tuple.Create(currentFolder, thumbnail));
             }
 
 
@@ -135,6 +140,28 @@ namespace ArtViewer.Network.DeviantArt
             folder.FolderId = "all";
             folder.TotalImages = imageCount;
             return folder;
+        }
+
+
+
+        /// <summary>
+        /// Extracts the thumbnail of the DeviantArt folder provided
+        /// </summary>
+        /// <param name="json">The JSON data for the folder</param>
+        /// <returns>An image url for the DeviantArt folder thumbnail</returns>
+        private string? ExtractFolderThumbnail(JsonElement json)
+        {
+            JsonElement thumbnailObj = json.GetProperty("thumb");
+            if(thumbnailObj.ValueKind != JsonValueKind.Null)
+            {
+                if (thumbnailObj.TryGetProperty("thumbs", out JsonElement imageList))
+                {
+                    return imageList[0].GetProperty("src").GetString();
+                }
+            }
+
+
+            return null;
         }
     }
 }
