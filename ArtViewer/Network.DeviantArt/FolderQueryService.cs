@@ -104,7 +104,7 @@ namespace ArtViewer.Network.DeviantArt
         private string BuildUrl(StorageLocation location, string username)
         {
             string baseUrl = "https://www.deviantart.com/api/v1/oauth2/{0}/folders?access_token={1}&username={2}&" +
-                "calculate_size=true&ext_preload=false&filter_empty_folder=true&limit=50";
+                "calculate_size=true&ext_preload=false&filter_empty_folder=true&limit=50&mature_content=true";
 
 
             return string.Format(baseUrl, location.AsText(), NetworkUtils.GetAccessToken(), username);
