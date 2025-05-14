@@ -63,7 +63,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     {
         try
         {
-            Folder[] folders = await GetFoldersToDisplay();
+            Tuple<Folder, string?>[] folders = await GetFoldersToDisplay();
             AddElementsToScrollView(folders);
         }
         catch(Exception e)
@@ -78,8 +78,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// Uses the FolderQueryService to fetch all the folders that need to be displayed.
     /// </summary>
-    /// <returns></returns>
-    private async Task<Folder[]> GetFoldersToDisplay()
+    private async Task<Tuple<Folder, string?>[]> GetFoldersToDisplay()
     {
         string username = Intent.GetStringExtra(USERNAME_KEY);
         StorageLocation location = (StorageLocation)Intent.GetIntExtra(LOCATION_KEY, 0);
@@ -92,14 +91,14 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// For each folder, adds a view to the activity displaying that folder.
     /// </summary>
-    /// <param name="folders">All the folders that should be displayed</param>
-    private void AddElementsToScrollView(Folder[] folders)
+    /// <param name="folders">All the folders that should be displayed, along with optional thumbnail images</param>
+    private void AddElementsToScrollView(Tuple<Folder, string?>[] folders)
     {
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
         parentView.AddView(BuildIntroDisplay());
 
 
-        foreach (Folder item in folders)
+        foreach (Tuple<Folder, string?> item in folders)
         {
             View newChild = BuildViewForSingleFolder(item);
             parentView.AddView(newChild);
@@ -128,10 +127,10 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// Builds a view for to display the specified folder
     /// </summary>
-    private View BuildViewForSingleFolder(Folder folder)
+    private View BuildViewForSingleFolder(Tuple<Folder, string?> folder)
     {
         TextView view = new TextView(this);
-        view.Text = folder.CustomName;
+        view.Text = folder.Item1.CustomName;
         view.Typeface = Typeface.DefaultBold;
         view.Gravity = GravityFlags.CenterVertical;
         view.SetPadding(32, 24, 32, 24);
@@ -150,7 +149,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
         view.Click += (sender, e) => {
-            CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder);
+            CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder.Item1);
             boxBuilder.ShowDialogBox();
         };
 
