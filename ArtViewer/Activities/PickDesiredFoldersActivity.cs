@@ -1,10 +1,14 @@
 namespace ArtViewer.Activities;
 
+using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using ArtViewer.Network.DeviantArt;
+using Bumptech.Glide;
+using static Android.Icu.Text.Transliterator;
+using static AndroidX.RecyclerView.Widget.RecyclerView;
 
 
 /// <summary>
@@ -66,7 +70,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
             Tuple<Folder, string?>[] folders = await GetFoldersToDisplay();
             AddElementsToScrollView(folders);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
             Toast.MakeText(this, "Something went wrong. Could not load the user's folders.", ToastLength.Long);
@@ -94,13 +98,14 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <param name="folders">All the folders that should be displayed, along with optional thumbnail images</param>
     private void AddElementsToScrollView(Tuple<Folder, string?>[] folders)
     {
+        LayoutInflater inflater = LayoutInflater.From(this);
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
         parentView.AddView(BuildIntroDisplay());
 
 
         foreach (Tuple<Folder, string?> item in folders)
         {
-            View newChild = BuildViewForSingleFolder(item);
+            View newChild = BuildViewForSingleFolder(item, parentView, inflater);
             parentView.AddView(newChild);
         }
     }
@@ -127,28 +132,28 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// Builds a view for to display the specified folder
     /// </summary>
-    private View BuildViewForSingleFolder(Tuple<Folder, string?> folder)
+    private View BuildViewForSingleFolder(Tuple<Folder, string?> folder, LinearLayout parentView, LayoutInflater inflater)
     {
-        TextView view = new TextView(this);
-        view.Text = folder.Item1.CustomName;
-        view.Typeface = Typeface.DefaultBold;
-        view.Gravity = GravityFlags.CenterVertical;
-        view.SetPadding(32, 24, 32, 24);
-        view.SetBackgroundColor(Color.ParseColor("#F8EDC4"));
+        View view = inflater.Inflate(Resource.Layout.display_deviantart_folder, parentView, false);
 
-
-        view.LayoutParameters = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent
-        );
-        ((LinearLayout.LayoutParams)view.LayoutParameters).Gravity = GravityFlags.CenterHorizontal;
-        var marginParams = new ViewGroup.MarginLayoutParams(view.LayoutParameters);
-        marginParams.SetMargins(20, 20, 20, 20);
-        view.LayoutParameters = new LinearLayout.LayoutParams(marginParams);
+        TextView folderNameDisplay = view.FindViewById<TextView>(Resource.Id.folder_name);
+        folderNameDisplay.Text = folder.Item1.CustomName;
 
 
 
-        view.Click += (sender, e) => {
+        if (folder.Item2 != null)
+        {
+            ImageView thumbnail = view.FindViewById<ImageView>(Resource.Id.folder_icon);
+            Glide.With(this)
+                 .Load(folder.Item2)
+                 .Into(thumbnail);
+        }
+
+
+
+
+        view.Click += (sender, e) =>
+        {
             CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder.Item1);
             boxBuilder.ShowDialogBox();
         };

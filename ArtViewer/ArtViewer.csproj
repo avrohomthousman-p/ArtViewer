@@ -17,6 +17,7 @@
 		<None Remove="Resources\layout\activity_display.xml" />
 		<None Remove="Resources\layout\activity_search_new_folders.xml" />
 		<None Remove="Resources\layout\display_db_folder.xml" />
+		<None Remove="Resources\layout\display_deviantart_folder.xml" />
 		<None Remove="Resources\layout\display_item_in_scrollview.xml" />
 		<None Remove="Resources\layout\edit_folder_dialog_box.xml" />
 		<None Remove="Resources\layout\image_item.xml" />
