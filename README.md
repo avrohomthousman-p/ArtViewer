@@ -46,6 +46,5 @@ project root directory and run this command in a terminal
 <img src="https://github.com/user-attachments/assets/7e9b8cd0-3e84-41b5-9fd1-e53a17cad938" width="300" />
 <img src="https://github.com/user-attachments/assets/35a3b107-94a5-4850-bae3-7274ccea74ee" width="300" />
 <img src="https://github.com/user-attachments/assets/fcf76efe-8c6b-4358-9126-181c795927b2" width="300" />
-<img src="https://github.com/user-attachments/assets/248508b1-7570-473b-a747-dd77cbdc5535" width="300" />
-
+<img src="https://github.com/user-attachments/assets/6dc7e727-2102-47b5-a953-ed3b9582b44b" width="300" />
 
