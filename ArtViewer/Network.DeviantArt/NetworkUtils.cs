@@ -39,6 +39,7 @@ namespace ArtViewer.Network.Deviantart
             catch (Exception ex)
             {
                 semaphore.Release();
+                Console.WriteLine(ex.GetType() + " " + ex.Message);
                 throw new Exception("Failed to retrieve access token", ex);
             }
 

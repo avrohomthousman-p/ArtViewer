@@ -15,9 +15,7 @@ namespace ArtViewer.Activities
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
-            //Start establishing a connection to the API and database as soon as possible to avoid slowdowns
-            Task.Run(() => NetworkUtils.GetAccessToken());
-            Task.Run(() => DatabaseConnection.GetConnection());
+            StartBackgroundJobs();
 
 
             base.OnCreate(savedInstanceState);
@@ -28,8 +26,54 @@ namespace ArtViewer.Activities
             SetSupportActionBar(toolbar);
 
 
+            SetupClickListeners();
+        }
 
 
+
+        /// <summary>
+        /// Runs background threads to establish connects to the database and the DeviantArt API.
+        /// These connections are not needed by this activity, but will be needed by other activities.
+        /// They are fetched here only to keep those other activitys moving quickly.
+        /// </summary>
+        private void StartBackgroundJobs()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    NetworkUtils.GetAccessToken();
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.GetType() + " " + e.Message);
+                    MakeToastPopup("Unable to connect to DeviantArt .....", ToastLength.Long);
+                }
+            });
+
+
+            Task.Run(() => DatabaseConnection.GetConnection());
+        }
+
+
+
+        /// <summary>
+        /// Convienent method for making a text popup on the UI thread
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        /// <param name="duration">The amount of time it should stay on the screen for</param>
+        private void MakeToastPopup(string message, ToastLength duration = ToastLength.Short)
+        {
+            RunOnUiThread(() => Toast.MakeText(this, message, duration).Show());
+        }
+
+
+
+        /// <summary>
+        /// Sets all the click listeners for the buttons in the layout
+        /// </summary>
+        private void SetupClickListeners()
+        {
             FindViewById<Button>(Resource.Id.browse_my_folders_btn).Click +=
                 (sender, e) =>
                 {
