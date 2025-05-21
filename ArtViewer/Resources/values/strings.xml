@@ -1,11 +1,15 @@
 <resources>
 	<string name="app_name">Art Viewer</string>
+	<string name="pick_folders_activity_name">Save Folders</string>
+	<string name="search_folders_activity_name">Search For Folders</string>
+	<string name="manage_folders_activity_name">My Folders</string>
+	
 	<string name="menu_intro">What Would You Like To Do Today?</string>
 
 	<string name="browse_my_folders_btn_text">Browse My Folders</string>
 	<string name="add_new_folders_btn_text">Add New Folder</string>
 
-
+	
 	<string name="save_new_folders_intro_text">Describe the folder you are looking for</string>
 	<string name="folder_input_label">Enter Folder Name: </string>
 	<string name="use_gallery_checkbox_label">Save the Full Gallery/Collection</string>

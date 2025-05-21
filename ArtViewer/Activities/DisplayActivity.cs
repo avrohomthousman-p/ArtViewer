@@ -10,10 +10,12 @@ namespace ArtViewer.Activities;
 /// <summary>
 /// Activity for displaying the images in a user's folder.
 /// </summary>
-[Activity(Label = "@string/app_name")]
+[Activity]
 public class DisplayActivity : AppCompatActivity
 {
     public const string FOLDER_ID_KEY = "folderId";
+
+    private AndroidX.AppCompat.Widget.Toolbar toolbar;
 
 
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -22,14 +24,15 @@ public class DisplayActivity : AppCompatActivity
         SetContentView(Resource.Layout.activity_display);
 
 
+        this.toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+        SetSupportActionBar(this.toolbar);
+
+
         SetupRecyclerView();
 
 
         Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
-
-        AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
-        SetSupportActionBar(toolbar);
 
 
         // Enable back button
@@ -53,6 +56,8 @@ public class DisplayActivity : AppCompatActivity
             }
             Folder folder = StandardDBQueries.GetFolderByID(folderId);
 
+            SetActivityTitle(folder.CustomName);
+
             ImageQueryService imageFetcher = new ImageQueryService();
             imageUrls = await imageFetcher.LoadAllImages(folder);
         }
@@ -74,6 +79,17 @@ public class DisplayActivity : AppCompatActivity
         //Make the images snap to the center of the screen on scroll
         var snapHelper = new PagerSnapHelper();
         snapHelper.AttachToRecyclerView(recyclerView);
+    }
+
+
+
+    /// <summary>
+    /// Sets the activity title on the UI thread.
+    /// </summary>
+    /// <param name="title">The new title you want for the activity</param>
+    private void SetActivityTitle(string title)
+    {
+        RunOnUiThread(() => { this.toolbar.Title = title; });
     }
 
 

@@ -12,7 +12,7 @@ namespace ArtViewer.Activities;
 /// <summary>
 /// Activity for searching for new folders that you can then view in the app.
 /// </summary>
-[Activity(Label = "SearchNewFoldersActivity")]
+[Activity]
 public class SearchNewFoldersActivity : AppCompatActivity
 {
     //Quick references to some of the views

@@ -10,7 +10,7 @@ namespace ArtViewer.Activities
     /// Lets the user decide what he/she wants to do. Browse saved folders, edit saved folders,
     /// or find new folders to save.
     /// </summary>
-    [Activity(Label = "@string/app_name", MainLauncher = true)]
+    [Activity(MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle? savedInstanceState)

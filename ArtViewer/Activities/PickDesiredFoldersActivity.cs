@@ -14,7 +14,7 @@ using static AndroidX.RecyclerView.Widget.RecyclerView;
 /// <summary>
 /// Activity for picking the folders you actually want to save
 /// </summary>
-[Activity(Label = "SaveNewFoldersActivity")]
+[Activity(Label = "@string/pick_folders_activity_name")]
 public class PickDesiredFoldersActivity : AppCompatActivity
 {
     //Keys used to pass these data points to this activity

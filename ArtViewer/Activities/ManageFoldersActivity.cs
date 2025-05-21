@@ -11,7 +11,7 @@ namespace ArtViewer.Activities;
 /// <summary>
 /// Displays all your saved folders and lets you edit/delete/view any of them.
 /// </summary>
-[Activity(Label = "FoldersActivity")]
+[Activity(Label = "@string/manage_folders_activity_name")]
 public class ManageFoldersActivity : AppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
