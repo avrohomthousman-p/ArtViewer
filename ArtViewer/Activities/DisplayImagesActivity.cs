@@ -11,7 +11,7 @@ namespace ArtViewer.Activities;
 /// Activity for displaying the images in a user's folder.
 /// </summary>
 [Activity]
-public class DisplayActivity : AppCompatActivity
+public class DisplayImagesActivity : AppCompatActivity
 {
     public const string FOLDER_ID_KEY = "folderId";
 
@@ -21,7 +21,7 @@ public class DisplayActivity : AppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(Resource.Layout.activity_display);
+        SetContentView(Resource.Layout.activity_images_display);
 
 
         this.toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);

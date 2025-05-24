@@ -73,8 +73,8 @@ public class ManageFoldersActivity : AppCompatActivity
 
     private void StartDisplayActivity(Folder folder)
     {
-        Intent intent = new Intent(this, typeof(DisplayActivity));
-        intent.PutExtra(DisplayActivity.FOLDER_ID_KEY, folder.ID);
+        Intent intent = new Intent(this, typeof(DisplayImagesActivity));
+        intent.PutExtra(DisplayImagesActivity.FOLDER_ID_KEY, folder.ID);
         StartActivity(intent);
     }
 
