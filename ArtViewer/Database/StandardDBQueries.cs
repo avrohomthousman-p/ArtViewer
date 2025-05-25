@@ -16,22 +16,6 @@ namespace ArtViewer.Database
         private static SQLiteConnection database = DatabaseConnection.GetConnection();
 
 
-        //Used only for development to reset the DB
-        internal static void SeedDB()
-        {
-            database.DropTable<Folder>();
-            database.CreateTable<Folder>();
-
-            int count = database.Table<Folder>().Count();
-
-            if (count == 0)
-            {
-                Folder sample = new Folder("89DB8DF6-9027-4CD2-965F-27CE55CCEFA9", "frog people", 98, StorageLocation.GALLERY, "dissunder", true);
-                database.Insert(sample);
-            }
-        }
-
-
 
         public static void CreateFolder(Folder folder)
         {

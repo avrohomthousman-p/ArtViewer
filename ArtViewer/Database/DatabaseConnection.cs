@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using Android.Content;
 
 namespace ArtViewer.Database
 {
@@ -9,6 +10,7 @@ namespace ArtViewer.Database
     {
         private static SQLiteConnection database = null;
         private static readonly object locker = new object();
+        
 
 
         public static SQLiteConnection GetConnection()
@@ -23,7 +25,9 @@ namespace ArtViewer.Database
             {
                 if (database == null)
                 {
-                    database = new SQLiteConnection(BuildDBPath());
+                    string dbPath = BuildDBPath();
+                    DatabaseSeeder.EnsureDBFileExists(dbPath);
+                    database = new SQLiteConnection(dbPath);
                 }
             }
 
@@ -32,15 +36,11 @@ namespace ArtViewer.Database
         }
 
 
+
         private static string BuildDBPath()
         {
-            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            var docFolder = Path.Combine(basePath, "Documents");
-
-            if (!Directory.Exists(docFolder))
-                Directory.CreateDirectory(docFolder);
-
-            return Path.Combine(docFolder, "folders.db3");
+            var basePath = Android.App.Application.Context.FilesDir.AbsolutePath;
+            return Path.Combine(basePath, DatabaseSeeder.DB_FILE_NAME);
         }
     }
 }
