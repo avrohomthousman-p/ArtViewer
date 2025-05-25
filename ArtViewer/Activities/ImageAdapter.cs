@@ -33,6 +33,7 @@ namespace ArtViewer.Activities
 
             Glide.With(context)
              .Load(imageUrls[position])
+             .Placeholder(Resource.Drawable.ic_loading)
              .Into(viewHolder.ImageView);
         }
 
