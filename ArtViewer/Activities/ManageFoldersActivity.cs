@@ -43,6 +43,15 @@ public class ManageFoldersActivity : AppCompatActivity
         var folders = StandardDBQueries.GetAllFolders();
 
 
+
+        if (folders.Count() == 0)
+        {
+            parentLayout.AddView(BuildDefaultViewForNoFolders());
+            return;
+        }
+
+
+
         foreach (Folder folder in folders)
         {
             View folderDisplayView = inflater.Inflate(Resource.Layout.display_db_folder, parentLayout, false);
@@ -66,6 +75,27 @@ public class ManageFoldersActivity : AppCompatActivity
 
             parentLayout.AddView(folderDisplayView);
         }
+    }
+
+
+
+
+    /// <summary>
+    /// Builds a TextView that displays the default message for when there are no folders.
+    /// </summary>
+    private TextView BuildDefaultViewForNoFolders()
+    {
+        return new TextView(this)
+        {
+            Text = "You Have No Folders",
+            TextSize = Resources.GetDimension(Resource.Dimension.large_text),
+            Gravity = GravityFlags.Center,
+            LayoutParameters = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MatchParent,
+                    ViewGroup.LayoutParams.WrapContent
+                )
+            { TopMargin = 20 },
+        };
     }
 
 
@@ -106,7 +136,13 @@ public class ManageFoldersActivity : AppCompatActivity
         try
         {
             StandardDBQueries.DeleteFolder(folder);
+
             parentLayout.RemoveView(targetView);
+            if (parentLayout.ChildCount == 0)
+            {
+                parentLayout.AddView(BuildDefaultViewForNoFolders());
+            }
+
             toastText = "Folder deleted successfully";
         }
         catch (SQLite.SQLiteException e)
