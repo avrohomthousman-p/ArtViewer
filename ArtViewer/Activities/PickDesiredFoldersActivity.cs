@@ -35,6 +35,14 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
 
+    public override bool OnCreateOptionsMenu(IMenu? menu)
+    {
+        MenuInflater.Inflate(Resource.Menu.pick_folders_activity_menu, menu);
+        return base.OnCreateOptionsMenu(menu);
+    }
+
+
+
     public override bool OnOptionsItemSelected(IMenuItem item)
     {
         if (item.ItemId == Android.Resource.Id.Home)
@@ -42,6 +50,19 @@ public class PickDesiredFoldersActivity : AppCompatActivity
             OnBackPressed();
             return true;
         }
+        else if (item.ItemId == Resource.Id.action_home)
+        {
+            Intent intent = new Intent(this, typeof(MainActivity));
+            StartActivity(intent);
+            return true;
+        }
+        else if (item.ItemId == Resource.Id.action_see_my_folders)
+        {
+            Intent intent = new Intent(this, typeof(ManageFoldersActivity));
+            StartActivity(intent);
+            return true;
+        }
+
         return base.OnOptionsItemSelected(item);
     }
 
