@@ -3,6 +3,7 @@ using ArtViewer.Network.Deviantart;
 using AndroidX.AppCompat.App;
 using Android.Views;
 using ArtViewer.Database;
+using Android.Content;
 namespace ArtViewer.Activities;
 
 
@@ -94,6 +95,14 @@ public class DisplayImagesActivity : AppCompatActivity
 
 
 
+    public override bool OnCreateOptionsMenu(IMenu? menu)
+    {
+        MenuInflater.Inflate(Resource.Menu.image_display_activity_menu, menu);
+        return base.OnCreateOptionsMenu(menu);
+    }
+
+
+
     public override bool OnOptionsItemSelected(IMenuItem item)
     {
         if (item.ItemId == Android.Resource.Id.Home)
@@ -101,6 +110,19 @@ public class DisplayImagesActivity : AppCompatActivity
             OnBackPressed();
             return true;
         }
+        else if (item.ItemId == Resource.Id.action_home)
+        {
+            Intent intent = new Intent(this, typeof(MainActivity));
+            StartActivity(intent);
+            return true;
+        }
+        else if (item.ItemId == Resource.Id.action_search_for_folders)
+        {
+            Intent intent = new Intent(this, typeof(SearchNewFoldersActivity));
+            StartActivity(intent);
+            return true;
+        }
+
         return base.OnOptionsItemSelected(item);
     }
 }
