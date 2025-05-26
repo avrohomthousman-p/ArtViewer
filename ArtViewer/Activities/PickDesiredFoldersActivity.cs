@@ -86,15 +86,19 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// </summary>
     private async Task PopulateView()
     {
+        string username = Intent.GetStringExtra(USERNAME_KEY);
+        StorageLocation location = (StorageLocation)Intent.GetIntExtra(LOCATION_KEY, 0);
+
+
         try
         {
-            Tuple<Folder, string?>[] folders = await GetFoldersToDisplay();
-            AddElementsToScrollView(folders);
+            Tuple<Folder, string?>[] folders = await GetFoldersToDisplay(location, username);
+            AddElementsToScrollView(folders, location, username);
         }
         catch (Exception e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
-            Toast.MakeText(this, "Something went wrong. Could not load the user's folders.", ToastLength.Long);
+            InsertNoFoldersFoundDisplay(location, username);
         }
     }
 
@@ -102,11 +106,11 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
     /// <summary>
     /// Uses the FolderQueryService to fetch all the folders that need to be displayed.
+    /// <param name="location">The storage location of the desired folders (gallery or collection)</param>
+    /// <param name="username">The DeviantArt username of the owner of the folder(s)</param>
     /// </summary>
-    private async Task<Tuple<Folder, string?>[]> GetFoldersToDisplay()
+    private async Task<Tuple<Folder, string?>[]> GetFoldersToDisplay(StorageLocation location, string username)
     {
-        string username = Intent.GetStringExtra(USERNAME_KEY);
-        StorageLocation location = (StorageLocation)Intent.GetIntExtra(LOCATION_KEY, 0);
         FolderQueryService service = new FolderQueryService();
         return await service.GetAllFoldersOwnedByUser(location, username);
     }
@@ -117,19 +121,65 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// For each folder, adds a view to the activity displaying that folder.
     /// </summary>
     /// <param name="folders">All the folders that should be displayed, along with optional thumbnail images</param>
-    private void AddElementsToScrollView(Tuple<Folder, string?>[] folders)
+    /// <param name="location">The storage location of the folders provided (gallery or collection)</param>
+    /// <param name="username">The DeviantArt username of the owner of the provided folders</param>
+    /// 
+    private void AddElementsToScrollView(Tuple<Folder, string?>[] folders, StorageLocation location, string username)
     {
+        if (folders.Length == 0)
+        {
+            InsertNoFoldersFoundDisplay(location, username);
+            return;
+        }
+
+
         LayoutInflater inflater = LayoutInflater.From(this);
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+
+
         parentView.AddView(BuildIntroDisplay());
-
-
         foreach (Tuple<Folder, string?> item in folders)
         {
             View newChild = BuildViewForSingleFolder(item, parentView, inflater);
             parentView.AddView(newChild);
         }
     }
+
+
+
+
+    /// <summary>
+    /// Populates the ScrollView with a message saying that no folders were found, and suggestions
+    /// for correcting the user input.
+    /// </summary>
+    /// <param name="location">The storage location the user entered for the search (gallery or collection)</param>
+    /// <param name="username">The username the user entered for the folder search</param>
+    private void InsertNoFoldersFoundDisplay(StorageLocation location, string username)
+    {
+        LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+
+        TextView intro = new TextView(this)
+        {
+            Text = "No Folders Found",
+            TextSize = Resources.GetDimension(Resource.Dimension.medium_text),
+            Typeface = Typeface.DefaultBold,
+            Gravity = GravityFlags.Center,
+        };
+        intro.SetPadding(32, 24, 32, 24);
+        parentView.AddView(intro);
+
+
+
+        TextView suggestion = new TextView(this)
+        {
+            Text = $"Double check that you are connected to the internet and that you entered the correct information:" +
+                            $"\n\tusername: {username}\n\tstorage location: {location.AsText()}",
+            Gravity = GravityFlags.Center,
+        };
+        suggestion.SetPadding(32, 24, 32, 24);
+        parentView.AddView(suggestion);
+    }
+
 
 
 

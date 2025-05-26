@@ -94,7 +94,6 @@ namespace ArtViewer.Network.Deviantart
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
-                    response.EnsureSuccessStatusCode();
                     string result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     return JsonDocument.Parse(result);
                 }
@@ -116,7 +115,6 @@ namespace ArtViewer.Network.Deviantart
                 {
                     var postData = new FormUrlEncodedContent(arguments);
                     HttpResponseMessage response = await client.PostAsync(url, postData);
-                    response.EnsureSuccessStatusCode();
                     string result = await response.Content.ReadAsStringAsync();
                     return JsonDocument.Parse(result);
                 }

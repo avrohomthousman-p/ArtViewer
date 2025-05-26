@@ -56,13 +56,19 @@ namespace ArtViewer.Network.DeviantArt
             List<Tuple<Folder, string?>> folders = new List<Tuple<Folder, string?>>();
             Folder currentFolder;
             JsonElement currentJsonItem;
-            for(int i = 0; i < folderCount; i++)
+            int folderSize;
+            for (int i = 0; i < folderCount; i++)
             {
                 currentJsonItem = foldersArray[i];
+                folderSize = currentJsonItem.GetProperty("size").GetInt32();
+                if (folderSize == 0)
+                {
+                    continue;
+                }
 
                 currentFolder = new Folder();
                 currentFolder.FolderId = currentJsonItem.GetProperty("folderid").GetString();
-                currentFolder.TotalImages = currentJsonItem.GetProperty("size").GetInt32();
+                currentFolder.TotalImages = folderSize;
                 currentFolder.Username = username;
                 currentFolder.StoredIn = location;
                 currentFolder.CustomName = currentJsonItem.GetProperty("name").GetString();
