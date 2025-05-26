@@ -86,6 +86,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// </summary>
     private async Task PopulateView()
     {
+        InsertTemporaryView();
         string username = Intent.GetStringExtra(USERNAME_KEY);
         StorageLocation location = (StorageLocation)Intent.GetIntExtra(LOCATION_KEY, 0);
 
@@ -100,6 +101,28 @@ public class PickDesiredFoldersActivity : AppCompatActivity
             Console.WriteLine(e.GetType() + " " + e.Message);
             InsertNoFoldersFoundDisplay(location, username);
         }
+    }
+
+
+
+
+    /// <summary>
+    /// Puts a temporary view on the screen that says "Loading..." for while the API queries load.
+    /// </summary>
+    private void InsertTemporaryView()
+    {
+        LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+
+        TextView tempView = new TextView(this)
+        {
+            Text = "Loading...",
+            TextSize = Resources.GetDimension(Resource.Dimension.large_text),
+            Typeface = Typeface.DefaultBold,
+            Gravity = GravityFlags.Center,
+        };
+        tempView.SetPadding(32, 24, 32, 24);
+
+        parentView.AddView(tempView);
     }
 
 
@@ -135,6 +158,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
         LayoutInflater inflater = LayoutInflater.From(this);
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+        parentView.RemoveAllViews();
 
 
         parentView.AddView(BuildIntroDisplay());
@@ -157,6 +181,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     private void InsertNoFoldersFoundDisplay(StorageLocation location, string username)
     {
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+        parentView.RemoveAllViews();
 
         TextView intro = new TextView(this)
         {
