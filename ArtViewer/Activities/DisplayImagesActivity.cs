@@ -65,7 +65,7 @@ public class DisplayImagesActivity : AppCompatActivity
         catch(Exception e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
-            Toast.MakeText(this, "Unable to load images", ToastLength.Short);
+            Toast.MakeText(this, "Unable to load images", ToastLength.Short).Show();
             return;
         }
 
