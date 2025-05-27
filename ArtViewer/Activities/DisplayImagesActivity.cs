@@ -4,6 +4,7 @@ using AndroidX.AppCompat.App;
 using Android.Views;
 using ArtViewer.Database;
 using Android.Content;
+using AndroidX.Lifecycle;
 namespace ArtViewer.Activities;
 
 
@@ -59,8 +60,10 @@ public class DisplayImagesActivity : AppCompatActivity
 
             SetActivityTitle(folder.CustomName);
 
-            ImageQueryService imageFetcher = new ImageQueryService();
-            imageUrls = await imageFetcher.LoadAllImages(folder);
+
+            //Urls are stored in the ImageUrlsViewModel to ensure they dont get reset on device rotation
+            ImageUrlsViewModel viewModel = new ViewModelProvider(this).Get(Java.Lang.Class.FromType(typeof(ImageUrlsViewModel))) as ImageUrlsViewModel;
+            imageUrls = await viewModel.GetImageUrlsAsync(folder);
         }
         catch(Exception e)
         {
