@@ -233,7 +233,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         View view = inflater.Inflate(Resource.Layout.display_deviantart_folder, parentView, false);
 
         TextView folderNameDisplay = view.FindViewById<TextView>(Resource.Id.folder_name);
-        folderNameDisplay.Text = folder.Item1.CustomName;
+        folderNameDisplay.Text = folder.Item1.CustomName + $" ({folder.Item1.TotalImages} images)";
 
 
 
