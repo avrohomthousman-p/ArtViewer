@@ -15,21 +15,6 @@
         >
 
 
-        <TextView
-            android:id="@+id/folder_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Folder name here"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/folder_icon"
-        />
-
-
 
         <ImageView
             android:id="@+id/folder_icon"
@@ -39,7 +24,40 @@
             android:layout_marginEnd="5dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <TextView
+            android:id="@+id/folder_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="Folder name here"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/folder_icon"
+            app:layout_constraintEnd_toStartOf="@+id/save_btn"
+        />
+
+
+
+        <ImageButton
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_save"
+            android:tint="@android:color/holo_green_dark"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/save_btn_content_description"
+            android:paddingEnd="14dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

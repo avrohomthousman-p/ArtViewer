@@ -25,4 +25,5 @@
 	<string name="switch_text_when_off">Show images in CORRECT order</string>
 
 	<string name="save_btn_text">Save</string>
+	<string name="save_btn_content_description">save button</string>
 </resources>

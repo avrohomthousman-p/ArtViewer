@@ -215,7 +215,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     private TextView BuildIntroDisplay()
     {
         TextView view = new TextView(this);
-        view.Text = "Tap on the folder you want to save";
+        view.Text = "Save any folders you like. They will appear on the \"Browse My Folders\" screen.";
         view.TextSize = Resources.GetDimension(Resource.Dimension.medium_text);
         view.Typeface = Typeface.DefaultBold;
         view.Gravity = GravityFlags.Center;
@@ -248,7 +248,8 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
 
-        view.Click += (sender, e) =>
+        ImageButton saveBtn = view.FindViewById<ImageButton>(Resource.Id.save_btn);
+        saveBtn.Click += (sender, e) =>
         {
             CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder.Item1);
             boxBuilder.ShowDialogBox();
