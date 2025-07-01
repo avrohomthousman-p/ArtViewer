@@ -14,21 +14,21 @@ namespace ArtViewer.Database
     /// </summary>
     internal static class DatabaseSeeder
     {
-        internal const string DB_FILE_NAME = "prepopulated.db";
+        internal const string SAMPLE_DB_FILE_NAME = "prepopulated.db";
 
 
 
         /// <summary>
-        /// Copies the sample database file from th assets folder to the specified database file location
+        /// Copies the sample database file from the assets folder to the specified database file location
         /// only if there isn't one there already.
         /// </summary>
-        /// <param name="dbFilePath">The correct filepath for the database file to be stored.</param>
-        internal static void EnsureDBFileExists(string dbFilePath)
+        /// <param name="liveDbPath">The correct filepath for the database file to be stored.</param>
+        internal static void EnsureDBFileExists(string liveDbPath)
         {
-            if (!File.Exists(dbFilePath))
+            if (!File.Exists(liveDbPath))
             {
-                using (var assetStream = Android.App.Application.Context.Assets.Open(DB_FILE_NAME))
-                using (var destStream = File.Create(dbFilePath))
+                using (var assetStream = Android.App.Application.Context.Assets.Open(SAMPLE_DB_FILE_NAME))
+                using (var destStream = File.Create(liveDbPath))
                 {
                     assetStream.CopyTo(destStream);
                 }

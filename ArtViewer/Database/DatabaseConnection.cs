@@ -40,7 +40,7 @@ namespace ArtViewer.Database
         private static string BuildDBPath()
         {
             var basePath = Android.App.Application.Context.FilesDir.AbsolutePath;
-            return Path.Combine(basePath, DatabaseSeeder.DB_FILE_NAME);
+            return Path.Combine(basePath, DatabaseSeeder.SAMPLE_DB_FILE_NAME);
         }
     }
 }
