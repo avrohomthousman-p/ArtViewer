@@ -13,6 +13,7 @@
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 	<ItemGroup>
+		<None Remove="Assets\prepopulated.db" />
 		<None Remove="Resources\drawable\ic_folder_search.xml" />
 		<None Remove="Resources\drawable\ic_loading.png" />
 		<None Remove="Resources\drawable\rounded_edit_text.xml" />

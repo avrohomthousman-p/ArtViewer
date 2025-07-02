@@ -37,23 +37,20 @@ namespace ArtViewer.Network.DeviantArt
 
         /// <summary>
         /// Queries the API for all folders owned by the specified user and returns them as an array
-        /// of UNSAVED folder instances. 
-        /// 
-        /// Along with every folder, this function returns a url to the thumbnail for that folder, or null
-        /// if no thumbnail exists.
+        /// of UNSAVED folder instances.
         /// 
         /// Note: the actual name of the folder is put inside the CustomName field.
         /// </summary>
         /// <param name="location">The location of the folders, gallery or collection</param>
         /// <param name="username">The username of the DeviantArt user who owns the folder</param>
-        /// <returns>An array of unsaved folder instances containing each folder the user has, and its thumbnail image</returns>
-        public async Task<Tuple<Folder, string?>[]> GetAllFoldersOwnedByUser(StorageLocation location, string username)
+        /// <returns>An array of unsaved folder instances containing each folder the user has</returns>
+        public async Task<Folder[]> GetAllFoldersOwnedByUser(StorageLocation location, string username)
         {
             JsonElement foldersArray = await FetchAllUsersFolders(username, location);
             int folderCount = foldersArray.GetArrayLength();
 
 
-            List<Tuple<Folder, string?>> folders = new List<Tuple<Folder, string?>>();
+            List<Folder> folders = new List<Folder>();
             Folder currentFolder;
             JsonElement currentJsonItem;
             int folderSize;
@@ -72,10 +69,9 @@ namespace ArtViewer.Network.DeviantArt
                 currentFolder.Username = username;
                 currentFolder.StoredIn = location;
                 currentFolder.CustomName = currentJsonItem.GetProperty("name").GetString();
+                currentFolder.ThumbnailUrl = ExtractFolderThumbnail(currentJsonItem);
 
-                string? thumbnail = ExtractFolderThumbnail(currentJsonItem);
-
-                folders.Add(Tuple.Create(currentFolder, thumbnail));
+                folders.Add(currentFolder);
             }
 
 

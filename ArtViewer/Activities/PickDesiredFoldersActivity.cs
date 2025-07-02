@@ -93,7 +93,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
         try
         {
-            Tuple<Folder, string?>[] folders = await GetFoldersToDisplay(location, username);
+            Folder[] folders = await GetFoldersToDisplay(location, username);
             AddElementsToScrollView(folders, location, username);
         }
         catch (Exception e)
@@ -132,7 +132,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <param name="location">The storage location of the desired folders (gallery or collection)</param>
     /// <param name="username">The DeviantArt username of the owner of the folder(s)</param>
     /// </summary>
-    private async Task<Tuple<Folder, string?>[]> GetFoldersToDisplay(StorageLocation location, string username)
+    private async Task<Folder[]> GetFoldersToDisplay(StorageLocation location, string username)
     {
         FolderQueryService service = new FolderQueryService();
         return await service.GetAllFoldersOwnedByUser(location, username);
@@ -143,11 +143,11 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// For each folder, adds a view to the activity displaying that folder.
     /// </summary>
-    /// <param name="folders">All the folders that should be displayed, along with optional thumbnail images</param>
+    /// <param name="folders">All the folders that should be displayed</param>
     /// <param name="location">The storage location of the folders provided (gallery or collection)</param>
     /// <param name="username">The DeviantArt username of the owner of the provided folders</param>
     /// 
-    private void AddElementsToScrollView(Tuple<Folder, string?>[] folders, StorageLocation location, string username)
+    private void AddElementsToScrollView(Folder[] folders, StorageLocation location, string username)
     {
         if (folders.Length == 0)
         {
@@ -162,7 +162,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
         parentView.AddView(BuildIntroDisplay());
-        foreach (Tuple<Folder, string?> item in folders)
+        foreach (Folder item in folders)
         {
             View newChild = BuildViewForSingleFolder(item, parentView, inflater);
             parentView.AddView(newChild);
@@ -228,20 +228,20 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// <summary>
     /// Builds a view for to display the specified folder
     /// </summary>
-    private View BuildViewForSingleFolder(Tuple<Folder, string?> folder, LinearLayout parentView, LayoutInflater inflater)
+    private View BuildViewForSingleFolder(Folder folder, LinearLayout parentView, LayoutInflater inflater)
     {
         View view = inflater.Inflate(Resource.Layout.display_deviantart_folder, parentView, false);
 
         TextView folderNameDisplay = view.FindViewById<TextView>(Resource.Id.folder_name);
-        folderNameDisplay.Text = folder.Item1.CustomName + $" ({folder.Item1.TotalImages} images)";
+        folderNameDisplay.Text = folder.CustomName + $" ({folder.TotalImages} images)";
 
 
 
-        if (folder.Item2 != null)
+        if (folder.ThumbnailUrl != null)
         {
             ImageView thumbnail = view.FindViewById<ImageView>(Resource.Id.folder_icon);
             Glide.With(this)
-                 .Load(folder.Item2)
+                 .Load(folder.ThumbnailUrl)
                  .Into(thumbnail);
         }
 
@@ -251,7 +251,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         ImageButton saveBtn = view.FindViewById<ImageButton>(Resource.Id.save_btn);
         saveBtn.Click += (sender, e) =>
         {
-            CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder.Item1);
+            CreateFolderDialogBox boxBuilder = new CreateFolderDialogBox(this, folder);
             boxBuilder.ShowDialogBox();
         };
 

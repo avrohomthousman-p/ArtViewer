@@ -26,6 +26,10 @@ namespace ArtViewer.Database
         public string CustomName { get; set; }
 
 
+        [SQLite.MaxLength(120)]
+        public string ThumbnailUrl { get; set; } = null;
+
+
         [NotNull]
         public int TotalImages { get; set; } = Network.Deviantart.ImageQueryService.MAX_IMAGES;
 
