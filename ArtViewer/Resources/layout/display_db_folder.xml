@@ -16,6 +16,17 @@
         >
 
 
+        <ImageView
+            android:id="@+id/folder_icon"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
         <TextView
             android:id="@+id/folder_name"
             android:layout_width="0dp"
@@ -23,12 +34,14 @@
             android:text="Folder name here"
             android:textSize="@dimen/large_text"
             android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:padding="10dp"
             android:layout_marginVertical="10dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/edit_btn"
+            app:layout_constraintStart_toEndOf="@+id/folder_icon"
+            app:layout_constraintEnd_toStartOf="@id/edit_btn"
         />
 
 

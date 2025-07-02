@@ -2,6 +2,7 @@ using Android.Content;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
+using Bumptech.Glide;
 using Google.Android.Material.Snackbar;
 
 namespace ArtViewer.Activities;
@@ -55,6 +56,12 @@ public class ManageFoldersActivity : AppCompatActivity
         foreach (Folder folder in folders)
         {
             View folderDisplayView = inflater.Inflate(Resource.Layout.display_db_folder, parentLayout, false);
+
+            ImageView thumbnailImageView = folderDisplayView.FindViewById<ImageView>(Resource.Id.folder_icon);
+            Glide.With(this)
+                  .Load(folder.ThumbnailUrl)
+                  .Into(thumbnailImageView);
+
 
 
             TextView folderNameView = folderDisplayView.FindViewById<TextView>(Resource.Id.folder_name);
