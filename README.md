@@ -39,7 +39,7 @@ project root directory and run this command in a terminal
 `dotnet tool restore`
 
 
-#Screenshots
+# Screenshots
 <img src="https://github.com/user-attachments/assets/a5f8bafe-b61c-41aa-89de-6be653371bff" width="300" />
 <img src="https://github.com/user-attachments/assets/692124d7-be9f-4f33-8ec4-cc0f3433904b" width="300" />
 <img src="https://github.com/user-attachments/assets/bf69053f-061f-4cc6-8030-ae9b85db452d" width="300" />
