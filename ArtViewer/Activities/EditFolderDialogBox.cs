@@ -114,7 +114,7 @@ namespace ArtViewer.Activities
             {
                 this.folder.CustomName = newName;
                 this.folder.ShouldRandomize = this.randomizationSwitch.Checked;
-                await StandardDBQueries.UpdateFolder(this.folder);
+                await StandardDBQueries.UpdateFolderByPK(this.folder);
             }
             catch (Exception e)
             {

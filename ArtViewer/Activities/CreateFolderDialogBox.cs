@@ -44,7 +44,7 @@ namespace ArtViewer.Activities
             {
                 this.folder.ShouldRandomize = this.randomizationSwitch.Checked;
                 this.folder.CustomName = customLabel;
-                await StandardDBQueries.CreateFolder(this.folder);
+                await StandardDBQueries.CreateOrUpdateFolder(this.folder);
                 dialogBox.Dismiss();
                 Toast.MakeText(this.activity, "Folder saved successfully", ToastLength.Short).Show();
             }
