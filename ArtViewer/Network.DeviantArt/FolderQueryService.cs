@@ -86,13 +86,20 @@ namespace ArtViewer.Network.DeviantArt
         /// <param name="username">The username of the DeviantArt user who owns the folder</param>
         /// <param name="page">Which PAGE_SIZE folders should be fetched.</param>
         /// <returns>An array of unsaved folder instances containing each folder the user has in this page</returns>
-        public async Task<Folder[]> GetPageOfUserFolders(StorageLocation location, string username, int page)
+        public async Task<Tuple<Folder[], bool>> GetPageOfUserFolders(StorageLocation location, string username, int page)
         {
-            JsonElement foldersArray = await FetchPageOfUserFolders(location, username, page);
+            Tuple<JsonElement, bool> data = await FetchPageOfUserFolders(location, username, page);
+
+            JsonElement foldersArray = data.Item1;
+            bool hasNextPage = data.Item2;
+
 
             List<Folder> folders = ConvertJsonArrayToFolders(foldersArray, location, username);
 
-            return folders.ToArray();
+            return Tuple.Create(
+                        folders.ToArray(),
+                        hasNextPage
+                    );
         }
 
 
@@ -141,11 +148,13 @@ namespace ArtViewer.Network.DeviantArt
 
         /// <summary>
         /// Queries the API and gets all the folders owned by the specified DeviantArt user within the specified page.
+        /// Also includes a boolean telling you if there is another page after this one.
         /// </summary>
         /// <param name="location">The location those folders can be found in, Gallery or Collection</param>
         /// <param name="username">The name of the DeviantArt user whose folders you want to see</param>
         /// <param name="page"></param>
-        private async Task<JsonElement> FetchPageOfUserFolders(StorageLocation location, string username, int page)
+        /// <returns>A Json array of the response data, and a boolean that is true if there is another page after this one</returns>
+        private async Task<Tuple<JsonElement, bool>> FetchPageOfUserFolders(StorageLocation location, string username, int page)
         {
             string url = BuildUrl(location, username, page * PAGE_SIZE);
             JsonDocument response = await NetworkUtils.RunGetRequest(url);
@@ -153,7 +162,10 @@ namespace ArtViewer.Network.DeviantArt
 
 
             CheckResponseForErrors(root);
-            return root.GetProperty("results");
+            return Tuple.Create(
+                            root.GetProperty("results"), 
+                            root.GetProperty("has_more").GetBoolean()
+                        );
         }
 
 

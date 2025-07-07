@@ -2,8 +2,11 @@ namespace ArtViewer.Activities;
 
 using Android.Content;
 using Android.Graphics;
+using Android.Graphics.Drawables;
+using Android.Util;
 using Android.Views;
 using AndroidX.AppCompat.App;
+using AndroidX.Core.Content;
 using ArtViewer.Database;
 using ArtViewer.Network.DeviantArt;
 using Bumptech.Glide;
@@ -21,7 +24,9 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     public const string USERNAME_KEY = "username";
     public const string LOCATION_KEY = "location";
 
-    private int page = 0;
+    private int nextPage = 0;
+    private bool hasNextPage = true;
+    private TextView tempView; //class reference to temp view that says "loading..." for easy removal when data is loaded
 
 
 
@@ -84,7 +89,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
     /// <summary>
-    /// Ensures that the ScrollView is properly populated with the correct data
+    /// Runs an API query and displayes the folders in the scroll view.
     /// </summary>
     private async Task PopulateView()
     {
@@ -101,7 +106,20 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         catch (Exception e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
-            InsertNoFoldersFoundDisplay(location, username);
+
+
+            LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+            bool thereAreNoFoldersOnDisplay = parentView.ChildCount <= 1; //Allow the "loading" TextView
+
+
+            if (thereAreNoFoldersOnDisplay)
+            {
+                InsertNoFoldersFoundDisplay(location, username);
+            }
+            else
+            {
+                Toast.MakeText(this, "Error: unable to load more folders", ToastLength.Short).Show();
+            }
         }
     }
 
@@ -124,6 +142,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         };
         tempView.SetPadding(32, 24, 32, 24);
 
+        this.tempView = tempView;
         parentView.AddView(tempView);
     }
 
@@ -137,7 +156,12 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     private async Task<Folder[]> GetFoldersToDisplay(StorageLocation location, string username)
     {
         FolderQueryService service = new FolderQueryService();
-        return await service.GetPageOfUserFolders(location, username, this.page++);
+        Tuple<Folder[], bool> results = await service.GetPageOfUserFolders(location, username, this.nextPage);
+
+        this.nextPage++;
+        this.hasNextPage = results.Item2;
+
+        return results.Item1;
     }
 
 
@@ -151,7 +175,11 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     /// 
     private void AddElementsToScrollView(Folder[] folders, StorageLocation location, string username)
     {
-        if (folders.Length == 0)
+        LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
+        bool thereAreNoFoldersOnDisplay = parentView.ChildCount <= 1; //Allow the "loading" TextView
+
+
+        if (folders.Length == 0 && thereAreNoFoldersOnDisplay)
         {
             InsertNoFoldersFoundDisplay(location, username);
             return;
@@ -159,11 +187,16 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
         LayoutInflater inflater = LayoutInflater.From(this);
-        LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
-        parentView.RemoveAllViews();
+
+        parentView.RemoveView(this.tempView);
 
 
-        parentView.AddView(BuildIntroDisplay());
+        if (thereAreNoFoldersOnDisplay)
+        {
+            parentView.AddView(BuildIntroDisplay());
+        }
+        
+
         foreach (Folder item in folders)
         {
             View newChild = BuildViewForSingleFolder(item, parentView, inflater);
@@ -171,7 +204,10 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         }
 
 
-        //TODO: Add button for load more
+        if (this.hasNextPage)
+        {
+            parentView.AddView(BuildButtonToLoadMoreFolders());
+        }
     }
 
 
@@ -261,5 +297,49 @@ public class PickDesiredFoldersActivity : AppCompatActivity
         };
 
         return view;
+    }
+
+
+
+    private Button BuildButtonToLoadMoreFolders()
+    {
+        Button button = new Button(this);
+        button.Text = "Load More...";
+
+
+        //Styling
+        var typedValue = new TypedValue();
+        Theme.ResolveAttribute(Android.Resource.Attribute.ColorPrimary, typedValue, true);
+        var primaryColor = new Color(typedValue.Data);
+        button.SetBackgroundColor(primaryColor);
+        button.SetTextColor(Android.Graphics.Color.White);
+
+
+        //Layout setup
+        var layoutParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WrapContent,
+            ViewGroup.LayoutParams.WrapContent
+        );
+
+        layoutParams.SetMargins(20, 10, 20, 20);
+        button.LayoutParameters = layoutParams;
+
+        button.SetPadding(24, 16, 24, 16);
+
+
+
+        //Event handling
+        button.Click += async (sender, e) => {
+            if (button.Parent is ViewGroup parentLayout)
+            {
+                parentLayout.RemoveView(button);
+            }
+
+            await PopulateView();
+        };
+
+
+
+        return button;
     }
 }
