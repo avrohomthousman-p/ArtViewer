@@ -22,12 +22,12 @@ namespace ArtViewer.Activities
         {
             base.SetupEventHandlers(dialogBox);
 
-            this.saveBtn.Click += (sender, e) => { SaveFolder(dialogBox); };
+            this.saveBtn.Click += async (sender, e) => { await SaveFolder(dialogBox); };
         }
 
 
 
-        protected void SaveFolder(AndroidX.AppCompat.App.AlertDialog dialogBox)
+        protected async Task SaveFolder(AndroidX.AppCompat.App.AlertDialog dialogBox)
         {
             View rootView = this.activity.FindViewById(Android.Resource.Id.Content);
             string customLabel = this.folderLabelInputField.Text;
@@ -44,7 +44,7 @@ namespace ArtViewer.Activities
             {
                 this.folder.ShouldRandomize = this.randomizationSwitch.Checked;
                 this.folder.CustomName = customLabel;
-                StandardDBQueries.CreateFolder(this.folder);
+                await StandardDBQueries.CreateFolder(this.folder);
                 dialogBox.Dismiss();
                 Toast.MakeText(this.activity, "Folder saved successfully", ToastLength.Short).Show();
             }

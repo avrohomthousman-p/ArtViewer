@@ -30,7 +30,7 @@ namespace ArtViewer.Network.DeviantArt
             folder.CustomName = username + "'s " + location.AsText();
 
 
-            StandardDBQueries.CreateFolder(folder);
+            await StandardDBQueries.CreateFolder(folder);
         }
 
 

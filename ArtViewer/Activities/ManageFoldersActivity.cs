@@ -37,11 +37,11 @@ public class ManageFoldersActivity : AppCompatActivity
     /// <summary>
     /// Inserts all the folders into the scroll view
     /// </summary>
-    private void PopulateScrollView()
+    private async Task PopulateScrollView()
     {
         LayoutInflater inflater = LayoutInflater.From(this);
         LinearLayout parentLayout = FindViewById<LinearLayout>(Resource.Id.folders_container);
-        var folders = StandardDBQueries.GetAllFolders();
+        var folders = await StandardDBQueries.GetAllFolders();
 
 
 
@@ -129,20 +129,20 @@ public class ManageFoldersActivity : AppCompatActivity
         dialog.SetTitle("Delete " + folder.CustomName);
         dialog.SetMessage("Are you sure you want to delete this folder?");
         dialog.SetNegativeButton("Cancel", (sender, e) => { });
-        dialog.SetPositiveButton("Delete", (sender, e) => DeleteFolder(folder, targetView, parentLayout));
+        dialog.SetPositiveButton("Delete", async (sender, e) => await DeleteFolder(folder, targetView, parentLayout));
         dialog.Show();
     }
 
 
 
-    private void DeleteFolder(Folder folder, View targetView, LinearLayout parentLayout)
+    private async Task DeleteFolder(Folder folder, View targetView, LinearLayout parentLayout)
     {
         //If this function slows things down, move it to a background thread
 
         string toastText;
         try
         {
-            StandardDBQueries.DeleteFolder(folder);
+            await StandardDBQueries.DeleteFolder(folder);
 
             parentLayout.RemoveView(targetView);
             if (parentLayout.ChildCount == 0)

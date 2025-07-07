@@ -48,7 +48,7 @@ namespace ArtViewer.Activities
         {
             base.SetupEventHandlers(dialogBox);
 
-            this.saveBtn.Click += (sender, e) => { SaveButton_HandleClick(dialogBox); };
+            this.saveBtn.Click += async (sender, e) => { await SaveButton_HandleClick(dialogBox); };
         }
 
 
@@ -58,7 +58,7 @@ namespace ArtViewer.Activities
         /// the name displayed on the activity) or displaying an error, whichever is appropriate.
         /// </summary>
         /// <param name="dialogBox">A reference to the dialog box being displayed</param>
-        protected void SaveButton_HandleClick(AndroidX.AppCompat.App.AlertDialog dialogBox)
+        protected async Task SaveButton_HandleClick(AndroidX.AppCompat.App.AlertDialog dialogBox)
         {
             View rootView = this.activity.FindViewById(Android.Resource.Id.Content);
             string originalName = this.originalFolderNameTextView.Text;
@@ -79,7 +79,7 @@ namespace ArtViewer.Activities
 
 
 
-            bool success = SaveChangesToFolder(newName);
+            bool success = await SaveChangesToFolder(newName);
             if (success)
             {
                 this.originalFolderNameTextView.Text = newName;
@@ -108,13 +108,13 @@ namespace ArtViewer.Activities
         /// Updates the folder label and randomization setting in the database.
         /// </summary>
         /// <returns>True if the folder was updated successfully and false otherwise</returns>
-        protected bool SaveChangesToFolder(string newName)
+        protected async Task<bool> SaveChangesToFolder(string newName)
         {
             try
             {
                 this.folder.CustomName = newName;
                 this.folder.ShouldRandomize = this.randomizationSwitch.Checked;
-                StandardDBQueries.UpdateFolder(this.folder);
+                await StandardDBQueries.UpdateFolder(this.folder);
             }
             catch (Exception e)
             {

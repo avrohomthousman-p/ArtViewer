@@ -8,12 +8,12 @@ namespace ArtViewer.Database
     /// </summary>
     public static class DatabaseConnection
     {
-        private static SQLiteConnection database = null;
+        private static SQLiteAsyncConnection database = null;
         private static readonly object locker = new object();
         
 
 
-        public static SQLiteConnection GetConnection()
+        public static SQLiteAsyncConnection GetConnection()
         {
             if (database != null)
             {
@@ -27,7 +27,7 @@ namespace ArtViewer.Database
                 {
                     string dbPath = BuildDBPath();
                     DatabaseSeeder.EnsureDBFileExists(dbPath);
-                    database = new SQLiteConnection(dbPath);
+                    database = new SQLiteAsyncConnection(dbPath);
                 }
             }
 

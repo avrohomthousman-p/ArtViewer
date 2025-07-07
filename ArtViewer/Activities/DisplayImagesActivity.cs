@@ -56,7 +56,7 @@ public class DisplayImagesActivity : AppCompatActivity
             {
                 throw new KeyNotFoundException("Could not find folder");
             }
-            Folder folder = StandardDBQueries.GetFolderByID(folderId);
+            Folder folder = await StandardDBQueries.GetFolderByID(folderId);
 
             SetActivityTitle(folder.CustomName);
 
