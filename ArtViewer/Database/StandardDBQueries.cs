@@ -40,7 +40,11 @@ namespace ArtViewer.Database
             else
             {
                 //Copy data from external folder to internal folder
-                internalFolder.CustomName = folder.CustomName;
+                if(folder.CustomName != null && folder.CustomName != "")
+                {
+                    internalFolder.CustomName = folder.CustomName;
+                }
+
                 internalFolder.TotalImages = folder.TotalImages;
                 internalFolder.ThumbnailUrl = folder.ThumbnailUrl;
                 internalFolder.ShouldRandomize = folder.ShouldRandomize;

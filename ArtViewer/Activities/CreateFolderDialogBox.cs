@@ -33,11 +33,14 @@ namespace ArtViewer.Activities
             string customLabel = this.folderLabelInputField.Text;
 
 
-            if (customLabel == null || customLabel.Length <= 3)
+            if (customLabel == null || customLabel.Trim().Length <= 3)
             {
                 Snackbar.Make(rootView, "Must provide a folder name at least 4 letters long", Snackbar.LengthShort).Show();
                 return;
             }
+
+
+            customLabel = customLabel.Trim();
 
 
             try

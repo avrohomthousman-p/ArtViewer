@@ -71,12 +71,14 @@ namespace ArtViewer.Activities
                 dialogBox.Dismiss();
                 return;
             }
-            else if (newName == null || newName.Length <= 3)
+            else if (newName == null || newName.Trim().Length <= 3)
             {
                 Snackbar.Make(rootView, "Must provide a folder name at least 4 letters long", Snackbar.LengthShort).Show();
                 return;
             }
 
+
+            newName = newName.Trim();
 
 
             bool success = await SaveChangesToFolder(newName);

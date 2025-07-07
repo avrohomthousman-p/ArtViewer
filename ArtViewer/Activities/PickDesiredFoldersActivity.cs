@@ -167,6 +167,9 @@ public class PickDesiredFoldersActivity : AppCompatActivity
             View newChild = BuildViewForSingleFolder(item, parentView, inflater);
             parentView.AddView(newChild);
         }
+
+
+        //TODO: Add button for load more
     }
 
 
