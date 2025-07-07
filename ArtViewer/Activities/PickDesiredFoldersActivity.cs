@@ -21,6 +21,8 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     public const string USERNAME_KEY = "username";
     public const string LOCATION_KEY = "location";
 
+    private int page = 0;
+
 
 
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -135,7 +137,7 @@ public class PickDesiredFoldersActivity : AppCompatActivity
     private async Task<Folder[]> GetFoldersToDisplay(StorageLocation location, string username)
     {
         FolderQueryService service = new FolderQueryService();
-        return await service.GetAllFoldersOwnedByUser(location, username);
+        return await service.GetPageOfUserFolders(location, username, this.page++);
     }
 
 
