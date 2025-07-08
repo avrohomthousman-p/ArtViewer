@@ -183,6 +183,14 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
 
+    public override bool OnCreateOptionsMenu(IMenu? menu)
+    {
+        MenuInflater.Inflate(Resource.Menu.manage_folders_activity_menu, menu);
+        return base.OnCreateOptionsMenu(menu);
+    }
+
+
+
     public override bool OnOptionsItemSelected(IMenuItem item)
     {
         if (item.ItemId == Android.Resource.Id.Home)
@@ -190,6 +198,11 @@ public class ManageFoldersActivity : AppCompatActivity
             OnBackPressed();
             return true;
         }
+        else if (item.ItemId == Resource.Id.action_refresh)
+        {
+            //TODO: open modal for refreshing folders
+        }
+        
         return base.OnOptionsItemSelected(item);
     }
 }
