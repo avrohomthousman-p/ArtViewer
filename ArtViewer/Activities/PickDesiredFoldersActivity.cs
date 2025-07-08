@@ -308,10 +308,11 @@ public class PickDesiredFoldersActivity : AppCompatActivity
 
 
         //Styling
-        var typedValue = new TypedValue();
-        Theme.ResolveAttribute(Android.Resource.Attribute.ColorPrimary, typedValue, true);
-        var primaryColor = new Color(typedValue.Data);
-        button.SetBackgroundColor(primaryColor);
+        //var typedValue = new TypedValue();
+        //Theme.ResolveAttribute(Android.Resource.Attribute.ColorPrimary, typedValue, true);
+        //var primaryColor = new Color(typedValue.Data);
+        //button.SetBackgroundColor(primaryColor);
+        button.SetBackgroundResource(Resource.Drawable.rounded_button);
         button.SetTextColor(Android.Graphics.Color.White);
 
 
