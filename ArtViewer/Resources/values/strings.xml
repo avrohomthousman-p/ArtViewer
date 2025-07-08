@@ -26,4 +26,12 @@
 
 	<string name="save_btn_text">Save</string>
 	<string name="save_btn_content_description">save button</string>
+
+
+	<string name="dialog_warning_text">The refresh operation may take a minute. Please do NOT exit the app or go back once it has started.</string>
+	<string name="dialog_explenation_text">
+		Refreshing a folder means loading the most recent folder information from DeviantArt and updating the local copy
+		stored in this app. You need to do this only if the owner of a folder you have saved makes changes to that folder
+		through the DeviantArt website.
+	</string>
 </resources>

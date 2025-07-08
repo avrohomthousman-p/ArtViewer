@@ -106,8 +106,6 @@ public class ManageFoldersActivity : AppCompatActivity
     }
 
 
-
-
     private void StartDisplayActivity(Folder folder)
     {
         Intent intent = new Intent(this, typeof(DisplayImagesActivity));
@@ -200,7 +198,8 @@ public class ManageFoldersActivity : AppCompatActivity
         }
         else if (item.ItemId == Resource.Id.action_refresh)
         {
-            //TODO: open modal for refreshing folders
+            StartActivity(new Intent(this, typeof(RefreshFoldersActivity)));
+            Finish();
         }
         
         return base.OnOptionsItemSelected(item);
