@@ -1,4 +1,5 @@
 using Android.Views;
+using Android.Widget;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using Bumptech.Glide;
@@ -187,7 +188,8 @@ public class RefreshFoldersActivity : AppCompatActivity
         LinearLayout parentView = FindViewById<LinearLayout>(Resource.Id.folders_container);
 
 
-        //TODO: add intro view with "check the folders you want to refresh"
+        TextView introView = BuildIntroView();
+        parentView.AddView(introView);
 
 
         LayoutInflater inflater = LayoutInflater.From(this);
@@ -212,6 +214,9 @@ public class RefreshFoldersActivity : AppCompatActivity
 
             parentView.AddView(folderContainer);
         }
+
+
+        parentView.AddView(BuiltSubmitButton());
     }
 
 
@@ -232,5 +237,60 @@ public class RefreshFoldersActivity : AppCompatActivity
                 )
             { TopMargin = 20 },
         };
+    }
+
+
+
+    /// <summary>
+    /// Builds an intro text view with simple instructions.
+    /// </summary>
+    private TextView BuildIntroView()
+    {
+        return new TextView(this)
+        {
+            Text = "Check off the folders you want to refresh",
+            TextSize = 16,
+            Gravity = GravityFlags.Center,
+            LayoutParameters = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MatchParent,
+                    ViewGroup.LayoutParams.WrapContent
+                )
+            { TopMargin = 20 },
+        };
+    }
+
+
+
+    /// <summary>
+    /// Build button that initaiates the folder refresh.
+    /// </summary>
+    private Button BuiltSubmitButton()
+    {
+        Button submitBtn = new Button(this)
+        {
+            Text = "Start Refresh Operation"
+        };
+
+        submitBtn.SetBackgroundResource(Resource.Drawable.rounded_button);
+        submitBtn.SetTextColor(Android.Graphics.Color.White);
+
+
+        var layoutParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WrapContent,
+            ViewGroup.LayoutParams.WrapContent
+        );
+        layoutParams.SetMargins(20, 20, 20, 30);
+        submitBtn.LayoutParameters = layoutParams;
+        submitBtn.SetPadding(30, 20, 30, 20);
+
+
+
+        submitBtn.Click += (sender, e) =>
+        {
+            //TODO: start refresh
+        };
+
+
+        return submitBtn;
     }
 }
