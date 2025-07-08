@@ -9,6 +9,8 @@ namespace ArtViewer.Activities;
 [Activity(Label = "Refresh Folders")]
 public class RefreshFoldersActivity : AppCompatActivity
 {
+    private Folder[] folders = new Folder[0];
+    private bool[] selected = new bool[0];
     private TextView tempView = null;
 
 
@@ -145,28 +147,29 @@ public class RefreshFoldersActivity : AppCompatActivity
     /// </summary>
     private async Task PopulateScrollView()
     {
-        var folders = await LoadFoldersFromDB();
+        await LoadFoldersFromDB();
         RemoveTemporaryLoadingView();
-        BuildMainContent(folders);
+        BuildMainContent();
     }
 
 
 
     /// <summary>
-    /// Initiates the DB query to fetch all folders from the database.
+    /// Initiates the DB query to fetch all folders from the database, and saves the results to
+    /// the local class variable.
     /// </summary>
-    private async Task<IEnumerable<Folder>> LoadFoldersFromDB()
+    private async Task LoadFoldersFromDB()
     {
         try
         {
-            var folders = await StandardDBQueries.GetAllFolders();
-            return folders;
+            var loadedFolders = await StandardDBQueries.GetAllFolders();
+            this.folders = loadedFolders.ToArray();
+            this.selected = Enumerable.Repeat(true, this.folders.Length).ToArray();
         }
         catch(Exception e)
         {
             Console.WriteLine(e.GetType() + " " + e.Message);
             Toast.MakeText(this, "Error: unable to load your folders", ToastLength.Short).Show();
-            return Enumerable.Empty<Folder>();
         }
     }
 
@@ -176,9 +179,9 @@ public class RefreshFoldersActivity : AppCompatActivity
     /// Builds and inserts a view to display each folder.
     /// </summary>
     /// <param name="folders"></param>
-    private void BuildMainContent(IEnumerable<Folder> folders)
+    private void BuildMainContent()
     {
-        if (folders.Count() == 0)
+        if (this.folders.Length == 0)
         {
             TextView noFolders = DefaultDisplayForNoFolders();
             return;
@@ -194,8 +197,11 @@ public class RefreshFoldersActivity : AppCompatActivity
 
         LayoutInflater inflater = LayoutInflater.From(this);
 
-        foreach (Folder folder in folders)
+        Folder folder;
+        for (int i = 0; i < this.folders.Length; i++)
         {
+            folder = this.folders[i];
+
             View folderContainer = inflater.Inflate(Resource.Layout.display_candidate_for_refresh, parentView, false);
 
 
@@ -209,7 +215,11 @@ public class RefreshFoldersActivity : AppCompatActivity
                   .Into(thumbnailImageView);
 
 
-            //TODO: handle checked and unchecked
+
+            int index = i;
+            CheckBox checkBox = folderContainer.FindViewById<CheckBox>(Resource.Id.should_refresh_checkbox);
+            checkBox.CheckedChange += (sender, e) => this.selected[index] = !this.selected[index];
+
 
 
             parentView.AddView(folderContainer);
@@ -268,7 +278,7 @@ public class RefreshFoldersActivity : AppCompatActivity
     {
         Button submitBtn = new Button(this)
         {
-            Text = "Start Refresh Operation"
+            Text = "Start Refresh"
         };
 
         submitBtn.SetBackgroundResource(Resource.Drawable.rounded_button);
@@ -287,10 +297,58 @@ public class RefreshFoldersActivity : AppCompatActivity
 
         submitBtn.Click += (sender, e) =>
         {
-            //TODO: start refresh
+            RefreshFolders();
         };
 
 
         return submitBtn;
+    }
+
+
+
+    /// <summary>
+    /// Runs the refresh folders job in the background, and prevents users from doing anything until its done.
+    /// </summary>
+    private async Task RefreshFolders()
+    {
+        //Block user input while the process runs
+        AndroidX.AppCompat.App.AlertDialog dialog = BuildDoNotCloseAppDialog();
+        dialog.Show();
+
+
+        for(int i = 0; i < this.folders.Length; i++)
+        {
+            if (!this.selected[i])
+                continue;
+
+
+            //TODO: launch API query to load this folder and save results to the DB
+        }
+
+
+        //TODO: on complete send user back to folders activity
+    }
+
+
+
+    /// <summary>
+    /// Builds a non closable popup that should be shown while the refresh process runs, so that 
+    /// users cant input anything until the process finishes.
+    /// 
+    /// Note: the dialog is built and returned but not shown. You must call dialog.Show() on the
+    /// returned object.
+    /// </summary>
+    /// <returns>A reference to the still hidden dialog.</returns>
+    private AndroidX.AppCompat.App.AlertDialog BuildDoNotCloseAppDialog()
+    {
+        AndroidX.AppCompat.App.AlertDialog.Builder builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
+        builder.SetTitle("Refreshing...");
+
+        builder.SetMessage("Your folders are being refreshed. This may take a moment. Please do NOT " +
+            "exit the app or press the back button.");
+
+        builder.SetCancelable(false);
+
+        return builder.Create();
     }
 }
