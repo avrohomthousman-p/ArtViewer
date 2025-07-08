@@ -86,7 +86,6 @@ public class ManageFoldersActivity : AppCompatActivity
 
 
 
-
     /// <summary>
     /// Builds a TextView that displays the default message for when there are no folders.
     /// </summary>
@@ -104,6 +103,7 @@ public class ManageFoldersActivity : AppCompatActivity
             { TopMargin = 20 },
         };
     }
+
 
 
     private void StartDisplayActivity(Folder folder)
