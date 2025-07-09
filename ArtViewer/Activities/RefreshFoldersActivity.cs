@@ -1,3 +1,4 @@
+using Android.Content;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
@@ -24,6 +25,10 @@ public class RefreshFoldersActivity : AppCompatActivity
 
         AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
         SetSupportActionBar(toolbar);
+
+        // Enable back button
+        SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+        SupportActionBar.SetDisplayShowHomeEnabled(true);
 
 
         SetupInfoWarningView();
@@ -408,5 +413,18 @@ public class RefreshFoldersActivity : AppCompatActivity
 
 
         return builder.Create();
+    }
+
+
+
+    public override bool OnOptionsItemSelected(IMenuItem item)
+    {
+        if (item.ItemId == Android.Resource.Id.Home)
+        {
+            OnBackPressed();
+            return true;
+        }
+
+        return base.OnOptionsItemSelected(item);
     }
 }
