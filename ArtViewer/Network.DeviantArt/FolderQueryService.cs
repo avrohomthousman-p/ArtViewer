@@ -19,6 +19,55 @@ namespace ArtViewer.Network.DeviantArt
 
 
         /// <summary>
+        /// Updates the specified folders with the most recent data from DeviantArt.
+        /// </summary>
+        /// <param name="localFolders">The folders from the local database that should be updated</param>
+        /// <returns>An array of updated folders</returns>
+        public async Task<Tuple<Folder, ChangeType>[]> RefreshFolders(Folder[] localFolders)
+        {
+            List<Tuple<Folder, ChangeType>> refreshed = new List<Tuple<Folder, ChangeType>>();
+            var queries = PlanQueries(localFolders);
+
+            await Parallel.ForEachAsync(queries, async (kvPair, ct) =>
+            {
+                Tuple<string, StorageLocation> queryData = kvPair.Key;
+                List<Folder> localFoldersForThisQuery = kvPair.Value;
+
+                Folder[] incomingFolders = await GetAllUserFolders(queryData.Item2, queryData.Item1);
+                Folder incomingVersion;
+
+                foreach (Folder localCopy in localFoldersForThisQuery)
+                {
+                    if (localCopy.FolderId == "all")
+                    {
+                        incomingVersion = CreateFolderForAllImages(incomingFolders);
+                        ChangeType changeType = CopyFolderData(localCopy, incomingVersion);
+                        refreshed.Add(Tuple.Create(localCopy, changeType));
+                    }
+                    else
+                    {
+                        incomingVersion = incomingFolders.Where(item => item.FolderId == localCopy.FolderId).FirstOrDefault();
+
+                        if (incomingVersion == null)
+                        {
+                            refreshed.Add(Tuple.Create(localCopy, ChangeType.DELETE));
+                        }
+                        else
+                        {
+                            ChangeType changeType = CopyFolderData(localCopy, incomingVersion);
+                            refreshed.Add(Tuple.Create(localCopy, changeType));
+                        }
+                    }
+                }
+            });
+
+
+            return refreshed.ToArray();
+        }
+
+
+
+        /// <summary>
         /// Fetches the desired gallery/collection from the DeviantArt API and saves it to the database for future use.
         /// </summary>
         public async Task SaveFullGalleryOrCollection(StorageLocation location, string username, bool shouldRandomize)
@@ -100,6 +149,72 @@ namespace ArtViewer.Network.DeviantArt
                         folders.ToArray(),
                         hasNextPage
                     );
+        }
+
+
+
+        /// <summary>
+        /// Compiles a list of all the queries that need to be done.
+        /// </summary>
+        /// <param name="foldersNeeded">The folders that need to be refreshed</param>
+        /// <returns>
+        /// A dictionary of the username and location we need to query, mapped to the 
+        /// folders that need to be loaded from that query.
+        /// </returns>
+        private Dictionary<Tuple<string, StorageLocation>, List<Folder>> PlanQueries(Folder[] foldersNeeded)
+        {
+            var queries = new Dictionary<Tuple<string, StorageLocation>, List<Folder>>();
+
+            Tuple<string, StorageLocation> requiredQuery;
+            foreach (Folder folder in foldersNeeded)
+            {
+                requiredQuery = Tuple.Create(folder.Username, folder.StoredIn);
+                
+                if (queries.TryGetValue(requiredQuery, out var existingValue))
+                {
+                    existingValue.Add(folder);
+                }
+                else
+                {
+                    List<Folder> foldersNeedingQuery = new List<Folder>();
+                    foldersNeedingQuery.Add(folder);
+                    queries[requiredQuery] = foldersNeedingQuery;
+                }
+            }
+
+
+            return queries;
+        }
+
+
+
+        /// <summary>
+        /// Copies data from the incoming folder to the local folder, but only the feilds that 
+        /// are expected to be updated by the API. Things like username or folder ID are not 
+        /// changed.
+        /// </summary>
+        /// <param name="local">The version of the folder that came from our Database</param>
+        /// <param name="incoming">The version of the folder that came from the API</param>
+        /// <returns>A ChangeType telling if the local folder was modified or not</returns>
+        private ChangeType CopyFolderData(Folder local, Folder incoming)
+        {
+            bool changesMade = false;
+
+            if (local.ThumbnailUrl != incoming.ThumbnailUrl)
+            {
+                local.ThumbnailUrl = incoming.ThumbnailUrl;
+                changesMade = true;
+            }
+            
+
+            if (local.TotalImages != incoming.TotalImages)
+            {
+                local.TotalImages = incoming.TotalImages;
+                changesMade = true;
+            }
+
+
+            return (changesMade ? ChangeType.UPDATE : ChangeType.NO_CHANGE);
         }
 
 

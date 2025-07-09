@@ -2,6 +2,7 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
+using ArtViewer.Network.DeviantArt;
 using Bumptech.Glide;
 
 namespace ArtViewer.Activities;
@@ -312,42 +313,99 @@ public class RefreshFoldersActivity : AppCompatActivity
     private async Task RefreshFolders()
     {
         //Block user input while the process runs
-        AndroidX.AppCompat.App.AlertDialog dialog = BuildDoNotCloseAppDialog();
+        AndroidX.AppCompat.App.AlertDialog dialog = 
+            BuildSimpleDialog(
+                   "Refreshing...", 
+                   "Your folders are being refreshed. This may take a moment. Please do NOT " +
+                   "exit the app or press the back button.",
+                   false
+        );
         dialog.Show();
 
 
-        for(int i = 0; i < this.folders.Length; i++)
+        int numDeletes = 0;
+        int numUpdates = 0;
+        int numUnchanged = 0;
+
+
+        //Execute the refresh
+        try
         {
-            if (!this.selected[i])
-                continue;
+            FolderQueryService service = new FolderQueryService();
 
+            var selectedFolders = this.folders.Where((item, index) => !this.selected[index]).ToArray();
+            Tuple<Folder, ChangeType>[] updatedFolders = await service.RefreshFolders(selectedFolders);
 
-            //TODO: launch API query to load this folder and save results to the DB
+            //Save results to the DB
+            foreach (Tuple<Folder, ChangeType> result in updatedFolders)
+            {
+                switch (result.Item2)
+                {
+                    case ChangeType.NO_CHANGE:
+                        numUnchanged++;
+                        continue;
+                    case ChangeType.DELETE:
+                        numDeletes++;
+                        await StandardDBQueries.DeleteFolder(result.Item1);
+                        continue;
+                    case ChangeType.UPDATE:
+                        numUpdates++;
+                        await StandardDBQueries.UpdateFolderByPK(result.Item1);
+                        continue;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.GetType() + " " + e.Message);
+
+            dialog.Dismiss();
+            dialog = BuildSimpleDialog("Error", "Something went wrong. The folders could not be refreshed.", true);
+            dialog.Show();
+            return;
         }
 
 
-        //TODO: on complete send user back to folders activity
+
+        string message = $"Operation completed successfully." +
+                            $"\n- {numUpdates} folders were updated" +
+                            $"\n- {numDeletes} folders were deleted" +
+                            $"\n- {numUnchanged} folders did not need updates";
+
+        dialog.Dismiss();
+        dialog = BuildSimpleDialog("Success", message, true);
+        dialog.Show();
     }
 
 
 
     /// <summary>
-    /// Builds a non closable popup that should be shown while the refresh process runs, so that 
-    /// users cant input anything until the process finishes.
+    /// Builds a Dialog box with the specified titke and message, and only includes a close button
+    /// if cancalable is set to true.
     /// 
-    /// Note: the dialog is built and returned but not shown. You must call dialog.Show() on the
-    /// returned object.
+    /// You still need to calldialog.Show(); on the returned instance.
     /// </summary>
-    /// <returns>A reference to the still hidden dialog.</returns>
-    private AndroidX.AppCompat.App.AlertDialog BuildDoNotCloseAppDialog()
+    /// <param name="title"></param>
+    /// <param name="message"></param>
+    /// <param name="cancelable"></param>
+    /// <returns>A reference to a dialog box that isnt showing yet.</returns>
+    private AndroidX.AppCompat.App.AlertDialog BuildSimpleDialog(string title, string message, bool cancelable)
     {
         AndroidX.AppCompat.App.AlertDialog.Builder builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
-        builder.SetTitle("Refreshing...");
+        builder.SetTitle(title);
 
-        builder.SetMessage("Your folders are being refreshed. This may take a moment. Please do NOT " +
-            "exit the app or press the back button.");
+        builder.SetMessage(message);
 
-        builder.SetCancelable(false);
+
+        if (cancelable)
+        {
+            builder.SetPositiveButton("Close", (sender, args) => {
+                ((AndroidX.AppCompat.App.AlertDialog)sender).Dismiss();
+            });
+        }
+
+        builder.SetCancelable(cancelable);
+
 
         return builder.Create();
     }
