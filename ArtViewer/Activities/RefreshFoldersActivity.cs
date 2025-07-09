@@ -333,7 +333,7 @@ public class RefreshFoldersActivity : AppCompatActivity
         {
             FolderQueryService service = new FolderQueryService();
 
-            var selectedFolders = this.folders.Where((item, index) => !this.selected[index]).ToArray();
+            var selectedFolders = this.folders.Where((item, index) => this.selected[index]).ToArray();
             Tuple<Folder, ChangeType>[] updatedFolders = await service.RefreshFolders(selectedFolders);
 
             //Save results to the DB

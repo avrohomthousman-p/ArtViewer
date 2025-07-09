@@ -1,6 +1,7 @@
 ﻿using ArtViewer.Database;
 using ArtViewer.Network.Deviantart;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace ArtViewer.Network.DeviantArt
         /// <returns>An array of updated folders</returns>
         public async Task<Tuple<Folder, ChangeType>[]> RefreshFolders(Folder[] localFolders)
         {
-            List<Tuple<Folder, ChangeType>> refreshed = new List<Tuple<Folder, ChangeType>>();
+            ConcurrentBag<Tuple<Folder, ChangeType>> refreshed = new ConcurrentBag<Tuple<Folder, ChangeType>>();
             var queries = PlanQueries(localFolders);
 
             await Parallel.ForEachAsync(queries, async (kvPair, ct) =>
