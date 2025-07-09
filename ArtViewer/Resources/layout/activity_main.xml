@@ -48,6 +48,7 @@
             android:paddingHorizontal="30dp"
             android:paddingVertical="15dp"
             android:layout_marginTop="35dp"
+            android:background="@drawable/rounded_button"
             app:layout_constraintTop_toBottomOf="@+id/intro_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -62,6 +63,7 @@
             android:paddingHorizontal="30dp"
             android:paddingVertical="15dp"
             android:layout_marginTop="35dp"
+            android:background="@drawable/rounded_button"
             app:layout_constraintTop_toBottomOf="@+id/browse_my_folders_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
