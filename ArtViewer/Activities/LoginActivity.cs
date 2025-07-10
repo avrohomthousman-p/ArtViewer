@@ -34,16 +34,28 @@ public class LoginActivity : AppCompatActivity
 
 
     /// <summary>
-    /// Luanches the browser so the user can login.
+    /// Launches the browser so the user can login.
     /// </summary>
     private void LaunchWebLogin()
     {
+
+        string codeVerifier = PkceUtil.GenerateCodeVerifier();
+        string codeChallenge = PkceUtil.GenerateCodeChallenge(codeVerifier);
+
+
+        ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+        ISharedPreferencesEditor editor = prefs.Edit();
+        editor.PutString("pkce_code_verifier", codeVerifier);
+        editor.Apply();
+
+
         string authUrl = "https://www.deviantart.com/oauth2/authorize" +
                  "?response_type=token" +
                  "&client_id=" + Secrets.client_id +
                  "&redirect_uri=artviewer://oauth2redirect" +
-                 "&scope=browse user.profile" +
-                 "&state=some_random_state" + 
+                 "&state=some_random_state" +
+                 $"&code_challenge={codeChallenge}" +
+                 $"&code_challenge_method=S256";
 
 
         var uri = Android.Net.Uri.Parse(authUrl);
