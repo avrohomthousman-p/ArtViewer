@@ -3,6 +3,7 @@ using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using ArtViewer.Network.Deviantart;
 using Java.Util.Prefs;
+using System.Text.Json;
 
 namespace ArtViewer.Activities
 {
@@ -50,21 +51,51 @@ namespace ArtViewer.Activities
 
         private void HandleRedirect(Intent intent)
         {
-            var uri = intent.DataString;
+            string uri = intent.DataString;
 
             if (uri != null && uri.StartsWith("artviewer://oauth2redirect"))
             {
-                //TODO: extract data we need
+                //var code = uri.GetQueryParameter("code");
+                //var state = uri.GetQueryParameter("state");
+                Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                Console.WriteLine(uri);
+                //TODO: analyze incoming data and extract what we need
 
-                ExchangeCodeForToken();
+                //Console.WriteLine($"Authorization Code: {code}");
+                //ExchangeCodeForToken(code);
             }
         }
 
 
 
-        private async void ExchangeCodeForToken()
+        //TODO: extract to network folder
+        private async void ExchangeCodeForToken(string code)
         {
-            //TODO: run another query for the access token
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+            string codeVerifier = prefs.GetString("pkce_code_verifier", "");
+
+            var values = new Dictionary<string, string>
+            {
+                { "grant_type", "authorization_code" },
+                { "client_id", "YOUR_CLIENT_ID" },
+                { "redirect_uri", "artviewer://oauth2redirect" },
+                { "code", code },
+                { "code_verifier", codeVerifier }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync("https://www.deviantart.com/oauth2/token", content);
+            var json = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("Token Response: " + json);
+
+            // Parse and store access_token
+            JsonDocument doc = JsonDocument.Parse(json);
+            //TODO: extract access token
+
+            //var accessToken = tokenObj["access_token"];
+            //await SecureStorage.SetAsync("access_token", accessToken);
         }
 
 
