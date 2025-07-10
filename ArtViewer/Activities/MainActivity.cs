@@ -1,8 +1,11 @@
 using Android.Content;
+using Android.Telephony.Ims;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using ArtViewer.Network.DeviantArt;
 using Java.Util.Prefs;
+using System.Text.Json;
+using System.Web;
 
 namespace ArtViewer.Activities
 {
@@ -15,7 +18,7 @@ namespace ArtViewer.Activities
     [IntentFilter(
         new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
-        DataScheme = "ArtViewer",
+        DataScheme = "artviewer",
         DataHost = "oauth2redirect"
     )]
     public class MainActivity : AppCompatActivity
@@ -50,21 +53,55 @@ namespace ArtViewer.Activities
 
         private void HandleRedirect(Intent intent)
         {
-            var uri = intent.DataString;
+            string? uriString = intent.DataString;
 
-            if (uri != null && uri.StartsWith("artviewer://oauth2redirect"))
+            if (uriString != null && uriString.StartsWith("artviewer://oauth2redirect"))
             {
-                //TODO: extract data we need
+                Uri uri = new Uri(uriString);
+                var queryCollection = HttpUtility.ParseQueryString(uri.Query);
+                string? code = queryCollection.Get("code");
 
-                ExchangeCodeForToken();
+                if (code == null)
+                {
+                    Console.WriteLine("No authorization code provided by deviantart");
+                    throw new Exception("DeviantArt has denied access");//TODO: not a good way to handle this
+                }
+
+                Console.WriteLine($"Authorization Code: {code}");
+                ExchangeCodeForToken(code.ToString());
             }
         }
 
 
 
-        private async void ExchangeCodeForToken()
+        //TODO: extract to network folder
+        private async void ExchangeCodeForToken(string code)
         {
-            //TODO: run another query for the access token
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+            string codeVerifier = prefs.GetString("pkce_code_verifier", "");
+
+            var values = new Dictionary<string, string>
+            {
+                { "grant_type", "authorization_code" },
+                { "client_id", LoginActivity.CLIENT_ID.ToString() },
+                { "redirect_uri", "artviewer://oauth2redirect" },
+                { "code", code },
+                { "code_verifier", codeVerifier }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync("https://www.deviantart.com/oauth2/token", content);
+            var json = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("Token Response: " + json);
+
+            // Parse and store access_token
+            JsonDocument doc = JsonDocument.Parse(json);
+            //TODO: extract access token
+
+            //var accessToken = tokenObj["access_token"];
+            //await SecureStorage.SetAsync("access_token", accessToken);
         }
 
 
