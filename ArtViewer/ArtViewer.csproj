@@ -19,6 +19,8 @@
 		<None Remove="Resources\drawable\ic_refresh.xml" />
 		<None Remove="Resources\drawable\rounded_button.xml" />
 		<None Remove="Resources\drawable\rounded_edit_text.xml" />
+		<None Remove="Resources\layout\activity_images_display.xml" />
+		<None Remove="Resources\layout\activity_login.xml" />
 		<None Remove="Resources\layout\activity_search_new_folders.xml" />
 		<None Remove="Resources\layout\display_candidate_for_refresh.xml" />
 		<None Remove="Resources\layout\display_db_folder.xml" />
