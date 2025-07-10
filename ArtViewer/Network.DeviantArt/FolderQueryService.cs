@@ -108,7 +108,7 @@ namespace ArtViewer.Network.DeviantArt
             while (hasMore)
             {
                 url = BuildUrl(location, username, page * PAGE_SIZE);
-                JsonDocument response = await NetworkUtils.RunGetRequest(url);
+                JsonDocument response = await NetworkUtils.RunAuthorizedGetRequest(url);
                 JsonElement root = response.RootElement;
 
                 CheckResponseForErrors(root);
@@ -273,7 +273,7 @@ namespace ArtViewer.Network.DeviantArt
         private async Task<Tuple<JsonElement, bool>> FetchPageOfUserFolders(StorageLocation location, string username, int page)
         {
             string url = BuildUrl(location, username, page * PAGE_SIZE);
-            JsonDocument response = await NetworkUtils.RunGetRequest(url);
+            JsonDocument response = await NetworkUtils.RunAuthorizedGetRequest(url);
             JsonElement root = response.RootElement;
 
 
@@ -294,11 +294,11 @@ namespace ArtViewer.Network.DeviantArt
         /// <param name="offset">The number of folders to skip</param>
         private string BuildUrl(StorageLocation location, string username, int offset=0)
         {
-            string baseUrl = "https://www.deviantart.com/api/v1/oauth2/{0}/folders?access_token={1}&username={2}&" +
-                "offset={3}&calculate_size=true&ext_preload=false&filter_empty_folder=true&limit=50&mature_content=true";
+            string baseUrl = "https://www.deviantart.com/api/v1/oauth2/{0}/folders?username={1}&" +
+                "offset={2}&calculate_size=true&ext_preload=false&filter_empty_folder=true&limit=50&mature_content=true";
 
 
-            return string.Format(baseUrl, location.AsText(), NetworkUtils.GetAccessToken(), username, offset);
+            return string.Format(baseUrl, location.AsText(), username, offset);
         }
 
 

@@ -49,7 +49,7 @@ namespace ArtViewer.Database
 
 
 
-        private const string BASE_URL = "https://www.deviantart.com/api/v1/oauth2/{0}/{1}?access_token={2}&username={3}&mature_content=true&limit={4}&offset={5}";
+        private const string BASE_URL = "https://www.deviantart.com/api/v1/oauth2/{0}/{1}?username={2}&mature_content=true&limit={3}&offset={4}";
 
 
         public Folder() { }
@@ -69,7 +69,7 @@ namespace ArtViewer.Database
 
         public string BuildUrl(int queryLimit, int offset)
         {
-            return string.Format(BASE_URL, this.StoredIn.AsText(), this.FolderId, NetworkUtils.GetAccessToken(), this.Username, queryLimit, offset);
+            return string.Format(BASE_URL, this.StoredIn.AsText(), this.FolderId, this.Username, queryLimit, offset);
         }
     }
 }

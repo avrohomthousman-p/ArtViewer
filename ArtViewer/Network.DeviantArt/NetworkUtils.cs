@@ -1,6 +1,8 @@
-﻿using Android.OS;
+﻿using Android.Content;
+using Android.OS;
 using Android.Util;
-using Android.Content;
+using ArtViewer.Activities;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 
@@ -9,118 +11,152 @@ namespace ArtViewer.Network.DeviantArt
 {
     public static class NetworkUtils
     {
-        private static SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-        private static string accessToken = null;
+        private static string? accessToken = null;
 
 
 
         /// <summary>
-        /// Gets the access token for the DeviantArt API.
+        /// Gets the access token for the DeviantArt API if there is one.
+        /// Ensure you call GenerateAccessToken before calling this.
         /// </summary>
+        /// <returns>The current DeviantArt access token.</returns>
+        /// <exception cref="Exception">
+        /// Thrown when no access token has been generated.
+        /// </exception>
         public static string GetAccessToken()
         {
-            if (accessToken != null)
+            if (NetworkUtils.accessToken == null)
             {
-                return accessToken;
+                throw new Exception("No access token for DeviantArt.");
             }
 
-
-            semaphore.Wait();
-
-            if (accessToken != null)
-            {
-                return accessToken;
-            }
-
-
-            try
-            {
-                GenerateAccessToken();
-            }
-            catch (Exception ex)
-            {
-                semaphore.Release();
-                Console.WriteLine(ex.GetType() + " " + ex.Message);
-                throw new Exception("Failed to retrieve access token", ex);
-            }
-
-
-
-            semaphore.Release();
-            return accessToken;
+            return NetworkUtils.accessToken;
         }
 
 
 
         /// <summary>
-        /// Connects to the cloud worker and gets an access token for the DeviantArt API from it.
+        /// Gets an access token from the DeviantArt API using the authorization code
+        /// they provided after a successfull login.
+        /// <param name="authorizationCode">The authorization code given by the API after logging in</param>
         /// </summary>
-        private static void GenerateAccessToken(bool isRetry=false)
+        public static async Task GenerateAccessToken(string authorizationCode)
         {
-            if (accessToken != null)
+            if (NetworkUtils.accessToken != null)
             {
                 return;
             }
 
-            RegisterApp();
 
-            string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/accessToken" +
-                "/clientCredentials?appID=" + SecurePreferences.DecryptAppID();
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
 
-            JsonDocument response = RunGetRequest(url).Result;
+            string codeVerifier = prefs.GetString(PkceUtil.PKCE_CODE_VERIFIER_KEY, "");
 
-
-            if (response.RootElement.TryGetProperty("access_token", out JsonElement accessTokenElement))
+            var requestData = new Dictionary<string, string>
             {
-                accessToken = accessTokenElement.ToString();
-            }
-            else
+                { "grant_type", "authorization_code" },
+                { "client_id", LoginActivity.CLIENT_ID.ToString() },
+                { "redirect_uri", "artviewer://oauth2redirect" },
+                { "code", authorizationCode },
+                { "code_verifier", codeVerifier }
+            };
+
+            var response = await RunPostRequest("https://www.deviantart.com/oauth2/token", requestData);
+
+
+            if (response.RootElement.TryGetProperty("status", out JsonElement statusElement))
             {
-                //Corner case. If we have a saved appID, but it no longer exists on the cloud worker
-                if (response.RootElement.TryGetProperty("error", out JsonElement errorMsg))
+                if (statusElement.GetString() == "error")
                 {
-                    if (!isRetry && errorMsg.ToString() == "Access Denied")
-                    {
-                        SecurePreferences.DeleteStoredAppID();
-                        GenerateAccessToken(true);
-                        return;
-                    }
+                    string? message = response.RootElement.GetProperty("error_description").GetString();
+                    throw new Exception(message);
                 }
-
-
-                Log.Error("Connection Error", "Failed to retrieve access token.");
-                throw new Exception("Failed to retrieve access token.");
             }
+
+
+            NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
+            string refreshToken = response.RootElement.GetProperty("refresh_token").GetString();
+            string exprirationDate = DateTime.UtcNow.AddMonths(3).ToString("O"); //ISO 8601 format
+
+
+
+            var editor = prefs.Edit();
+            editor.PutString("refresh_token", refreshToken);
+            editor.PutString("refresh_token_expiration_date", exprirationDate);
+            editor.Apply();
         }
 
 
 
         /// <summary>
-        /// Connects to a cloud worker to register this app if it isnt already registered. This gets 
-        /// the AppID that is used to connect to the could worker again and fetch an API access token
-        /// for DeviantArt.
+        /// Determans if the user needs to log in again becuase we cannot use the refresh token
+        /// to get an access token.
         /// </summary>
-        private static void RegisterApp()
+        /// <returns>True if we need the user to reauthenticate and false otherwise</returns>
+        public static bool ShouldRequireNewLogin()
         {
-            if (SecurePreferences.AppIDExists())
+            ISharedPreferences? prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+            string? savedDate = prefs?.GetString("refresh_token_expiration_date", null);
+
+
+            if(String.IsNullOrEmpty(savedDate))
+                return true;
+
+            if (!DateTime.TryParse(savedDate, null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime expirationDate))
+                return true;
+
+
+            return DateTime.UtcNow >= expirationDate;
+        }
+
+
+
+        /// <summary>
+        /// Gets an access token using the refresh token saved in shared preferences, so
+        /// the user doesnt need to login manually. Do not call this function unless you
+        /// have confirmed that the refresh token is not expired by calling the method
+        /// ShouldRequireNewLogin.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If there is no saved refresh token</exception>
+        /// <exception cref="Exception"></exception>
+        public static async Task RefreshAccessToken()
+        {
+            ISharedPreferences? prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+            string? refreshToken = prefs?.GetString("refresh_token", null);
+
+            if (string.IsNullOrEmpty(refreshToken))
+                throw new InvalidOperationException("No refresh token stored.");
+
+
+            const string URL = "https://www.deviantart.com/oauth2/token";
+            var requestData = new Dictionary<string, string>
             {
-                return;
+                { "grant_type", "refresh_token" },
+                { "client_id", LoginActivity.CLIENT_ID.ToString() },
+                { "refresh_token", refreshToken }
+            };
+
+
+            JsonDocument response = await RunPostRequest(URL, requestData);
+
+
+            if (response.RootElement.TryGetProperty("status", out JsonElement statusElement))
+            {
+                if (statusElement.GetString() == "error")
+                {
+                    string? message = response.RootElement.GetProperty("error_description").GetString();
+                    throw new Exception(message);
+                }
             }
 
 
-            const string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/register";
-            JsonDocument response = RunGetRequest(url).Result;
+            NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
 
-
-            if (response.RootElement.TryGetProperty("appID", out JsonElement appID))
-            {
-                SecurePreferences.EncryptAppID(appID.ToString());
-            }
-            else
-            {
-                Log.Error("Connection Error", "Failed to register app.");
-                throw new Exception("Failed to register app.");
-            }
+            //Update the refresh token
+            var editor = prefs.Edit();
+            editor.PutString("refresh_token", response.RootElement.GetProperty("refresh_token").GetString());
+            editor.PutString("refresh_token_expiration_date", DateTime.UtcNow.AddMonths(3).ToString("O"));
+            editor.Apply();
         }
 
 
@@ -145,14 +181,41 @@ namespace ArtViewer.Network.DeviantArt
 
 
 
-        public static async Task<JsonDocument> RunPostRequest(string url, Dictionary<string, string> arguments)
+        /// <summary>
+        /// This functions runs a regular get request except that it includes a header with
+        /// the DeviantArt access token from the GetAccessToken function.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>The response data from the request</returns>
+        public static async Task<JsonDocument> RunAuthorizedGetRequest(string url)
         {
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    var postData = new FormUrlEncodedContent(arguments);
-                    HttpResponseMessage response = await client.PostAsync(url, postData);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", NetworkUtils.GetAccessToken());
+                    HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+                    string result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return JsonDocument.Parse(result);
+                }
+                catch (HttpRequestException e)
+                {
+                    Log.Error("Connection Error", $"Request error: {e.Message}");
+                    return CreateErrorJson(e.Message);
+                }
+            }
+        }
+
+
+
+        public static async Task<JsonDocument> RunPostRequest(string url, Dictionary<string, string> postData)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    var payload = new FormUrlEncodedContent(postData);
+                    HttpResponseMessage response = await client.PostAsync(url, payload);
                     string result = await response.Content.ReadAsStringAsync();
                     return JsonDocument.Parse(result);
                 }

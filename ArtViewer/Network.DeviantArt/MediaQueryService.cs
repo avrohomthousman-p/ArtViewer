@@ -1,8 +1,4 @@
-﻿using Android.Drm;
-using ArtViewer.Activities;
-using ArtViewer.Database;
-using ArtViewer.Network.DeviantArt;
-using System.Collections.Concurrent;
+﻿using ArtViewer.Database;
 using System.Text.Json;
 
 namespace ArtViewer.Network.DeviantArt
@@ -178,7 +174,7 @@ namespace ArtViewer.Network.DeviantArt
         private async Task GetImageUrls(Folder folderModel, QueryTarget queryData)
         {
             string url = folderModel.BuildUrl(queryData.queryLimit, queryData.offset);
-            using JsonDocument jsonFolder = await NetworkUtils.RunGetRequest(url);
+            using JsonDocument jsonFolder = await NetworkUtils.RunAuthorizedGetRequest(url);
             JsonElement root = jsonFolder.RootElement;
 
 
