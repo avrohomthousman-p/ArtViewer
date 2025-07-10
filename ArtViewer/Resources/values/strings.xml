@@ -27,6 +27,8 @@
 	<string name="save_btn_text">Save</string>
 	<string name="save_btn_content_description">save button</string>
 
+	<string name="login_btn_text">Login to DeviantArt</string>
+
 
 	<string name="dialog_warning_text">The refresh operation may take a minute. Please do NOT exit the app or go back once it has started.</string>
 	<string name="dialog_explenation_text">

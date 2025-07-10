@@ -2,6 +2,7 @@ using Android.Content;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
 using ArtViewer.Network.Deviantart;
+using Java.Util.Prefs;
 
 namespace ArtViewer.Activities
 {
@@ -10,15 +11,23 @@ namespace ArtViewer.Activities
     /// Lets the user decide what he/she wants to do. Browse saved folders, edit saved folders,
     /// or find new folders to save.
     /// </summary>
-    [Activity(MainLauncher = true)]
+    [Activity(Exported = true)]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+        DataScheme = "ArtViewer",
+        DataHost = "oauth2redirect"
+    )]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
-            StartBackgroundJobs();
+            //StartBackgroundJobs();
 
 
             base.OnCreate(savedInstanceState);
+            HandleRedirect(base.Intent);
+
             SetContentView(Resource.Layout.activity_main);
 
 
@@ -28,6 +37,36 @@ namespace ArtViewer.Activities
 
             SetupClickListeners();
         }
+
+
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            HandleRedirect(intent);
+        }
+
+
+
+        private void HandleRedirect(Intent intent)
+        {
+            var uri = intent.DataString;
+
+            if (uri != null && uri.StartsWith("artviewer://oauth2redirect"))
+            {
+                //TODO: extract data we need
+
+                ExchangeCodeForToken();
+            }
+        }
+
+
+
+        private async void ExchangeCodeForToken()
+        {
+            //TODO: run another query for the access token
+        }
+
 
 
 
