@@ -30,6 +30,8 @@
 
 	<string name="temp_title">Loading Image...</string>
 
+	<string name="login_btn_text">Login to DeviantArt</string>
+
 
 	<string name="dialog_warning_text">The refresh operation may take a minute. Please do NOT exit the app or go back once it has started.</string>
 	<string name="dialog_explenation_text">
