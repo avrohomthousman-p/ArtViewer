@@ -4,7 +4,7 @@ using Org.Apache.Http.Authentication;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace ArtViewer.Network.Deviantart
+namespace ArtViewer.Network.DeviantArt
 {
     public static class NetworkUtils
     {

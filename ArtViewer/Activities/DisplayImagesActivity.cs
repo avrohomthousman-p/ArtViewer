@@ -1,5 +1,5 @@
 ﻿using AndroidX.RecyclerView.Widget;
-using ArtViewer.Network.Deviantart;
+using ArtViewer.Network.DeviantArt;
 using AndroidX.AppCompat.App;
 using Android.Views;
 using ArtViewer.Database;

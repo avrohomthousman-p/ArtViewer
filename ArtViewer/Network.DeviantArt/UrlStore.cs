@@ -1,4 +1,4 @@
-﻿using ArtViewer.Network.Deviantart;
+﻿using ArtViewer.Network.DeviantArt;
 using System.Collections.Concurrent;
 
 namespace ArtViewer.Network.DeviantArt

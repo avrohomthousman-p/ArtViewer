@@ -1,4 +1,4 @@
-﻿using ArtViewer.Network.Deviantart;
+﻿using ArtViewer.Network.DeviantArt;
 using SQLite;
 using System.ComponentModel.DataAnnotations;
 
@@ -31,7 +31,7 @@ namespace ArtViewer.Database
 
 
         [NotNull]
-        public int TotalImages { get; set; } = Network.Deviantart.ImageQueryService.MAX_IMAGES;
+        public int TotalImages { get; set; } = ImageQueryService.MAX_IMAGES;
 
 
         [SQLite.MaxLength(20)]

@@ -1,7 +1,7 @@
 using Android.Content;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
-using ArtViewer.Network.Deviantart;
+using ArtViewer.Network.DeviantArt;
 
 namespace ArtViewer.Activities
 {

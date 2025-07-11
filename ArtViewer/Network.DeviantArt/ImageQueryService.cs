@@ -5,7 +5,7 @@ using ArtViewer.Network.DeviantArt;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace ArtViewer.Network.Deviantart
+namespace ArtViewer.Network.DeviantArt
 {
 
     /// <summary>
