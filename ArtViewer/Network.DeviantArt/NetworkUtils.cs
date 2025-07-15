@@ -61,17 +61,10 @@ namespace ArtViewer.Network.DeviantArt
                 return;
             }
 
-            const string url = "https://www.deviantart.com/oauth2/token";
-            Dictionary<string, string> postData = new Dictionary<string, string>
-                {
-                    { "grant_type", "client_credentials" },
-                    { "client_id", Secrets.client_id },
-                    { "client_secret", Secrets.client_secret }
-                };
+            const string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/";
 
-
-
-            JsonDocument response = RunPostRequest(url, postData).Result;
+            JsonDocument response = RunGetRequest(url).Result;
+            
 
             if (response.RootElement.TryGetProperty("access_token", out JsonElement accessTokenElement))
             {
