@@ -1,8 +1,9 @@
 ﻿using Android.OS;
 using Android.Util;
-using Org.Apache.Http.Authentication;
-using System.Collections.Concurrent;
+using Android.Content;
 using System.Text.Json;
+
+
 
 namespace ArtViewer.Network.DeviantArt
 {
@@ -52,7 +53,7 @@ namespace ArtViewer.Network.DeviantArt
 
 
         /// <summary>
-        /// Connects to the DeviantArt API and retrieves and saves an access token.
+        /// Connects to the cloud worker and gets an access token for the DeviantArt API from it.
         /// </summary>
         private static void GenerateAccessToken()
         {
@@ -61,10 +62,13 @@ namespace ArtViewer.Network.DeviantArt
                 return;
             }
 
-            const string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/";
+            RegisterApp();
+
+            string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/accessToken?appID="
+                                    + SecurePreferences.DecryptAppID();
 
             JsonDocument response = RunGetRequest(url).Result;
-            
+
 
             if (response.RootElement.TryGetProperty("access_token", out JsonElement accessTokenElement))
             {
@@ -77,6 +81,35 @@ namespace ArtViewer.Network.DeviantArt
             }
         }
 
+
+
+        /// <summary>
+        /// Connects to a cloud worker to register this app if it isnt already registered. This gets 
+        /// the AppID that is used to connect to the could worker again and fetch an API access token
+        /// for DeviantArt.
+        /// </summary>
+        private static void RegisterApp()
+        {
+            if (SecurePreferences.AppIDExists())
+            {
+                return;
+            }
+
+
+            const string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/register";
+            JsonDocument response = RunGetRequest(url).Result;
+
+
+            if (response.RootElement.TryGetProperty("appID", out JsonElement appID))
+            {
+                SecurePreferences.EncryptAppID(appID.ToString());
+            }
+            else
+            {
+                Log.Error("Connection Error", "Failed to register app.");
+                throw new Exception("Failed to register app.");
+            }
+        }
 
 
 
