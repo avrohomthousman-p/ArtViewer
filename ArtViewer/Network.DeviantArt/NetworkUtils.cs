@@ -55,7 +55,7 @@ namespace ArtViewer.Network.DeviantArt
         /// <summary>
         /// Connects to the cloud worker and gets an access token for the DeviantArt API from it.
         /// </summary>
-        private static void GenerateAccessToken()
+        private static void GenerateAccessToken(bool isRetry=false)
         {
             if (accessToken != null)
             {
@@ -76,6 +76,18 @@ namespace ArtViewer.Network.DeviantArt
             }
             else
             {
+                //Corner case. If we have a saved appID, but it no longer exists on the cloud worker
+                if (response.RootElement.TryGetProperty("error", out JsonElement errorMsg))
+                {
+                    if (!isRetry && errorMsg.ToString() == "Access Denied")
+                    {
+                        SecurePreferences.DeleteStoredAppID();
+                        GenerateAccessToken(true);
+                        return;
+                    }
+                }
+
+
                 Log.Error("Connection Error", "Failed to retrieve access token.");
                 throw new Exception("Failed to retrieve access token.");
             }

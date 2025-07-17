@@ -104,5 +104,20 @@ namespace ArtViewer.Network.DeviantArt
             var prefs = Android.App.Application.Context.GetSharedPreferences(PrefName, FileCreationMode.Private);
             return prefs.Contains(EncryptedKey) && prefs.Contains(IVKey);
         }
+
+
+
+        /// <summary>
+        /// Deletes the AppID from shared preferences.
+        /// </summary>
+        public static void DeleteStoredAppID()
+        {
+            var prefs = Android.App.Application.Context.GetSharedPreferences(PrefName, FileCreationMode.Private);
+            var editor = prefs.Edit();
+            editor.Remove(EncryptedKey);
+            editor.Remove(IVKey);
+            editor.Apply();
+        }
+
     }
 }
