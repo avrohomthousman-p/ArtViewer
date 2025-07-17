@@ -128,7 +128,9 @@ namespace ArtViewer.Database
 
         public static async Task<IEnumerable<Folder>> GetAllFolders()
         {
-            return await database.Table<Folder>().ToListAsync();
+            return await database.Table<Folder>()
+                                    .OrderBy(folder => folder.CustomName)
+                                    .ToListAsync();
         }
     }
 }
