@@ -13,30 +13,20 @@ have saved a folder, you can access it anytime.
 
 
 
-# Installation
-It is important to understand how this app manages its secrets. The app has a `Secrets.cs` file (ArtViewer\ArtViewer\Secrets.cs).
-When the app is being built, before any code is compiled, a special script is called. This script (found in 
-"ArtViewer\GenerateSecrets.csx") will search the project root for a `.env` file containing a `client_id` and a `client_secret`, 
-which are both necessary for connecting to the DeviantArt API. The script reads the values from the `.env` file and uses them to 
-replace the dummy values in `ArtViewer\ArtViewer\Secrets.cs`, so that real data will be available at runtime. This process will
-completely overwrite the contents of the secrets file, and it will contain actual secrets in plain text. As a result of this system,
-there are a few things that need to be done (in any order) before building the app for the first time. 
+# DeviantArt Connection
+Unfortunatly the DeviantArt Oauth2 login page does not currently work, so this app gets a DeviantArt access token from a cloudflare worker
+that handles all the API secrets. The worker is used to generate the access token only. Actual requests for DeviantArt data is fetched 
+directly from the DeviantArt API.
 
-1) run this command:
-`git update-index --assume-unchanged ArtViewer\Secrets.cs`
-This ensures that when the secrets file is overwritten, it is not registered as a change and does not get pushed.
+As its stands the code assumes the worker supports these URLs (all get requests):
 
-2) Make a DeviantArt account for yourself and [register your app](https://www.deviantart.com/developers/apps). They will provide you
-with a client_id and client_secret. Then put those values into a `.env` file in the project's root directory like this:
-```
-client_id=your_client_id_here
-client_secret=your_secret_here
-```
-Do not have trailing or leading whitespace on any line or at the beginning or end of the file. It might cause the script to fail.
+### worker_url/accessToken?appID={your appID here}
+gets a DeviantArt access token only if your app has a valid appID
 
-3) You will need to install the scripting software that is required by the above mentioned script. To do this, navigate to the
-project root directory and run this command in a terminal
-`dotnet tool restore`
+### worker_url/register
+generates a new ID for the app. This should be saved for future reuse
+
+
 
 
 # Screenshots
