@@ -43,11 +43,4 @@
 		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.2" />
 		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.4" />
 	</ItemGroup>
-
-	<Target Name="GenerateSecretsPreBuild" BeforeTargets="BeforeBuild">
-		<Exec Command="dotnet script ..\GenerateSecrets.csx" />
-		<ItemGroup>
-			<Compile Include="Secrets.cs" />
-		</ItemGroup>
-	</Target>
 </Project>
