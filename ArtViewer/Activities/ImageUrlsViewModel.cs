@@ -27,7 +27,7 @@ namespace ArtViewer.Activities
         {
             if (urls == null)
             {
-                ImageQueryService service = new ImageQueryService();
+                MediaQueryService service = new MediaQueryService();
                 this.urls = await service.LoadAllImages(folder);
                 return this.urls;
             }
