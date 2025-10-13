@@ -9,10 +9,11 @@ namespace ArtViewer.Network.DeviantArt
 {
 
     /// <summary>
-    /// Stores which images a query is supposed to fetch, and which of those the system should keep.
+    /// Stores which items a query is supposed to fetch, and which of those the system should keep.
     /// 
-    /// The imagesToKkeep should be index number(s) withing this query, not the full gallery. So
-    /// index 0 is the first image returned by this query, not the first image in the gallery.
+    /// The itemsToKkeep should be a list of index number(s) within this query, not the full gallery. So
+    /// index 0 is the first image returned by this query, even if item 0 in the query is not item 0 in 
+    /// the gallery.
     /// 
     /// If itemsToKeep is set to null, all query results are kept.
     /// </summary>
@@ -26,7 +27,7 @@ namespace ArtViewer.Network.DeviantArt
         public QueryTarget()
         {
             offset = 0;
-            queryLimit = ImageQueryService.MAX_QUERY_LIMIT;
+            queryLimit = MediaQueryService.MAX_QUERY_LIMIT;
             itemsToKeep = null;
         }
 

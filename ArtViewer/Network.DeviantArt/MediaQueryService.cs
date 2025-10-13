@@ -9,12 +9,12 @@ namespace ArtViewer.Network.DeviantArt
 {
 
     /// <summary>
-    /// Class that starts threads to connect to the DeviantArt API and retrieve the image URLs.
+    /// Class that starts threads to connect to the DeviantArt API and retrieve the image and video URLs.
     /// </summary>
-    internal class ImageQueryService
+    internal class MediaQueryService
     {
-        //fetch only 250 imagaes, but it not necessarily the first 250 in the gallery
-        public const int MAX_IMAGES = 250;
+        //fetch only 250 imagaes and videos, but it not necessarily the first 250 in the gallery
+        public const int MAX_MEDIA_ITEMS = 250;
         public const int MAX_QUERY_LIMIT = 24;
 
 
@@ -41,7 +41,7 @@ namespace ArtViewer.Network.DeviantArt
         private List<QueryTarget> PlanQueries(Folder folder)
         {
             //We only need to download random images if there are more than MAX_IMAGES. Otherwise, just take all
-            if (folder.ShouldRandomize && folder.TotalImages > MAX_IMAGES)
+            if (folder.ShouldRandomize && folder.TotalImages > MAX_MEDIA_ITEMS)
             {
                 int[] galleryIndexes = PickImagesToLoad(folder);
                 return PlanNonConsecutiveQueries(galleryIndexes);
@@ -61,7 +61,7 @@ namespace ArtViewer.Network.DeviantArt
         private int[] PickImagesToLoad(Folder folder)
         {
             //If we have less images than the max, just load all of them
-            if (folder.TotalImages <= MAX_IMAGES)
+            if (folder.TotalImages <= MAX_MEDIA_ITEMS)
             {
                 return Enumerable.Range(0, folder.TotalImages).ToArray();
             }
@@ -69,7 +69,7 @@ namespace ArtViewer.Network.DeviantArt
 
             Random random = new Random();
             HashSet<int> selectedImages = new HashSet<int>();
-            while (selectedImages.Count < MAX_IMAGES)
+            while (selectedImages.Count < MAX_MEDIA_ITEMS)
             {
                 int randomNumber = random.Next(0, folder.TotalImages);
                 selectedImages.Add(randomNumber);
@@ -137,7 +137,7 @@ namespace ArtViewer.Network.DeviantArt
         {
             List<QueryTarget> queries = new List<QueryTarget>();
 
-            int numImagesToFetch = Math.Min(MAX_IMAGES, folder.TotalImages);
+            int numImagesToFetch = Math.Min(MAX_MEDIA_ITEMS, folder.TotalImages);
             int offset = 0;
             while (offset < numImagesToFetch)
             {

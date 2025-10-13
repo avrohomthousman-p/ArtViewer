@@ -31,7 +31,7 @@ namespace ArtViewer.Database
 
 
         [NotNull]
-        public int TotalImages { get; set; } = ImageQueryService.MAX_IMAGES;
+        public int TotalImages { get; set; } = MediaQueryService.MAX_MEDIA_ITEMS;
 
 
         [SQLite.MaxLength(20)]
