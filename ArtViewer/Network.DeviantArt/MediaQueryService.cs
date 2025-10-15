@@ -22,7 +22,7 @@ namespace ArtViewer.Network.DeviantArt
 
 
 
-        public async Task<List<string>> LoadAllImages(Folder folder)
+        public async Task<List<MediaItem>> LoadAllImages(Folder folder)
         {
             this.urls = new UrlStore(folder.ShouldRandomize);
 
@@ -238,11 +238,33 @@ namespace ArtViewer.Network.DeviantArt
             void ExtractImage(int imageIndex)
             {
                 var imageData = pics[imageIndex];
+                if (imageData.TryGetProperty("tier_access", out JsonElement tier))
+                {
+                    if (tier.GetString() == "locked")
+                    {
+                        return; //image only availible to paying users
+                    }
+                }
+
+
+
+                string title = imageData.GetProperty("title").GetString() ?? "";
+
+
                 if (imageData.TryGetProperty("content", out JsonElement content))
                 {
                     if (content.TryGetProperty("src", out JsonElement src))
                     {
-                        urls.Add(src.ToString(), imageIndex + offset);
+                        urls.Add(src.ToString(), title, imageIndex + offset, true);
+                    }
+                }
+                else if (imageData.TryGetProperty("videos", out JsonElement videos))
+                {
+                    JsonElement firstVideo = videos.EnumerateArray().First();
+                    string? videoUrl = firstVideo.GetProperty("src").GetString();
+                    if (videoUrl != null)
+                    {
+                        urls.Add(videoUrl, title, imageIndex + offset, false);
                     }
                 }
             }

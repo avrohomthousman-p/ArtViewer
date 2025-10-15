@@ -14,16 +14,16 @@ namespace ArtViewer.Activities
     /// </summary>
     internal class ImageUrlsViewModel : ViewModel
     {
-        private List<string> urls = null;
+        private List<MediaItem> urls = null;
 
 
 
         /// <summary>
-        /// Gets the image urls if they are cached, otherwise gets them from the ImageQueryService 
+        /// Gets the image/video urls if they are cached, otherwise gets them from the ImageQueryService 
         /// </summary>
-        /// <param name="folder">The folder whose images are to be displayed</param>
-        /// <returns>The image urls to be displayed</returns>
-        internal async Task<List<string>> GetImageUrlsAsync(Folder folder)
+        /// <param name="folder">The folder whose items are to be displayed</param>
+        /// <returns>The urls to be displayed</returns>
+        internal async Task<List<MediaItem>> GetMediaUrlsAsync(Folder folder)
         {
             if (urls == null)
             {

@@ -4,27 +4,19 @@ using System.Collections.Concurrent;
 namespace ArtViewer.Network.DeviantArt
 {
     /// <summary>
-    /// Stores urls and, if set to not randomize, also indexes needed for sorting.
+    /// Stores urls (and other data) and, if set to not randomize, also indexes needed for sorting.
     /// </summary>
     internal class UrlStore
     {
         public bool shouldRandomize;
-        private readonly ConcurrentBag<string> nonSortable = null;
-        private readonly ConcurrentBag<Tuple<int, string>> sortable = null;
+        private readonly ConcurrentBag<MediaItem> gatheredArt = null;
 
 
         internal UrlStore(bool shouldRandomize)
         {
             this.shouldRandomize = shouldRandomize;
 
-            if (shouldRandomize)
-            {
-                nonSortable = new ConcurrentBag<string>();
-            }
-            else
-            {
-                sortable = new ConcurrentBag<Tuple<int, string>>();
-            }
+            this.gatheredArt = new ConcurrentBag<MediaItem>();
         }
 
 
@@ -35,25 +27,27 @@ namespace ArtViewer.Network.DeviantArt
         /// <param name="url">the image url to be stored</param>
         /// <param name="index">the image index in the gallery (for sorting). Ignored if randomize is on</param>
         /// <exception cref="ArgumentException">If null index is provided when randomizing is off</exception>
-        public void Add(string url, int? index = null)
+        public void Add(string url, string title, int? index = null, bool isImage = true)
         {
-            if (this.shouldRandomize)
+            if (!this.shouldRandomize && index == null)
             {
-                this.nonSortable.Add(url);
+                throw new ArgumentException("Image index cannot be null when sorting is on.");
             }
-            else
+            if (index < 0 || index >= MediaQueryService.MAX_MEDIA_ITEMS)
             {
-                if (index == null)
-                {
-                    throw new ArgumentException("Image index cannot be null when sorting is on.");
-                }
-                if (index < 0 || index >= MediaQueryService.MAX_MEDIA_ITEMS)
-                {
-                    throw new ArgumentOutOfRangeException($"Image index {index} is out of bounds for range 0-{MediaQueryService.MAX_MEDIA_ITEMS}");
-                }
+                throw new ArgumentOutOfRangeException($"Image index {index} is out of bounds for range 0-{MediaQueryService.MAX_MEDIA_ITEMS}");
+            }
 
-                sortable.Add(Tuple.Create((int)index, url));
+
+            MediaItem item = new MediaItem(url, title);
+            item.IsImage = isImage;
+            if (index != null)
+            {
+                item.Index = (int)index;
             }
+
+
+            this.gatheredArt.Add(item);
         }
 
 
@@ -66,18 +60,18 @@ namespace ArtViewer.Network.DeviantArt
         /// getting more. If you want to wait for other threads you need to do so external to this
         /// function.
         /// </summary>
-        /// <returns>A list of image urls, sorted or randomized depending on your settings</returns>
-        public List<string> GetUrls()
+        /// <returns>A list of image data, sorted or randomized depending on your settings</returns>
+        public List<MediaItem> GetUrls()
         {
             if (this.shouldRandomize)
             {
-                List<string> results = new List<string>(this.nonSortable);
+                List<MediaItem> results = new List<MediaItem>(this.gatheredArt);
                 ShuffleList(results);
                 return results;
             }
             else
             {
-                return this.sortable.OrderBy(data => data.Item1).Select(data => data.Item2).ToList();
+                return this.gatheredArt.OrderBy(image => image.Index).ToList();
             }
         }
 

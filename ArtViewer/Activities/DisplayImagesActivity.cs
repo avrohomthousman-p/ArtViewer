@@ -46,7 +46,7 @@ public class DisplayImagesActivity : AppCompatActivity
 
     private async Task SetupRecyclerView()
     {
-        List<string> imageUrls;
+        List<MediaItem> imageUrls;
 
 
         try
@@ -63,7 +63,7 @@ public class DisplayImagesActivity : AppCompatActivity
 
             //Urls are stored in the ImageUrlsViewModel to ensure they dont get reset on device rotation
             ImageUrlsViewModel viewModel = new ViewModelProvider(this).Get(Java.Lang.Class.FromType(typeof(ImageUrlsViewModel))) as ImageUrlsViewModel;
-            imageUrls = await viewModel.GetImageUrlsAsync(folder);
+            imageUrls = await viewModel.GetMediaUrlsAsync(folder);
         }
         catch(Exception e)
         {

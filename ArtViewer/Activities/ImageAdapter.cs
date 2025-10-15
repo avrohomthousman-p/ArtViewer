@@ -1,6 +1,7 @@
 ﻿using Android.Content;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
+using ArtViewer.Network.DeviantArt;
 using Bumptech.Glide;
 
 
@@ -10,19 +11,19 @@ namespace ArtViewer.Activities
 
     {
         private Context context;
-        private List<string> imageUrls;
+        private List<MediaItem> displayData;
 
 
 
-        public ImageAdapter(Context context, List<string> imageUrls)
+        public ImageAdapter(Context context, List<MediaItem> displayData)
         {
             this.context = context;
-            this.imageUrls = imageUrls;
+            this.displayData = displayData;
         }
 
 
 
-        public override int ItemCount => imageUrls.Count;
+        public override int ItemCount => displayData.Count;
 
 
 
@@ -32,7 +33,7 @@ namespace ArtViewer.Activities
 
 
             Glide.With(context)
-             .Load(imageUrls[position])
+             .Load(displayData[position].Url)
              .Placeholder(Resource.Drawable.ic_loading)
              .Into(viewHolder.ImageView);
         }
