@@ -77,7 +77,7 @@ public class DisplayImagesActivity : AppCompatActivity
         //Recycler view creation
         RecyclerView recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
         recyclerView.SetLayoutManager(new LinearLayoutManager(this));
-        recyclerView.SetAdapter(new ImageAdapter(this, imageUrls));
+        recyclerView.SetAdapter(new MediaAdapter(this, imageUrls));
 
 
         //Make the images snap to the center of the screen on scroll
