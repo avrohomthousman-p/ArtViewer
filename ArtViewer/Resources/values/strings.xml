@@ -6,8 +6,8 @@
 	
 	<string name="menu_intro">What Would You Like To Do Today?</string>
 
-	<string name="browse_my_folders_btn_text">Browse My Folders</string>
-	<string name="add_new_folders_btn_text">Add New Folder</string>
+	<string name="browse_my_folders_btn_text">Browse Saved Folders</string>
+	<string name="add_new_folders_btn_text">Find New Folders</string>
 
 	
 	<string name="save_new_folders_intro_text">Describe the folder you are looking for</string>

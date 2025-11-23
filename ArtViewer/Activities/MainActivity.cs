@@ -74,7 +74,7 @@ namespace ArtViewer.Activities
         /// </summary>
         private void SetupClickListeners()
         {
-            FindViewById<Button>(Resource.Id.browse_my_folders_btn).Click +=
+            FindViewById<LinearLayout>(Resource.Id.browse_my_folders_container).Click +=
                 (sender, e) =>
                 {
                     Intent intent = new Intent(this, typeof(ManageFoldersActivity));
@@ -82,7 +82,7 @@ namespace ArtViewer.Activities
                 };
 
 
-            FindViewById<Button>(Resource.Id.add_new_folders_btn).Click +=
+            FindViewById<LinearLayout>(Resource.Id.add_new_folders_container).Click +=
                 (sender, e) =>
                 {
                     Intent intent = new Intent(this, typeof(SearchNewFoldersActivity));
