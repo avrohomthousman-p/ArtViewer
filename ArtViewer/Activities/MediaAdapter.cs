@@ -1,8 +1,8 @@
 ﻿using Android.Content;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
-using Bumptech.Glide;
 using ArtViewer.Network.DeviantArt;
+using Bumptech.Glide;
 
 
 namespace ArtViewer.Activities
@@ -14,6 +14,7 @@ namespace ArtViewer.Activities
     {
         private Context context;
         private List<MediaItem> artData;
+        private VideoViewHolder currentVideoHolder;
 
 
 
@@ -53,7 +54,7 @@ namespace ArtViewer.Activities
                 view = LayoutInflater.From(parent.Context)
                     .Inflate(Resource.Layout.video_item, parent, false);
 
-                return new VideoViewHolder(view);
+                return new VideoViewHolder(view, parent.Context);
             }
         }
 
@@ -78,22 +79,62 @@ namespace ArtViewer.Activities
             else
             {
                 VideoViewHolder viewHolder = holder as VideoViewHolder;
+                var videoHolder = holder as VideoViewHolder;
+
+                this.UpdateCurrentVideo(viewHolder);
 
                 viewHolder.Title.Text = artData[position].Title;
-
-
-                var uri = Android.Net.Uri.Parse(artData[position].Url);
-
-                viewHolder.Video.SetVideoURI(uri);
-                viewHolder.Video.SetMediaController(new MediaController(context));
-                viewHolder.Video.RequestFocus();
-                //viewHolder.Video.Start();
-
-                viewHolder.Video.Prepared += (s, e) =>
-                {
-                    viewHolder.Video.Start();
-                };
+                viewHolder.PrepareVideo(artData[position].Url);
             }
+        }
+
+
+
+        /// <summary>
+        /// Updates the variable referencing the current video, and pauses the previous video.
+        /// </summary>
+        /// <param name="holder"></param>
+        private void UpdateCurrentVideo(VideoViewHolder holder)
+        {
+            if (this.currentVideoHolder != null && this.currentVideoHolder != holder)
+            {
+                this.currentVideoHolder.Player.Pause();
+            }
+            this.currentVideoHolder = holder;
+        }
+
+
+
+        public override void OnViewRecycled(Java.Lang.Object holder)
+        {
+            if (holder is VideoViewHolder videoHolder)
+            {
+                videoHolder.Player.Stop();
+                videoHolder.Player.Release();
+            }
+            base.OnViewRecycled(holder);
+        }
+
+
+
+        public override void OnViewDetachedFromWindow(Java.Lang.Object holder)
+        {
+            if (holder is VideoViewHolder videoHolder)
+            {
+                videoHolder.Player.Pause();
+            }
+            base.OnViewDetachedFromWindow(holder);
+        }
+
+
+
+        public override void OnViewAttachedToWindow(Java.Lang.Object holder)
+        {
+            if (holder is VideoViewHolder videoHolder)
+            {
+                videoHolder.Player.Play();
+            }
+            base.OnViewAttachedToWindow(holder);
         }
     }
 }

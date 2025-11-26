@@ -33,7 +33,7 @@ namespace ArtViewer.Network.DeviantArt
             {
                 throw new ArgumentException("Image index cannot be null when sorting is on.");
             }
-            if (index < 0 || index >= MediaQueryService.MAX_MEDIA_ITEMS)
+            if (!this.shouldRandomize && (index < 0 || index >= MediaQueryService.MAX_MEDIA_ITEMS))
             {
                 throw new ArgumentOutOfRangeException($"Image index {index} is out of bounds for range 0-{MediaQueryService.MAX_MEDIA_ITEMS}");
             }

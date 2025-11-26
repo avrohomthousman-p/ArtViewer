@@ -33,10 +33,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintDimensionRatio="16:9">
 
-		<VideoView
+		<androidx.media3.ui.PlayerView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+			android:layout_height="match_parent"
+            app:use_controller="true" />
 	</FrameLayout>
 
 
