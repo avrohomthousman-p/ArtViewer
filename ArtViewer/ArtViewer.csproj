@@ -19,7 +19,6 @@
 		<None Remove="Resources\drawable\ic_refresh.xml" />
 		<None Remove="Resources\drawable\rounded_button.xml" />
 		<None Remove="Resources\drawable\rounded_edit_text.xml" />
-		<None Remove="Resources\layout\activity_images_display.xml" />
 		<None Remove="Resources\layout\activity_search_new_folders.xml" />
 		<None Remove="Resources\layout\display_candidate_for_refresh.xml" />
 		<None Remove="Resources\layout\display_db_folder.xml" />
@@ -28,7 +27,6 @@
 		<None Remove="Resources\layout\edit_folder_dialog_box.xml" />
 		<None Remove="Resources\layout\image_item.xml" />
 		<None Remove="Resources\layout\refresh_folder_dialog_content.xml" />
-		<None Remove="Resources\menu\image_display_activity_menu.xml" />
 		<None Remove="Resources\menu\manage_folders_activity_menu.xml" />
 		<None Remove="Resources\menu\pick_folders_activity_menu.xml" />
 		<None Remove="Resources\values-sw600dp\dimens.xml" />

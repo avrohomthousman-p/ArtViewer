@@ -13,7 +13,7 @@ namespace ArtViewer.Activities;
 /// Activity for displaying the images in a user's folder.
 /// </summary>
 [Activity]
-public class DisplayImagesActivity : AppCompatActivity
+public class DisplayArtActivity : AppCompatActivity
 {
     public const string FOLDER_ID_KEY = "folderId";
 
@@ -23,7 +23,7 @@ public class DisplayImagesActivity : AppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        SetContentView(Resource.Layout.activity_images_display);
+        SetContentView(Resource.Layout.activity_art_display);
 
 
         this.toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
@@ -62,7 +62,7 @@ public class DisplayImagesActivity : AppCompatActivity
 
 
             //Urls are stored in the ImageUrlsViewModel to ensure they dont get reset on device rotation
-            ImageUrlsViewModel viewModel = new ViewModelProvider(this).Get(Java.Lang.Class.FromType(typeof(ImageUrlsViewModel))) as ImageUrlsViewModel;
+            MediaUrlsViewModel viewModel = new ViewModelProvider(this).Get(Java.Lang.Class.FromType(typeof(MediaUrlsViewModel))) as MediaUrlsViewModel;
             imageUrls = await viewModel.GetMediaUrlsAsync(folder);
         }
         catch(Exception e)
@@ -100,7 +100,7 @@ public class DisplayImagesActivity : AppCompatActivity
 
     public override bool OnCreateOptionsMenu(IMenu? menu)
     {
-        MenuInflater.Inflate(Resource.Menu.image_display_activity_menu, menu);
+        MenuInflater.Inflate(Resource.Menu.art_display_activity_menu, menu);
         return base.OnCreateOptionsMenu(menu);
     }
 

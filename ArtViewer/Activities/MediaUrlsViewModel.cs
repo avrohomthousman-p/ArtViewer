@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace ArtViewer.Activities
 {
     /// <summary>
-    /// Stores the image urls such that they dont get deleted when the screen is rotated
+    /// Stores the image/video urls such that they dont get deleted when the screen is rotated
     /// </summary>
-    internal class ImageUrlsViewModel : ViewModel
+    internal class MediaUrlsViewModel : ViewModel
     {
         private List<MediaItem> urls = null;
 
