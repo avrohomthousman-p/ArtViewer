@@ -196,6 +196,12 @@ public class ManageFoldersActivity : AppCompatActivity
             OnBackPressed();
             return true;
         }
+        else if (item.ItemId == Resource.Id.action_search_for_folders)
+        {
+            Intent intent = new Intent(this, typeof(SearchNewFoldersActivity));
+            StartActivity(intent);
+            return true;
+        }
         else if (item.ItemId == Resource.Id.action_refresh)
         {
             StartActivity(new Intent(this, typeof(RefreshFoldersActivity)));
