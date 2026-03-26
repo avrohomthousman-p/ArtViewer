@@ -64,8 +64,8 @@ namespace ArtViewer.Network.DeviantArt
 
             RegisterApp();
 
-            string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/accessToken?appID="
-                                    + SecurePreferences.DecryptAppID();
+            string url = "https://verification-server-morning-thunder-6fdd.avrohomthousman.workers.dev/accessToken" +
+                "/clientCredentials?appID=" + SecurePreferences.DecryptAppID();
 
             JsonDocument response = RunGetRequest(url).Result;
 
