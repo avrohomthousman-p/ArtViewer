@@ -2,6 +2,7 @@ using Android.Content;
 using Android.Graphics;
 using AndroidX.AppCompat.App;
 using ArtViewer.Network.DeviantArt;
+using ArtViewer.Utils;
 using Java.Util.Prefs;
 
 namespace ArtViewer.Activities;
@@ -93,10 +94,8 @@ public class LoginActivity : AppCompatActivity
         string codeChallenge = PkceUtil.GenerateCodeChallenge(codeVerifier);
 
 
-        ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
-        ISharedPreferencesEditor editor = prefs.Edit();
-        editor.PutString(PkceUtil.PKCE_CODE_VERIFIER_KEY, codeVerifier);
-        editor.Apply();
+        SharedPrefsRepository prefs = new SharedPrefsRepository();
+        prefs.PkceCodeVerifier = codeVerifier;
 
 
         string authUrl = "https://www.deviantart.com/oauth2/authorize" +
@@ -122,6 +121,6 @@ public class LoginActivity : AppCompatActivity
     /// <param name="duration">The amount of time it should stay on the screen for</param>
     private void MakeToastPopup(string message, ToastLength duration = ToastLength.Short)
     {
-        RunOnUiThread(() => Toast.MakeText(this, message, duration).Show());
+        RunOnUiThread(() => Toast.MakeText(this, message, duration)?.Show());
     }
 }

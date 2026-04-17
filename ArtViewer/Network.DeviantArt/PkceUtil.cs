@@ -9,9 +9,6 @@ namespace ArtViewer.Network.DeviantArt
 {
     public static class PkceUtil
     {
-        public const string PKCE_CODE_VERIFIER_KEY = "pkce_code_verifier";
-
-
         public static string GenerateCodeVerifier()
         {
             byte[] bytes = new byte[32];
