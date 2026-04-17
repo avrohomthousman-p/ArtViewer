@@ -2,6 +2,7 @@
 using Android.OS;
 using Android.Util;
 using ArtViewer.Activities;
+using ArtViewer.Utils;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -48,9 +49,9 @@ namespace ArtViewer.Network.DeviantArt
             }
 
 
-            ISharedPreferences prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
+            SharedPrefsRepository prefs = new SharedPrefsRepository();
+            string? codeVerifier = prefs.PkceCodeVerifier;
 
-            string codeVerifier = prefs.GetString(PkceUtil.PKCE_CODE_VERIFIER_KEY, "");
 
             var requestData = new Dictionary<string, string>
             {
@@ -75,15 +76,12 @@ namespace ArtViewer.Network.DeviantArt
 
 
             NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
-            string refreshToken = response.RootElement.GetProperty("refresh_token").GetString();
-            string exprirationDate = DateTime.UtcNow.AddMonths(3).ToString("O"); //ISO 8601 format
+            string? refreshToken = response.RootElement.GetProperty("refresh_token").GetString();
+            DateTime exprirationDate = DateTime.UtcNow.AddMonths(3);
 
 
-
-            var editor = prefs.Edit();
-            editor.PutString("refresh_token", refreshToken);
-            editor.PutString("refresh_token_expiration_date", exprirationDate);
-            editor.Apply();
+            prefs.RefreshToken = refreshToken;
+            prefs.RefreshTokenExpirationDate = exprirationDate;
         }
 
 
@@ -95,14 +93,11 @@ namespace ArtViewer.Network.DeviantArt
         /// <returns>True if we need the user to reauthenticate and false otherwise</returns>
         public static bool ShouldRequireNewLogin()
         {
-            ISharedPreferences? prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
-            string? savedDate = prefs?.GetString("refresh_token_expiration_date", null);
+            SharedPrefsRepository prefs = new SharedPrefsRepository();
+            DateTime? expirationDate = prefs.RefreshTokenExpirationDate;
 
 
-            if(String.IsNullOrEmpty(savedDate))
-                return true;
-
-            if (!DateTime.TryParse(savedDate, null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime expirationDate))
+            if(expirationDate == null)
                 return true;
 
 
@@ -121,8 +116,8 @@ namespace ArtViewer.Network.DeviantArt
         /// <exception cref="Exception"></exception>
         public static async Task RefreshAccessToken()
         {
-            ISharedPreferences? prefs = Application.Context.GetSharedPreferences("MyPrefs", FileCreationMode.Private);
-            string? refreshToken = prefs?.GetString("refresh_token", null);
+            SharedPrefsRepository prefs = new SharedPrefsRepository();
+            string? refreshToken = prefs.RefreshToken;
 
             if (string.IsNullOrEmpty(refreshToken))
                 throw new InvalidOperationException("No refresh token stored.");
@@ -153,10 +148,8 @@ namespace ArtViewer.Network.DeviantArt
             NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
 
             //Update the refresh token
-            var editor = prefs.Edit();
-            editor.PutString("refresh_token", response.RootElement.GetProperty("refresh_token").GetString());
-            editor.PutString("refresh_token_expiration_date", DateTime.UtcNow.AddMonths(3).ToString("O"));
-            editor.Apply();
+            prefs.RefreshToken = response.RootElement.GetProperty("refresh_token").GetString();
+            prefs.RefreshTokenExpirationDate = DateTime.UtcNow.AddMonths(3);
         }
 
 

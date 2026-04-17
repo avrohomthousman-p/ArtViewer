@@ -67,7 +67,7 @@ namespace ArtViewer.Activities
         /// <param name="duration">The amount of time it should stay on the screen for</param>
         private void MakeToastPopup(string message, ToastLength duration = ToastLength.Short)
         {
-            RunOnUiThread(() => Toast.MakeText(this, message, duration).Show());
+            RunOnUiThread(() => Toast.MakeText(this, message, duration)?.Show());
         }
 
 
