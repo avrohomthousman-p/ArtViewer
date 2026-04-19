@@ -96,6 +96,21 @@ namespace ArtViewer.Activities
 
             Intent intent = new Intent(this, typeof(LoginActivity));
             StartActivity(intent);
+            Finish();
+        }
+
+
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            if (!NetworkUtils.IsAccessTokenValid())
+            {
+                Intent intent = new Intent(this, typeof(LoginActivity));
+                StartActivity(intent);
+                Finish();
+            }
         }
     }
 }

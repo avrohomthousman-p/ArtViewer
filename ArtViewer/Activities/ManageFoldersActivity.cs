@@ -2,6 +2,7 @@ using Android.Content;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Database;
+using ArtViewer.Network.DeviantArt;
 using Bumptech.Glide;
 using Google.Android.Material.Snackbar;
 
@@ -177,6 +178,20 @@ public class ManageFoldersActivity : AppCompatActivity
     {
         EditFolderDialogBox dialogBox = new EditFolderDialogBox(this, folder, originalFolderNameTextView);
         dialogBox.ShowDialogBox();
+    }
+
+
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+
+        if (!NetworkUtils.IsAccessTokenValid())
+        {
+            Intent intent = new Intent(this, typeof(LoginActivity));
+            StartActivity(intent);
+            Finish();
+        }
     }
 
 

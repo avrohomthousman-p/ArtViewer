@@ -32,6 +32,20 @@ public class SearchNewFoldersActivity : AppCompatActivity
 
 
 
+    protected override void OnResume()
+    {
+        base.OnResume();
+
+        if (!NetworkUtils.IsAccessTokenValid())
+        {
+            Intent intent = new Intent(this, typeof(LoginActivity));
+            StartActivity(intent);
+            Finish();
+        }
+    }
+
+
+
     public override bool OnOptionsItemSelected(IMenuItem item)
     {
         if (item.ItemId == Android.Resource.Id.Home)
