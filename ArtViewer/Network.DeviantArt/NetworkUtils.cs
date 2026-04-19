@@ -12,27 +12,39 @@ namespace ArtViewer.Network.DeviantArt
 {
     public static class NetworkUtils
     {
-        private static string? accessToken = null;
-
-
-
-        /// <summary>
-        /// Gets the access token for the DeviantArt API if there is one.
-        /// Ensure you call GenerateAccessToken before calling this.
-        /// </summary>
-        /// <returns>The current DeviantArt access token.</returns>
-        /// <exception cref="Exception">
-        /// Thrown when no access token has been generated.
-        /// </exception>
-        public static string GetAccessToken()
+        private static string? _accessToken = null;
+        public static string? AccessToken
         {
-            if (NetworkUtils.accessToken == null)
+            get => _accessToken;
+            private set
             {
-                throw new Exception("No access token for DeviantArt.");
+                if (value == null)
+                {
+                    _accessToken = null;
+                    AccessTokenExpiration = null;
+                }
+                else
+                {
+                    _accessToken = value;
+                    AccessTokenExpiration = DateTime.UtcNow.AddHours(1);
+                }
             }
-
-            return NetworkUtils.accessToken;
         }
+
+
+        public static DateTime? AccessTokenExpiration
+        {
+            get;
+            private set;
+        }
+
+
+
+        public static bool IsAccessTokenValid()
+        {
+            return _accessToken != null && AccessTokenExpiration != null && AccessTokenExpiration > DateTime.UtcNow;
+        }
+
 
 
 
@@ -43,12 +55,6 @@ namespace ArtViewer.Network.DeviantArt
         /// </summary>
         public static async Task GenerateAccessToken(string authorizationCode)
         {
-            if (NetworkUtils.accessToken != null)
-            {
-                return;
-            }
-
-
             SharedPrefsRepository prefs = new SharedPrefsRepository();
             string? codeVerifier = prefs.PkceCodeVerifier;
 
@@ -75,7 +81,7 @@ namespace ArtViewer.Network.DeviantArt
             }
 
 
-            NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
+            NetworkUtils.AccessToken = response.RootElement.GetProperty("access_token").GetString();
             string? refreshToken = response.RootElement.GetProperty("refresh_token").GetString();
             DateTime exprirationDate = DateTime.UtcNow.AddMonths(3);
 
@@ -93,6 +99,10 @@ namespace ArtViewer.Network.DeviantArt
         /// <returns>True if we need the user to reauthenticate and false otherwise</returns>
         public static bool ShouldRequireNewLogin()
         {
+            if (IsAccessTokenValid())
+                return false;
+
+
             SharedPrefsRepository prefs = new SharedPrefsRepository();
             DateTime? expirationDate = prefs.RefreshTokenExpirationDate;
 
@@ -145,7 +155,7 @@ namespace ArtViewer.Network.DeviantArt
             }
 
 
-            NetworkUtils.accessToken = response.RootElement.GetProperty("access_token").GetString();
+            NetworkUtils.AccessToken = response.RootElement.GetProperty("access_token").GetString();
 
             //Update the refresh token
             prefs.RefreshToken = response.RootElement.GetProperty("refresh_token").GetString();
@@ -162,7 +172,7 @@ namespace ArtViewer.Network.DeviantArt
         {
             SharedPrefsRepository prefs = new SharedPrefsRepository();
             
-            string? token = prefs.RefreshToken ?? NetworkUtils.accessToken;
+            string? token = prefs.RefreshToken ?? NetworkUtils.AccessToken;
 
 
             if (String.IsNullOrEmpty(token))
@@ -178,7 +188,7 @@ namespace ArtViewer.Network.DeviantArt
 
             await RunPostRequest(url, requestData);
 
-            NetworkUtils.accessToken = null;
+            NetworkUtils.AccessToken = null;
             prefs.RefreshToken = null;
             prefs.RefreshTokenExpirationDate = null;
         }
@@ -217,7 +227,7 @@ namespace ArtViewer.Network.DeviantArt
             {
                 try
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", NetworkUtils.GetAccessToken());
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", NetworkUtils.AccessToken);
                     HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
                     string result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     return JsonDocument.Parse(result);
