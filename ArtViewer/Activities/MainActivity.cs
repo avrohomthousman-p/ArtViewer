@@ -16,7 +16,7 @@ namespace ArtViewer.Activities
     {
         protected override void OnCreate(Bundle? savedInstanceState)
         {
-            //StartBackgroundJobs();
+            StartBackgroundJobs();
 
 
             base.OnCreate(savedInstanceState);
@@ -24,7 +24,7 @@ namespace ArtViewer.Activities
             SetContentView(Resource.Layout.activity_main);
 
 
-            AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+            AndroidX.AppCompat.Widget.Toolbar? toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
 
@@ -35,26 +35,12 @@ namespace ArtViewer.Activities
 
 
         /// <summary>
-        /// Runs background threads to establish connects to the database and the DeviantArt API.
+        /// Runs background threads to establish connects to the database.
         /// These connections are not needed by this activity, but will be needed by other activities.
         /// They are fetched here only to keep those other activitys moving quickly.
         /// </summary>
         private void StartBackgroundJobs()
         {
-            Task.Run(() =>
-            {
-                try
-                {
-                    NetworkUtils.GetAccessToken();
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e.GetType() + " " + e.Message);
-                    MakeToastPopup("Unable to connect to DeviantArt .....", ToastLength.Long);
-                }
-            });
-
-
             Task.Run(() => DatabaseConnection.GetConnection());
         }
 
@@ -91,6 +77,25 @@ namespace ArtViewer.Activities
                     Intent intent = new Intent(this, typeof(SearchNewFoldersActivity));
                     StartActivity(intent);
                 };
+
+            FindViewById<Button>(Resource.Id.logout_btn).Click +=
+                (sender, e) =>
+                {
+                    InitiateLogOut();
+                };
+        }
+
+
+
+        /// <summary>
+        /// Logs the user out of DeviantArt and sends them back to the login screen.
+        /// </summary>
+        private async Task InitiateLogOut()
+        {
+            await NetworkUtils.LogOutOfDeviantArt();
+
+            Intent intent = new Intent(this, typeof(LoginActivity));
+            StartActivity(intent);
         }
     }
 }

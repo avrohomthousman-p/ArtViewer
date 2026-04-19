@@ -154,6 +154,37 @@ namespace ArtViewer.Network.DeviantArt
 
 
 
+
+        /// <summary>
+        /// Logs the user out of DeviantArt for this session only. Also deletes the access token and refresh token.
+        /// </summary>
+        public static async Task LogOutOfDeviantArt()
+        {
+            SharedPrefsRepository prefs = new SharedPrefsRepository();
+            
+            string? token = prefs.RefreshToken ?? NetworkUtils.accessToken;
+
+
+            if (String.IsNullOrEmpty(token))
+                return; //Already logged out
+
+
+            string url = "https://www.deviantart.com/oauth2/revoke";
+            var requestData = new Dictionary<string, string>
+            {
+                { "revoke_refresh_only", "true" },
+                { "token", token }
+            };
+
+            await RunPostRequest(url, requestData);
+
+            NetworkUtils.accessToken = null;
+            prefs.RefreshToken = null;
+            prefs.RefreshTokenExpirationDate = null;
+        }
+
+
+
         public static async Task<JsonDocument> RunGetRequest(string url)
         {
             using (HttpClient client = new HttpClient())
