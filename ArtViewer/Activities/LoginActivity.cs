@@ -1,11 +1,13 @@
 using Android.Content;
 using Android.Graphics;
+using Android.Views;
 using AndroidX.AppCompat.App;
 using ArtViewer.Network.DeviantArt;
 using ArtViewer.Utils;
 using Java.Util.Prefs;
 
 namespace ArtViewer.Activities;
+
 
 
 
@@ -19,7 +21,14 @@ public class LoginActivity : AppCompatActivity
 {
     public const int CLIENT_ID = 48967;
     private TextView? banner = null;
+    private TextView? loginStatusView = null;
     private Button? loginBtn = null;
+
+
+    private enum LoginState
+    {
+        LoggedOut, LoginInProgress, LoginSuccess, LoginFailure
+    }
 
 
 
@@ -29,18 +38,15 @@ public class LoginActivity : AppCompatActivity
 
         SetContentView(Resource.Layout.activity_login);
         this.banner = FindViewById<TextView>(Resource.Id.banner);
+        this.loginStatusView = FindViewById<TextView>(Resource.Id.login_status_view);
         this.loginBtn = FindViewById<Button>(Resource.Id.login_btn);
 
         if (NetworkUtils.ShouldRequireNewLogin())
         {
-            this.banner.Text = GetString(Resource.String.banner_text_reauthenticate);
-            this.loginBtn.Visibility = Android.Views.ViewStates.Visible;
+            ApplyLoginState(LoginState.LoggedOut);
         }
         else
         {
-            this.banner.Text = GetString(Resource.String.banner_text_refreshing_access);
-            this.loginBtn.Visibility = Android.Views.ViewStates.Gone;
-
             RefreshSession();
         }
 
@@ -56,27 +62,25 @@ public class LoginActivity : AppCompatActivity
 
     private async Task RefreshSession()
     {
+        ApplyLoginState(LoginState.LoginInProgress);
+
         try
         {
             await NetworkUtils.RefreshAccessToken();
+            await Task.Delay(800).ConfigureAwait(true);
         }
         catch (Exception ex)
         {
-            this.banner.Text = GetString(Resource.String.banner_text_refresh_failed);
-            this.banner.SetTextColor(Color.Red);
-            this.loginBtn.Visibility = Android.Views.ViewStates.Visible;
+            ApplyLoginState(LoginState.LoginFailure);
             Console.WriteLine("Error: " + ex.Message);
             MakeToastPopup("Unable to refresh your session");
             return;
         }
 
 
-        this.banner.Text = GetString(Resource.String.successful_login_text);
-        this.banner.SetTextColor(Color.Green);
+        ApplyLoginState(LoginState.LoginSuccess);
 
-
-        await Task.Delay(2500).ConfigureAwait(true);
-
+        await Task.Delay(2000).ConfigureAwait(true);
 
         var intent = new Intent(this, typeof(MainActivity));
         StartActivity(intent);
@@ -89,7 +93,6 @@ public class LoginActivity : AppCompatActivity
     /// </summary>
     private void LaunchWebLogin()
     {
-
         string codeVerifier = PkceUtil.GenerateCodeVerifier();
         string codeChallenge = PkceUtil.GenerateCodeChallenge(codeVerifier);
 
@@ -111,6 +114,51 @@ public class LoginActivity : AppCompatActivity
         var intent = new Intent(Intent.ActionView, uri);
         StartActivity(intent);
     }
+
+
+
+    /// <summary>
+    /// Updates the UI to have the correct display for where the user
+    /// is holding in the login process.
+    /// </summary>
+    /// <param name="loginState">The user's login status</param>
+    private void ApplyLoginState(LoginState loginState)
+    {
+        switch (loginState)
+        {
+            case LoginState.LoggedOut:
+                this.banner.Text = GetString(Resource.String.banner_text_reauthenticate);
+                Remove(this.loginStatusView);
+                Show(this.loginBtn);
+                break;
+            case LoginState.LoginInProgress:
+                Hide(this.banner);
+                this.loginStatusView.Text = GetString(Resource.String.banner_text_refreshing_access);
+                Show(this.loginStatusView);
+                Remove(this.loginBtn);
+                break;
+            case LoginState.LoginSuccess:
+                this.banner.Text = GetString(Resource.String.welcome_message);
+                Show(this.banner);
+                this.loginStatusView.Text = GetString(Resource.String.successful_login_text);
+                this.loginStatusView.SetTextColor(Color.Green);
+                break;
+            case LoginState.LoginFailure:
+                this.banner.Text = GetString(Resource.String.failed_login_text);
+                this.banner.SetTextColor(Color.Red);
+                Show(this.banner);
+                Remove(this.loginStatusView);
+                Show(this.loginBtn);
+                break;
+        }
+    }
+
+
+
+    private void Show(View view) => view.Visibility = ViewStates.Visible;
+    private void Hide(View view) => view.Visibility = ViewStates.Invisible;
+    private void Remove(View view) => view.Visibility = ViewStates.Gone;
+
 
 
 
