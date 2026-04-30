@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="off_white">#F5F1E1</color>
+	<color name="off_white">#F7F7F5</color>
 	<color name="alt_button_color">#398DFA</color>
 	<color name="edit_green">#00C853</color>
 	<color name="delete_red">#D32F2F</color>
